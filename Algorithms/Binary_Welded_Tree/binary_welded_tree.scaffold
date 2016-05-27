@@ -20,7 +20,7 @@ const double PI=3.14159;
 const double dt=57.295;          /* Delta_t as per GFI ver 1.2  */
   
 //const unsigned int s_=336960;  /* Time Parameter as per  GFI ver 1.2 */
-const unsigned int s_=1000;
+const unsigned int s_=3000;
 
 //#define n 300 /* height of the treee as per GFI 1.2 */
 #define n 300
