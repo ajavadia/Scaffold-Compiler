@@ -32,7 +32,7 @@ for f in $*; do
   fi
 done
 
-# Module flattening pass with different thresholds
+# Module flattening pass with different thresholds, then critical path calculation.
 for f in $*; do
   b=$(basename $f .scaffold)  
   echo "[gen-cp.sh] $b: Flattening"

@@ -40,9 +40,13 @@ Finds critical path information for several different flattening thresholds by d
 $ ./gen-scheds.sh 
 -----------------
 This is the wrapper script around all the different schedulers.
-Generates communication-unaware Multi-SIMD schedules and commnication-aware LPFS, RCP and SS scheudles.
+Generates communication-unaware Multi-SIMD schedules and commnication-aware LPFS, RCP and SS schedules.
 Options: 
-  K=number of SIMD regions / D=capacity of each region
+  D=capacity of each region.
+  K=number of SIMD regions.
+  THRESHOLDS=list of thresholds for flattening. more flattening gives better schedule at the cost of time & memory.  
+  FULL_SCHED=true:generate full schedule / false:generate metrics only (faster)
+
 Calls the following scripts:
   
   $ ./regress.sh

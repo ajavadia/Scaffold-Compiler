@@ -12,6 +12,8 @@ K=(2)
 # Module flattening threshold
 # note: thresholds must be picked from the set in scripts/flattening_thresh.py
 THRESHOLDS=(010k 2M)
+# Full schedule? otherwise only generates metrics (faster)
+FULL_SCHED=true
 
 # Create directory to put all byproduct and output files in
 for f in $*; do
@@ -40,6 +42,7 @@ done
 for f in $*; do
   b=$(basename $f .scaffold)
   echo "[gen-scheds.sh] $b: Flattening ..."
+  echo "[gen-scheds.sh] Computing module gate counts ..."  
   $OPT -S -load $SCAF -ResourceCount2 ${b}/${b}.ll > /dev/null 2> ${b}.out  
   python $DIR/flattening_thresh.py ${b}  
   for th in ${THRESHOLDS[@]}; do      
@@ -86,9 +89,11 @@ for f in $*; do
   b=$(basename $f .scaffold)
   echo "[gen-scheds.sh] $b: Generating LPFS, RCP, SS leaves ..."
   cd ${b}
-  ../${DIR}/full_sched_regress.sh ${b}*.leaves
-  # Only generate metrics, not full schedule. Use this for speed.
-  #../${DIR}/regress.sh ${b}*.leaves  
+  if [ "$FULL_SCHED" = true ]; then
+    ../${DIR}/full_sched_regress.sh ${b}*.leaves
+  else
+    ../${DIR}/regress.sh ${b}*.leaves  
+  fi
   cd ..
 done
 
