@@ -1,0 +1,8 @@
+module
+main_module(
+  qint[5] a, qint[5] b
+) {
+  zero_to_garbage aint[5];
+  $ aint := a;
+  $ b += aint * a;
+}

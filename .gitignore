@@ -17,6 +17,10 @@
 *.pyc
 # vim swap files
 .*.sw?
+# Byte compiled c files
+*.bc
+# Fuse hidden files
+*fuse_hidden*
 
 #==============================================================================#
 # Explicit files to ignore (only matches one).

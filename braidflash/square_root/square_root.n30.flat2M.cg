@@ -1,0 +1,41 @@
+
+#Function initialize
+SIMD k=4 d=1024 initialize 1 5 30 1 leaf= 1(read from file)
+
+#Function Sqr
+SIMD k=4 d=1024 Sqr 1 15 90 3 leaf= 1(read from file)
+
+#Function EQxMark_0
+SIMD k=4 d=1024 EQxMark_0 2 2684 952 525 leaf= 1(read from file)
+
+#Function diffuse
+SIMD k=4 d=1024 diffuse 3 2691 953 526 leaf= 1(read from file)
+
+#Function EQxMark_1
+SIMD k=4 d=1024 EQxMark_1 2 2684 956 525 leaf= 1(read from file)
+
+#Function measure
+SIMD k=4 d=1024 measure 1 5 61 1 leaf= 1(read from file)
+
+#Function main
+initialize : a-1, 
+1 initialize a
+EQxMark_0 : b-1, 
+21 EQxMark_0 b
+diffuse : a-1, 
+2720 diffuse a
+EQxMark_0 : b-1, 
+5426 EQxMark_0 b
+diffuse : a-1, 
+8125 diffuse a
+EQxMark_0 : b-1, 
+10831 EQxMark_0 b
+diffuse : a-1, 
+13530 diffuse a
+EQxMark_0 : b-1, 
+16236 EQxMark_0 b
+measure : t-1, a-1, b-1, 
+139100380 measure t a b
+SIMD k=4 d=1024 main 3 139100384 53658612 27202425 16470720 0 0 0 leaf=0
+
+#Num of SIMD time steps for function main : 139100384

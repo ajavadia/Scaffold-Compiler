@@ -44,7 +44,7 @@ def genFlattenModules(benchName):
     for i in range(numBuckets):
         can1k = filter(lambda x: (int(x[1])>=0) and (int(x[1])<buckets[i][1]), m)
         n1k = map(lambda x: x[0], can1k)
-        fn = benchName+'_flat'+names[i]+'.txt'
+        fn = benchName+'.flat'+names[i]+'.txt'
     
         fout = open(fn,'w')
     

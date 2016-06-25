@@ -18,7 +18,7 @@ for f in $*; do
   mkdir -p "$b"
 
   echo "[gen-freq-estimate.sh] Compiling frequency-estimation-hybrid.c" >&2
-  $CLANG -c -O1 -emit-llvm $I_FLAGS frequency-estimation-hybrid.c -o frequency-estimation-hybrid.bc
+  $CLANG -c -emit-llvm frequency-estimation-hybrid.c -o frequency-estimation-hybrid.bc
 
   # if: file is compiled before (possibly flattened/unrolled/cloned also), use that compiled .ll file.
   # else: do simple compilation to get .ll file (without any flattening/unrolling/cloning)    
@@ -50,8 +50,8 @@ for f in $*; do
   $OPT -S -O1 ${b}/${b}_instr2.ll -o ${b}/${b}_instr.ll
 
   echo "[gen-freq-estimate.sh] Executing ${b}/${b}_instr.ll with lli" >&2
-  $LLI ${b}/${b}_instr.ll > ${b}/${b}.freq_estimate
+  $LLI ${b}/${b}_instr.ll > ${b}/${b}.freq
 
-  echo "[gen-freq-estimate.sh] Critical path lengths written to ${b}.freq_estimate"
-  #rm frequency-estimation-hybrid.bc ${b}/${b}_dynamic.ll ${b}/${b}_marked.ll ${b}/${b}_rolled.ll ${b}/${b}_linked.ll ${b}/${b}_instr.ll ${b}/${b}_instr2.ll
+  echo "[gen-freq-estimate.sh] Frequency estimates written to ${b}.freq"
+  rm frequency-estimation-hybrid.bc ${b}/${b}_dynamic.ll ${b}/${b}_marked.ll ${b}/${b}_rolled.ll ${b}/${b}_linked.ll ${b}/${b}_instr.ll ${b}/${b}_instr2.ll
 done
