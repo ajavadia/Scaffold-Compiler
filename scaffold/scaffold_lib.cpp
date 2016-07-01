@@ -23,4 +23,3 @@ void X (qbit *x) {
 
 int main() {
 }
-

@@ -3,7 +3,7 @@ CXX=clang++
 RM=rm -f
 
 # compiler flags:
-CPPFLAGS=-std=c++11
+CPPFLAGS=-std=c++11 -O3
 
 # define any directories containing header files other than /usr/include
 INCLUDES=-I/usr/include

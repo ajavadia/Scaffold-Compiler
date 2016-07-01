@@ -3,10 +3,13 @@ PERL=/usr/bin/perl
 PYTHON=/usr/bin/python
 
 ROOT=".."
+DIRNAME=""
 FILENAME=""
 FILE=""
 CFILE=""
-DIRNAME=""
+TOFF=0
+CTQG=0
+ROTATIONS=0
 
 BUILD=$(ROOT)/build/Release+Asserts
 
@@ -27,9 +30,6 @@ ifeq ($(UNAME_S),Darwin)
 SCAFFOLD_LIB=$(ROOT)/build/Release+Asserts/lib/Scaffold.dylib
 endif
 
-CTQG=0
-ROTATIONS=0
-TOFF=0
 
 ################################
 # Resource Count Estimation

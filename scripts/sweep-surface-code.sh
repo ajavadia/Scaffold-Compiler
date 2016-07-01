@@ -6,7 +6,7 @@ OPT=$ROOT/build/Release+Asserts/bin/opt
 SCAF=$ROOT/build/Release+Asserts/lib/Scaffold.so
 
 # change the desired thresholds below. that's the only change needed.
-error_rates=(5 6 7 8 9)
+error_rates=(9)
 
 # surface codes
 attempt_th_yx=(4)
@@ -26,10 +26,9 @@ for bench in $*; do
     echo "--------------- Surface Code -----------------"   
     for yx in "${attempt_th_yx[@]}"
     do  
-      echo "attempt_th_yx = ${yx}"
       for drop in "${attempt_th_drop[@]}"
       do
-        echo "attempt_th_drop = ${drop}"        
+        echo "(p = ${p}, attempt_th_yx = ${yx}, attempt_th_drop = ${drop})"        
         cd $ROOT/braidflash
         ./braidflash ${bench} --p ${p} --yx ${yx} --drop ${drop} > /dev/null
         ./braidflash ${bench} --p ${p} --yx ${yx} --drop ${drop} --opt > /dev/null

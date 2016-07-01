@@ -106,10 +106,11 @@ bool report_storage = false;
 
 //TODO: make these input arguments later
 #define distribute 1
+#define LEAF_SIMULATION_MAX 3
 
 #define P_th 4              // Steane code threshold = 10^-4   
 #define epsilon 0.5         // total desired logical error
-unsigned int total_logical_gates;    // KQ parameter, needed for calculating L_error_rate
+unsigned long long total_logical_gates;    // KQ parameter, needed for calculating L_error_rate
 double L_error_rate;           // desired logical error rate = 10^-(L_error_rate)
 int P_error_rate;           // device error rate = 10^-(P_error_rate)
 int concatenation_level;    // concatenation_level of Steane code
@@ -420,9 +421,9 @@ typedef DAGTy::edge_descriptor EdgeID;
 // structures to keep track of live qbits
 std::map<std::string, qbit*> q_map;
 // Result vectors for experiments
-unsigned int cycle = 0;
-unsigned int current_leaf_cycle = 0;
-std::map<std::string, std::vector<unsigned int>> leaf_cycles; // a leaf may execute a few times, we average its length.
+unsigned long long cycle = 0;
+unsigned long long current_leaf_cycle = 0;
+std::map<std::string, std::vector<unsigned long long>> leaf_cycles; // a leaf may execute a few times, we average its length.
 std::map<unsigned int, unsigned int> qbits_per_cycle;
 std::map<unsigned int, SeqTupleTy> ancillas_per_cycle;
 std::map<unsigned int, unsigned int> zeros_per_cycle;
@@ -433,9 +434,9 @@ std::map<unsigned int, std::vector<unsigned int>> storage_per_cycle;
 // structures to keep track of leaf/non-leaf modules
 std::vector<std::string> leaves;
 std::vector<std::string> non_leaves;
-// structures to keep all leaves in order of execution
-std::vector<std::string> all_ordered_leaf_names;
-std::stack<std::string> call_stack;           // call stack to keep track of module calls in call graph traversal  
+std::vector<std::string> all_ordered_leaf_names; // all leaves in order of execution
+std::vector<std::string> sub_ordered_leaf_names; // small subset of leaves, respecting same order of execution
+std::stack<std::string> call_stack;             // call stack to keep track of module calls in call graph traversal  
 
 
 void qbit::insert_q_map() {
@@ -788,23 +789,23 @@ InstTableTy parse_LPFS_file (const std::string file_path) {
 }
 
 // parse profile of module frequencies
-std::unordered_map<std::string, unsigned int> parse_freq (const std::string file_path) {
+std::unordered_map<std::string, unsigned long long> parse_freq (const std::string file_path) {
   #ifdef _DEBUG_PROGRESS
     std::cerr<<"parsing Freq..."<<std::endl;
   #endif  
   std::ifstream profile_freq_file (file_path);
   std::string line;
   std::string module_name = "";  
-  std::unordered_map<std::string, unsigned int> mapOfFreq;
+  std::unordered_map<std::string, unsigned long long> mapOfFreq;
   mapOfFreq.clear();
-  unsigned int freq = 0;
+  unsigned long long freq = 0;
   if (profile_freq_file.is_open()) {
     while ( getline (profile_freq_file,line) ) {
       std::vector<std::string> elems; 
       elems.clear();     
       split(line, ' ', elems);              
       module_name = elems[0];
-      freq = (unsigned int)std::stol(elems[9]);
+      freq = std::stoull(elems[9]);
       mapOfFreq[module_name] = freq;
     }
   }
@@ -832,14 +833,34 @@ InstTableTy parse_CG_file (const std::string file_path) {
   if (CGfile.is_open())
   {
     while ( std::getline (CGfile,line) ) {
-      // Function Headers
-      if (line.find("SIMD") != std::string::npos) {
+      if(line.empty())
+        continue;
+      // Function Bodies: CGInsts
+      else if (line.find("#") == std::string::npos && line.find("SIMD") == std::string::npos) {
+        
+        std::vector<std::string> elems;
+        split(line, ' ', elems);
+        std::string callee_name = elems[0];
+        if (callee_name.find("llvm.")!=std::string::npos)
+          continue;
+        std::vector<std::string> args;
+        for (int i = 2; i<elems.size(); i++)
+          args.push_back( elems[i].substr(0, elems[i].find_first_of('(') ) );
+        bool is_callee_leaf;
+        if (std::find(leaves.begin(), leaves.end(), callee_name) != leaves.end())
+          is_callee_leaf = false;
+        else
+          is_callee_leaf = true;
+        std::shared_ptr<Instruction> cg_inst_cur (std::make_shared <CGinst> (0, callee_name, args, is_callee_leaf));
+        cg_inst_cur->seq = seq++;
+        bodyInst_v.push_back(cg_inst_cur);
+      }
+      // Function Summary
+      else if (line.find("SIMD k") != std::string::npos) {
         std::vector<std::string> elems;
         split(line, ' ', elems);
         std::string module_name = elems[3];
-        unsigned int width = atoi(elems[4].c_str());
-        unsigned int length = atoi(elems[5].c_str());
-        std::string leaf_status = elems[9].substr(0, elems[9].find_first_of('('));
+        std::string leaf_status = elems[9];
         bool is_leaf = atoi(leaf_status.c_str());
         if (is_leaf == 0) {
           if (bodyInst_v.size() == 0) {
@@ -853,25 +874,7 @@ InstTableTy parse_CG_file (const std::string file_path) {
           leaves.push_back(module_name);      // add module to leaves
         bodyInst_v.clear();                    // all of this non-leaf's body is read
         seq = 0;
-      }
-      // Function Bodies: useful CGInsts start with a number (ts)
-      else if (isdigit(line[0])) {
-        std::vector<std::string> elems;
-        split(line, ' ', elems);
-        unsigned int timestep = atoi(elems[0].c_str());
-        std::string callee_name = elems[1];
-        std::vector<std::string> args;
-        for (int i = 2; i<elems.size(); i++)
-          args.push_back(elems[i]);
-        bool is_callee_leaf;
-        if (std::find(leaves.begin(), leaves.end(), callee_name) != leaves.end())
-          is_callee_leaf = false;
-        else
-          is_callee_leaf = true;
-        std::shared_ptr<Instruction> cg_inst_cur (std::make_shared <CGinst> (timestep, callee_name, args, is_callee_leaf));
-        cg_inst_cur->seq = seq++;
-        bodyInst_v.push_back(cg_inst_cur);
-      }
+      }      
     }
 
     CGfile.close();
@@ -1773,7 +1776,7 @@ void do_one_cycle(InstVecTy &PhysicalInst_v, InstVecTy &ready_queue, InstVecTy &
         #endif        
       } 
       else {
-        std::cerr<<"Error: Executing qubit "<<q_id[i]<<" is neither IN_MOV nor IN_OP."<<std::endl;
+        std::cerr<<"Error: Executing qubit (current) "<<q_id[i]<<" is neither IN_MOV nor IN_OP."<<std::endl;
         exit(1);
       }
 
@@ -1811,7 +1814,7 @@ void do_one_cycle(InstVecTy &PhysicalInst_v, InstVecTy &ready_queue, InstVecTy &
         exit(1);
       }  
       else {
-        std::cerr<<"Error: Executing qubit "<<q_id[i]<<" is neither IN_MOV nor IN_OP."<<std::endl;
+        std::cerr<<"Error: Executing qubit (next) "<<q_id[i]<<" is neither IN_MOV nor IN_OP."<<std::endl;
         exit(1);        
       }  
 
@@ -1908,7 +1911,7 @@ int main (int argc, char *argv[]) {
 
   // -------- Major data-structures
   InstTableTy mapOfLogicalInst_v;
-  std::unordered_map<std::string, unsigned int> mapOfFreq;
+  std::unordered_map<std::string, unsigned long long> mapOfFreq;
   InstTableTy mapOfCGInst_v;
   InstTableTy mapOfPhysicalInst_v;  
   SeqTupleTableTy mapOfTeleport_seq_tuples;
@@ -1959,11 +1962,11 @@ int main (int argc, char *argv[]) {
       for (auto &v_it : m_it.second)
         if (std::shared_ptr<OPinst> op_inst = std::dynamic_pointer_cast<OPinst>(v_it)) 
           leaf_size++;
-      unsigned int leaf_freq = mapOfFreq[leaf_name];
+      unsigned long long leaf_freq = mapOfFreq[leaf_name];
     #ifdef _DEBUG_PROGRESS
       std::cerr<<"leaf: "<<leaf_name<<" - size: "<<leaf_size<<" - freq: "<<leaf_freq<<std::endl;
     #endif    
-      total_logical_gates += leaf_size * leaf_freq;
+      total_logical_gates += (unsigned long long)leaf_size * leaf_freq;
     }
 
     std::cerr << "total logical gates: " << total_logical_gates << std::endl;
@@ -2057,9 +2060,25 @@ int main (int argc, char *argv[]) {
     unsigned int agg_prev_time = 0;  
   #endif
 
+  // find a small subset of all_ordered_leaf_names, to speed up simulation
+  std::map<std::string, int> sub_ordered_leaf_count;
+  sub_ordered_leaf_count.clear();  
+  for (auto &i : all_ordered_leaf_names) {
+    if (sub_ordered_leaf_count.find(i)==sub_ordered_leaf_count.end()) {
+      sub_ordered_leaf_count[i] = 1;
+      sub_ordered_leaf_names.push_back(i);
+    }
+    else if (sub_ordered_leaf_count[i] < LEAF_SIMULATION_MAX) {
+      sub_ordered_leaf_count[i]++;
+      sub_ordered_leaf_names.push_back(i);
+    }      
+    else
+      continue;
+  }
+
   // -------- Traverse tree of coarse-grain instructions
   // -------- Find leaf modules to simulate 
-  for (std::vector<std::string>::const_iterator F = all_ordered_leaf_names.begin(); F != all_ordered_leaf_names.end(); F++) {
+  for (std::vector<std::string>::const_iterator F = sub_ordered_leaf_names.begin(); F != sub_ordered_leaf_names.end(); F++) {
     std::string leaf_name = (*F);    
  
     #ifdef _DEBUG_PROGRESS
@@ -2096,8 +2115,9 @@ int main (int argc, char *argv[]) {
     ready_queue = initialize_ready_queue(PhysicalInst_v, g, false);
 
     // get ready queue of the next module. pre-fetch ancilla moves from this ready_queue_n in case of backward smoothing.
-    if (backward && *F!=all_ordered_leaf_names.back()) {      
+    if (backward && *F!=sub_ordered_leaf_names.back()) {
       std::string leaf_name_n = (*(F+1));   
+      if (leaf_name != leaf_name_n) {      // don't cross smooth two similar modules: qubits can go wrong.
 
       PhysicalInst_v_original_n = mapOfPhysicalInst_v.find(leaf_name_n)->second; 
       teleport_seq_tuples_original_n = mapOfTeleport_seq_tuples.find(leaf_name_n)->second;
@@ -2109,12 +2129,13 @@ int main (int argc, char *argv[]) {
       
       copy_module_data (PhysicalInst_v_original_n, PhysicalInst_v_n, teleport_seq_tuples_original_n, teleport_inst_tuples_n, g_original_n, g_n);
             
-      // for backward smoothing: mark the EPR movs of the next module.
-      ready_queue_n = initialize_ready_queue(PhysicalInst_v_n, g_n, true);      
+      // for backward smoothing: mark the ancilla movs of the next module.
+      ready_queue_n = initialize_ready_queue(PhysicalInst_v_n, g_n, true); 
+      }     
     }
     
     // simulate until all PhysicalInsts are executed. 
-    // don't stop if some prefetching of EPR from the next module is in the midst of execution.
+    // don't stop if some prefetching of ancilla from the next module is in the midst of execution.
     while (!PhysicalInst_v.empty() || !current_exec_n.empty()) { 
       #ifdef _DEBUG_SIMULATOR    
         std::cout<<"\ncycle: "<<cycle<<std::endl;    
@@ -2122,7 +2143,7 @@ int main (int argc, char *argv[]) {
 
       #ifdef _DEBUG_PERFORMANCE
         if(cycle%10000==0) {
-          unsigned int agg_cycle_time = (clock()-base_time)/(CLOCKS_PER_SEC);
+          unsigned long long agg_cycle_time = (clock()-base_time)/(CLOCKS_PER_SEC);
           std::cerr<<cycle<<" "<<agg_cycle_time-agg_prev_time<<std::endl;
           agg_prev_time = agg_cycle_time;
         }
@@ -2503,10 +2524,10 @@ int main (int argc, char *argv[]) {
   // KQ: total number of logical gates
   // k: total number of physical timesteps
   // q: total number of physical qubits
-  unsigned int total_cycles = 0;
+  unsigned long long total_cycles = 0;
   for (auto &m_it : leaf_cycles) {
-    unsigned int leaf_avg_cycles = 0;
-    unsigned int leaf_freq = 0;
+    unsigned long long leaf_avg_cycles = 0;
+    unsigned long long leaf_freq = 0;
     std::string leaf_name = m_it.first; 
     std::cout << leaf_name << "\t\t";
     for (auto &v_it : m_it.second) {
@@ -2515,15 +2536,15 @@ int main (int argc, char *argv[]) {
     }
     std::cout << std::endl;  
     leaf_avg_cycles /= m_it.second.size();
-    leaf_freq = mapOfFreq[leaf_name];    
+    leaf_freq = (unsigned long long) mapOfFreq[leaf_name];    
     total_cycles += leaf_avg_cycles * leaf_freq;    
   }
 
-  unsigned int num_physical_qbits = 0;
+  unsigned int max_q_count = 0;
   for (auto &it : qbits_per_cycle) {
-    if (it.second > num_physical_qbits) num_physical_qbits = it.second;
+    if (it.second > max_q_count) max_q_count = it.second;
   }
-  num_physical_qbits = num_physical_qbits * (int)pow(7.0,(double)concatenation_level);
+  unsigned long long num_physical_qbits = (unsigned long long) max_q_count * (unsigned long long)pow(7.0,(double)concatenation_level);
   
 
   // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Report results for plotting %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2549,7 +2570,7 @@ int main (int argc, char *argv[]) {
   kq_file << "total cycles: " << total_cycles << std::endl;
   kq_file << "max qubits: " << num_physical_qbits << std::endl;
   kq_file << "logical KQ: " << total_logical_gates << std::endl;
-  kq_file << "physical kq: " << total_cycles * num_physical_qbits << std::endl;  
+  kq_file << "physical kq: " << (total_cycles * num_physical_qbits) << std::endl;  
   kq_file.close();  
   std::cerr << "kq report written to:\t" << kq_file_path << std::endl; 
 

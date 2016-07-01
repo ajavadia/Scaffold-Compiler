@@ -11,7 +11,7 @@ error_rates=(5 6 7 8 9)
 # concatenated codes parameters
 caps=(100)
 windows=(50)
-directions=("backforth")
+directions=("forward" "backward" "backforth")
 
 # sweep problem sizes
 for bench in $*; do
@@ -27,26 +27,14 @@ for bench in $*; do
     # simulate simd_router with concatenated code (different directions, caps, windows)
     for direction in "${directions[@]}"
     do  
-      echo "Direction = ${direction}"
       for window in "${windows[@]}"
-      do
-        echo "WindowSize = ${window}"        
+      do     
         for cap in "${caps[@]}"
         do
-          echo "CapSize = ${cap}"
+          echo "(p = ${p}, CapSize = ${cap}, WindowSize = ${window}, Direction = ${direction})"
           $ROOT/simd_router/router ${bench} --p ${p} --window ${window} --cap ${cap} --${direction}
-          echo "CapSize = inf"                            
-          $ROOT/simd_router/router ${bench} --p ${p} --window ${window} --${direction}          
         done
       done
-      echo "WindowSize = inf"        
-      for cap in "${caps[@]}"
-      do
-        echo "CapSize = ${cap}"                  
-        $ROOT/simd_router/router ${bench} --p ${p} --cap ${cap} --${direction}
-        echo "CapSize = inf"                            
-        $ROOT/simd_router/router ${bench} --p ${p} --${direction}          
-      done      
     done
   done
 done

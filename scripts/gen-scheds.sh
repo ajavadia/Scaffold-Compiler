@@ -9,9 +9,8 @@ SCAF=$ROOT/build/Release+Asserts/lib/Scaffold.so
 D=(1024)
 # Number of SIMD regions
 K=(2)
-# Module flattening threshold
-# note: thresholds must be picked from the set in scripts/flattening_thresh.py
-THRESHOLDS=(010k 2M)
+# Module flattening threshold: must be picked from the set in scripts/flattening_thresh.py
+THRESHOLDS=(2M)
 # Full schedule? otherwise only generates metrics (faster)
 FULL_SCHED=true
 
@@ -118,7 +117,7 @@ for f in $*; do
     echo "[gen-scheds.sh] $b: Coarse-grain schedule ..."
     mv $c comm_aware_schedule.txt
     if [ ! -e ${b}.flat${th}.simd.${k}.${d}.${x}.time ]; then
-      ../$OPT -load ../$SCAF -GenCGSIMDSchedule -simd-kconstraint-cg $k -simd-dconstraint-cg $d ${b}.flat${th}.ll > /dev/null 2> ${b}.flat${th}.simd.${k}.${d}.${x}.time
+      ../$OPT -load ../$SCAF -GenCGSIMDSchedule -simd-kconstraint-cg $k -simd-dconstraint-cg $d ${b}.flat${th}.ll > /dev/null 2> ${b}.flat${th}.simd.${k}.${d}.${x}.cg
     fi
 
     # Now do 0-communication cost

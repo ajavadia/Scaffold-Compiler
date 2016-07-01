@@ -1,0 +1,66 @@
+
+LPFS:
+Function: Sqr (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
+==================================================================
+Finished Building Dependency Graph
+Finished Finding Longest Path(s)
+Finished Assigning
+0,0 TMOV 1 0 b2
+0,0 TMOV 1 0 a1
+0,0 TMOV 1 0 b4
+0,0 TMOV 1 0 a2
+0,0 TMOV 1 0 b1
+0,0 TMOV 1 0 a3
+0,0 TMOV 1 0 b3
+0,0 TMOV 1 0 a4
+0,0 TMOV 1 0 b0
+0,0 TMOV 1 0 a0
+0,1 CNOT b2 a1
+0,1 CNOT b4 a2
+0,1 CNOT b1 a3
+0,1 CNOT b3 a4
+0,1 CNOT b0 a0
+1,0 TMOV 0 1 a1
+1,0 TMOV 0 1 a2
+1,0 TMOV 0 1 b1
+1,0 TMOV 0 1 b3
+1,0 TMOV 0 1 b0
+1,0 TMOV 0 1 a0
+1,1 CNOT b2 a3
+1,1 CNOT b4 a4
+
+LPFS:
+Function: ToffoliImpl (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
+==================================================================
+Finished Building Dependency Graph
+Finished Finding Longest Path(s)
+Finished Assigning
+0,0 TMOV 1 0 target0
+0,0 TMOV 2 0 control10
+0,0 TMOV 3 0 control20
+0,1 H target0
+0,2 Tdag control10
+0,3 T control20
+1,0 TMOV 2 3 control20
+1,1 T target0
+1,2 CNOT control20 control10
+2,0 TMOV 1 2 control10
+2,1 CNOT control10 target0
+3,0 TMOV 2 1 target0
+3,1 Tdag control10
+3,2 CNOT target0 control20
+4,0 TMOV 1 2 control20
+4,1 CNOT control10 control20
+4,2 T target0
+5,1 Tdag control10
+5,1 Tdag control20
+6,0 TMOV 1 2 target0
+6,0 TMOV 0 1 control20
+6,1 CNOT control10 target0
+7,0 TMOV 2 1 target0
+7,0 TMOV 2 0 control20
+7,1 S control10
+7,2 CNOT target0 control20
+8,0 TMOV 1 2 control20
+8,1 CNOT control20 control10
+8,2 H target0

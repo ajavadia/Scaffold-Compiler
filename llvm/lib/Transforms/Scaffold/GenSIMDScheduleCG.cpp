@@ -536,7 +536,7 @@ void GenSIMDSchedCG::print_ArrParGates(){
 void GenSIMDSchedCG::print_qgate(qGate qg){
   errs() << qg.qFunc->getName() << " : ";
   for(int i=0;i<qg.numArgs;i++){
-    errs() << qg.args[i].name << qg.args[i].index << ", "  ;
+    errs() << qg.args[i].name << "(" << qg.args[i].index << ") "  ;
   }
   errs() << "\n";
 }
@@ -614,7 +614,7 @@ uint64_t GenSIMDSchedCG::get_ts_to_schedule(Function* F, uint64_t ts, Function* 
         currSched.tgates_ub = min(TinUB+currSched.tgates_ub, currSched.length);
         currSched.tgates_par = max(TinPar, currSched.tgates_par);
         currSched.tgates_par_ub = min(TinParUB+currSched.tgates_par_ub, currSched.width);
-        errs() << "Parallel. New Width = " << currSched.width << " New Length = " << currSched.length << " New Tgates = " << currSched.tgates << " Tpar= " << currSched.tgates_par << " TparUB=" << currSched.tgates_par_ub << "\n";
+        //errs() << "Parallel. New Width = " << currSched.width << " New Length = " << currSched.length << " New Tgates = " << currSched.tgates << " Tpar= " << currSched.tgates_par << " TparUB=" << currSched.tgates_par_ub << "\n";
          }
     else // must be serialized due to SIMD-k constraint
       {
@@ -639,7 +639,7 @@ uint64_t GenSIMDSchedCG::get_ts_to_schedule(Function* F, uint64_t ts, Function* 
         currSched.tgates_ub = TinUB; //create new W
         currSched.tgates_par = TinPar; //create new W
         currSched.tgates_par_ub = TinParUB; //create new W
-        errs() << "Serial(SIMD-k). New Width = " << currSched.width << " New Length = " << currSched.length << " New Tgates= " << currSched.tgates<< " New TgatesUB= " << currSched.tgates_ub<< " New TgatesPar= " << currSched.tgates_par<< " TparUB=" << currSched.tgates_par_ub << "\n";
+        //errs() << "Serial(SIMD-k). New Width = " << currSched.width << " New Length = " << currSched.length << " New Tgates= " << currSched.tgates<< " New TgatesUB= " << currSched.tgates_ub<< " New TgatesPar= " << currSched.tgates_par<< " TparUB=" << currSched.tgates_par_ub << "\n";
       }
   }
 
@@ -855,7 +855,7 @@ void GenSIMDSchedCG::save_blackbox_info(Function* F){
   if(vit==isLeaf.end()) //not a leaf
     funcIsLeaf=false;
   
-  errs() << "SIMD k="<<RES_CONSTRAINT<<" d=" << DATA_CONSTRAINT << " " << F->getName() << " " << tmpMod.width << " " << tmpMod.length << " " << tmpMod.moves << " " << tmpMod.mts << " " <<tmpMod.tgates << " " << tmpMod.tgates_ub << " " << tmpMod.tgates_par<< " " << tmpMod.tgates_par_ub << " leaf=" << funcIsLeaf << "\n";
+  errs() << "SIMD k="<<RES_CONSTRAINT<<" d=" << DATA_CONSTRAINT << " " << F->getName() << " " << tmpMod.width << " " << tmpMod.length << " " << tmpMod.moves << " " << tmpMod.mts << " leaf= " << funcIsLeaf << "\n";
 
 }
 
@@ -951,7 +951,7 @@ void GenSIMDSchedCG::print_tableFuncQbits(){
 void GenSIMDSchedCG::calc_critical_time(Function* F, qGate qg, bool isLeafFunc){
   string fname = qg.qFunc->getName();
 
-  //print_qgate(qg);
+  print_qgate(qg);
   uint64_t max_ts_of_all_args = 0;
 
   uint64_t first_step = 0;
@@ -1262,7 +1262,7 @@ bool GenSIMDSchedCG::check_if_pre_schedule(Function* F){
 
   funcInfo[F] = (*foundFn).second;
 
-  errs() << "SIMD k="<<RES_CONSTRAINT<<" d=" << DATA_CONSTRAINT << " " << F->getName() << " " << (*foundFn).second.width << " " << (*foundFn).second.length << " " << (*foundFn).second.moves << " " << (*foundFn).second.mts << " leaf= 1" << "(read from file)\n";
+  errs() << "SIMD k="<<RES_CONSTRAINT<<" d=" << DATA_CONSTRAINT << " " << F->getName() << " " << (*foundFn).second.width << " " << (*foundFn).second.length << " " << (*foundFn).second.moves << " " << (*foundFn).second.mts << " leaf= 1" << " (read from file)\n";
 
   return true;
 

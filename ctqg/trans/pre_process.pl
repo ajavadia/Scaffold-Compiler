@@ -21,7 +21,7 @@ $last_name='';
 # Any Scaffold module is not added to the CTQG output
 # All global variables need to be #defines for CTQG
 while ($#buffer >= $line) {
-  print "$line: $buffer[$line]";
+  #print "$line: $buffer[$line]";
 
   # Extract CTQG: it could either be regular ctqg function or a Parameterized one
   if ( $buffer[$line] =~ /^ctqg\s+(\w+).*{/ || $buffer[$line] =~ /^ctqg\s+(\<.*?\>)?\s?(\w+).*{/ ) {

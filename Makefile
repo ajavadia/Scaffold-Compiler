@@ -111,11 +111,9 @@ CFLAGS=-L ../build/Debug+Asserts/lib \
 		-I ../build/include \
 		-I ../build/tools/clang/include
 
-EXECUTABLES=ParserTest LexerTest
 SCAFFOLD=scaffold
 
-all: Sqct Clang
-#all: Sqct Clang $(EXECUTABLES) Scaffold
+all: Sqct CTQG Clang SIMD Braid
 
 Clang: llvm build
 	@cd llvm/tools && /bin/rm -f clang && /bin/ln -s ../../clang;
@@ -140,17 +138,23 @@ llvm:
 Scaffold:
 	@cd scaffold && make;
 
-$(EXECUTABLES):
-	@echo "Compiling $@"
-	@cd Tests && $(CLANG) $@.cpp -o $@ $(LDFLAGS) $(CFLAGS) $(CLANGFLAGS)
-
 Sqct:
-	@cd Rotations/sqct && make
+	@cd Rotations/sqct && make;
+
+CTQG:
+	@cd ctqg/ && tar -xvf ctqg.tar;
+
+SIMD:
+	@cd simd_router/ && make;
+
+Braid:
+	@cd braidflash/ && make;
 
 clean:
 	@cd Rotations/sqct && make clean
-	#cd Tests && rm -f $(EXECUTABLES)
 	#cd scaffold && make clean
 	@if [ -d build ]; then cd build && make clean; fi
+	@cd simd_router/ && make clean
+	@cd braidflash/ && make clean  
 
 .PHONY: clean Sqct Scaffold Clang

@@ -13,7 +13,7 @@ foreach $file ( @ARGV ) {
     if ( $file =~ /([a-zA-Z0-9_]+)\.(\w+)\.(\w+)\.simd\.(\d)\.(\d+)\.leaves\.(.*)/ ) {
         $name = $1; $size = $2; $th = $3; $k = $4; $d = $5; $ext = $6;
         $comm = "comm_aware_schedule.txt.$name\.$size\.$th\_K$k\_D$d\_$ext";
-        print "[comm_aware.pl] $file -> $comm\n";
+        print "\t[comm_aware.pl] $file -> $comm\n";
         open COM, ">$comm"  or die "Unable to open $comm: $!\n";
         open RES, $file or die "Unable to open $file: $!\n";
         $last{Function} = "";

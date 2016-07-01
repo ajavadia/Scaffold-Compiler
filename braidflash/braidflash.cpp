@@ -149,7 +149,7 @@ vector<Gate> module_gates;
 vector<gate_descriptor> ready_gates;
 map< gate_descriptor, queue<Event> > event_queues;
 vector<Event> ready_events;
-map< string, unsigned int > module_freqs;
+map< string, unsigned long long > module_freqs;
 
 // 3 data structures for results
 list<pair<gate_descriptor, event_type>> success_events;
@@ -883,14 +883,14 @@ void parse_freq (const string file_path) {
   ifstream profile_freq_file (file_path);
   string line;
   string module_name = "";  
-  unsigned int freq = 0;
+  unsigned long long freq = 0;
   if (profile_freq_file.is_open()) {
     while ( getline (profile_freq_file,line) ) {
       vector<string> elems; 
       elems.clear();     
       split(line, ' ', elems);              
       module_name = elems[0];
-      freq = (unsigned int)stol(elems[9]);
+      freq = stoull(elems[9]);
       module_freqs[module_name] = freq;
     }
   }
@@ -1037,11 +1037,11 @@ int main (int argc, char *argv[]) {
     cerr << "Physical error rate is higher than the code threshold. Terminating..\n";
     exit(1);
   }      
-  int total_logical_gates = 0;    // KQ parameter, needed for calculating L_error_rate  
+  unsigned long long total_logical_gates = 0;    // KQ parameter, needed for calculating L_error_rate  
   for (auto const &map_it : all_gates) {
     string module_name = map_it.first;     
     int module_size = map_it.second.size();
-    int module_freq = 0;
+    unsigned long long module_freq = 0;
     if ( module_freqs.find(module_name) != module_freqs.end() )
       module_freq = module_freqs[module_name];
 #ifdef _PROGRESS
@@ -1052,8 +1052,8 @@ int main (int argc, char *argv[]) {
   cerr << "total logical gates: " << total_logical_gates << endl;
   L_error_rate = (double)epsilon/(double)total_logical_gates;   
   code_distance = 
-    (int) floor( 2 * ( log( (100.0/3.0) * (double)L_error_rate ) / 
-                       log( pow(10.0,(-1.0*(double)P_error_rate)) / pow(10.0,(-1.0*(double)P_th)) ) ) - 1);
+          2*(int)( ceil(log( (100.0/3.0) * (double)L_error_rate ) / 
+                       log( pow(10.0,(-1.0*(double)P_error_rate)) / pow(10.0,(-1.0*(double)P_th)) ) ) ) - 1;
   if ( L_error_rate > pow(10.0,(-1.0*(double)P_error_rate)) ) code_distance = 1; // very small circuit (large L_error_rate), means smallest possible mesh
 #ifdef _PROGRESS  
   cerr << "Physical error rate (p): " << P_error_rate << endl;
@@ -1066,10 +1066,10 @@ int main (int argc, char *argv[]) {
   }
 
   // how long is each surface code cycle
-  surface_code_cycle = op_delays.find("PrepZ")->second + 
+  surface_code_cycle = 1;/*op_delays.find("PrepZ")->second + 
                        2*op_delays.find("H")->second + 
                        4*op_delays.find("CNOT")->second + 
-                       op_delays.find("MeasZ")->second;
+                       op_delays.find("MeasZ")->second;*/
 
   // optimize qubit placements
   // write all_gates to trace (.tr) file    
@@ -1397,7 +1397,7 @@ int main (int argc, char *argv[]) {
     }
  
     // print results
-    unsigned int module_freq = 1;
+    unsigned long long module_freq = 1;
     if ( module_freqs.find(module_name) != module_freqs.end() ) {
       module_freq = module_freqs[module_name];
       cerr << "module_freq: " << module_freq << endl;

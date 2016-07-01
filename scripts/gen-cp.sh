@@ -7,7 +7,7 @@ SCAF=$ROOT/build/Release+Asserts/lib/Scaffold.so
 
 # Module flattening threshold
 # note: thresholds must be picked from the set in scripts/flattening_thresh.py
-THRESHOLDS=(010k 100k 2M 25M)
+THRESHOLDS=(010k 100k 2M)
 
 # Create directory to put all byproduct and output files in
 for f in $*; do
