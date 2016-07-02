@@ -2,9 +2,6 @@
 LPFS:
 Function: PARSENODEROOT (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 scratch200
 0,0 TMOV 1 0 scratch199
 0,0 TMOV 1 0 scratch198
@@ -15418,9 +15415,6 @@ Finished Assigning
 LPFS:
 Function: PARSENODEEVEN (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 scratch200
 0,0 TMOV 1 0 scratch199
 0,0 TMOV 1 0 scratch198
@@ -33789,9 +33783,6 @@ Finished Assigning
 LPFS:
 Function: TESTISPARENT_IP0_IP1_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 even0
 0,0 TMOV 1 0 a0
 0,0 TMOV 1 0 root0
@@ -33869,16 +33860,13 @@ Finished Assigning
 LPFS:
 Function: TESTISCHILD_IP0_IPx_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
+0,0 TMOV 1 0 ischild0
+0,0 TMOV 1 0 even0
+0,1 CNOT ischild0 even0
 
 LPFS:
 Function: SETPARENT (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 b0
 0,0 TMOV 1 0 b1
 0,0 TMOV 1 0 b2
@@ -40512,9 +40500,6 @@ Finished Assigning
 LPFS:
 Function: ToffoliImpl (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 target0
 0,0 TMOV 2 0 control10
 0,0 TMOV 3 0 control20
@@ -40548,9 +40533,6 @@ Finished Assigning
 LPFS:
 Function: CADDNUMCLEAR (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 scratch199
 0,0 TMOV 2 0 a199
 0,0 TMOV 2 0 a198
@@ -47118,9 +47100,6 @@ Finished Assigning
 LPFS:
 Function: CSUBNUMCLEAR (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 a199
 0,0 TMOV 1 0 a198
 0,0 TMOV 1 0 a197
@@ -54288,9 +54267,6 @@ Finished Assigning
 LPFS:
 Function: DOWELD1 (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 ancl0
 0,0 TMOV 2 0 weldctrl0
 0,0 TMOV 2 0 a200
@@ -67724,9 +67700,6 @@ Finished Assigning
 LPFS:
 Function: SETCHILDINTREE (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 b0
 0,0 TMOV 1 0 b1
 0,0 TMOV 1 0 b2
@@ -74393,9 +74366,6 @@ Finished Assigning
 LPFS:
 Function: TESTISPARENT_IP0_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 root0
 0,0 TMOV 1 0 even0
 0,0 TMOV 1 0 a0
@@ -74505,9 +74475,6 @@ Finished Assigning
 LPFS:
 Function: W (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 q10
 0,0 TMOV 1 0 q20
 0,1 CNOT q10 q20
@@ -74527,9 +74494,6 @@ Finished Assigning
 LPFS:
 Function: controlled_expZ (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 target0
 0,1 H target0
 1,1 T target0
@@ -74940,9 +74904,6 @@ Finished Assigning
 LPFS:
 Function: TESTISPARENT_IP1_IP1_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 even0
 0,0 TMOV 1 0 root0
 0,0 TMOV 2 0 isparent0
@@ -75017,9 +74978,6 @@ Finished Assigning
 LPFS:
 Function: TESTISCHILD_IP1_IPx_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 ischild0
 0,0 TMOV 1 0 even0
 0,1 CNOT ischild0 even0
@@ -75027,9 +74985,6 @@ Finished Assigning
 LPFS:
 Function: TESTISPARENT_IP1_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 root0
 0,0 TMOV 1 0 even0
 0,0 TMOV 2 0 isparent0
@@ -75136,9 +75091,6 @@ Finished Assigning
 LPFS:
 Function: TESTISPARENT_IP2_IP1_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 a0
 0,0 TMOV 1 0 root0
 0,0 TMOV 2 0 ismatch0
@@ -75218,9 +75170,6 @@ Finished Assigning
 LPFS:
 Function: TESTISCHILD_IP2_IPx_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 even0
 0,1 X even0
 1,0 TMOV 1 0 ischild0
@@ -75229,9 +75178,6 @@ Finished Assigning
 LPFS:
 Function: TESTISPARENT_IP2_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 root0
 0,0 TMOV 1 0 a0
 0,0 TMOV 2 0 isparent0
@@ -75342,9 +75288,6 @@ Finished Assigning
 LPFS:
 Function: TESTISPARENT_IP3_IP1_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 ismatch0
 0,0 TMOV 1 0 isparent0
 0,0 TMOV 2 0 even0
@@ -75416,9 +75359,6 @@ Finished Assigning
 LPFS:
 Function: TESTISCHILD_IP3_IPx_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 even0
 0,1 X even0
 1,0 TMOV 1 0 ischild0
@@ -75429,9 +75369,6 @@ Finished Assigning
 LPFS:
 Function: TESTISPARENT_IP3_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 root0
 0,0 TMOV 2 0 isparent0
 0,0 TMOV 3 0 ismatch0

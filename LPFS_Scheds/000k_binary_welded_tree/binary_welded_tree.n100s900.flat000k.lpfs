@@ -2,9 +2,6 @@
 LPFS:
 Function: ToffoliImpl (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 target0
 0,0 TMOV 2 0 control10
 0,0 TMOV 3 0 control20
@@ -38,16 +35,13 @@ Finished Assigning
 LPFS:
 Function: TESTISCHILD_IP0_IPx_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
+0,0 TMOV 1 0 ischild0
+0,0 TMOV 1 0 even0
+0,1 CNOT ischild0 even0
 
 LPFS:
 Function: W (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 q10
 0,0 TMOV 1 0 q20
 0,1 CNOT q10 q20
@@ -67,9 +61,6 @@ Finished Assigning
 LPFS:
 Function: DecomposeRotation_n1_145900e02 (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 q0
 0,1 X q0
 1,1 H q0
@@ -276,9 +267,6 @@ Finished Assigning
 LPFS:
 Function: DecomposeRotation_1_145900e02 (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 q0
 0,1 T q0
 1,1 H q0
@@ -487,9 +475,6 @@ Finished Assigning
 LPFS:
 Function: TESTISCHILD_IP1_IPx_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 ischild0
 0,0 TMOV 1 0 even0
 0,1 CNOT ischild0 even0
@@ -497,9 +482,6 @@ Finished Assigning
 LPFS:
 Function: TESTISCHILD_IP2_IPx_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 even0
 0,1 X even0
 1,0 TMOV 1 0 ischild0
@@ -508,9 +490,6 @@ Finished Assigning
 LPFS:
 Function: TESTISCHILD_IP3_IPx_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
-Finished Building Dependency Graph
-Finished Finding Longest Path(s)
-Finished Assigning
 0,0 TMOV 1 0 even0
 0,1 X even0
 1,0 TMOV 1 0 ischild0

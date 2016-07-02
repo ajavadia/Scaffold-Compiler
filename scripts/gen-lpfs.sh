@@ -118,8 +118,8 @@ done
 # Rename to simple names
 for f in $*; do
   b=$(basename $f .scaffold)  
-  rename 's/\.simd\.(\d)\.(\d+)\.leaves\.local/\.lpfs/' ${b}/*leaves.local
-  rename 's/\.simd\.(\d)\.(\d+)\.local\.time/\.cg/' ${b}/*time
+  rename -f 's/\.simd\.(\d)\.(\d+)\.leaves\.local/\.lpfs/' ${b}/*leaves.local
+  rename -f 's/\.simd\.(\d)\.(\d+)\.local\.time/\.cg/' ${b}/*time
 done
 
 # Perform module frequency estimation

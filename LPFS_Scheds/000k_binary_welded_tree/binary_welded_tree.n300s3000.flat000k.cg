@@ -1,6 +1,6 @@
 
 #Function ToffoliImpl
-SIMD k=4 d=1024 ToffoliImpl 0 64506936 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 ToffoliImpl 0 50469944 0 0 leaf= 1 (read from file)
 
 #Function PARSENODEROOT
 llvm.PrepZ : scratch(300) 
@@ -2708,7 +2708,7 @@ llvm.CNOT : scratch(299) scratch(300)
 llvm.X : scratch(300) 
 ToffoliImpl : scratch(299) scratch(300) a(300) 
 llvm.X : scratch(300) 
-SIMD k=4 d=1024 PARSENODEROOT 2 38704170625 5414 1805 leaf= 0
+SIMD k=4 d=1024 PARSENODEROOT 2 30281975425 5414 1805 leaf= 0
 
 #Function PARSENODEEVEN
 llvm.PrepZ : scratch(300) 
@@ -5558,7 +5558,7 @@ llvm.CNOT : scratch(300) scratch(299)
 llvm.X : scratch(300) 
 ToffoliImpl : scratch(299) scratch(300) a(300) 
 llvm.X : scratch(300) 
-SIMD k=4 d=1024 PARSENODEEVEN 2 48315704054 10808 3603 leaf= 0
+SIMD k=4 d=1024 PARSENODEEVEN 2 37801997046 10808 3603 leaf= 0
 
 #Function TESTISPARENT_IP0_IP1_IPx_IPx_DPx_DPx_DPx_DPx
 llvm.X : even(0) 
@@ -5569,10 +5569,10 @@ ToffoliImpl : isparent(0) root(0) ismatch(0)
 llvm.X : a(0) 
 llvm.X : even(0) 
 llvm.X : root(0) 
-SIMD k=4 d=1024 TESTISPARENT_IP0_IP1_IPx_IPx_DPx_DPx_DPx_DPx 2 129013882 10820 3607 leaf= 0
+SIMD k=4 d=1024 TESTISPARENT_IP0_IP1_IPx_IPx_DPx_DPx_DPx_DPx 2 100939898 10820 3607 leaf= 0
 
 #Function TESTISCHILD_IP0_IPx_IPx_IPx_DPx_DPx_DPx_DPx
-SIMD k=4 d=1024 TESTISCHILD_IP0_IPx_IPx_IPx_DPx_DPx_DPx_DPx 0 64506936 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 TESTISCHILD_IP0_IPx_IPx_IPx_DPx_DPx_DPx_DPx 0 50469944 0 0 leaf= 1 (read from file)
 
 #Function SETPARENT
 ToffoliImpl : b(0) isparent(0) a(1) 
@@ -5876,7 +5876,7 @@ ToffoliImpl : b(297) isparent(0) a(298)
 ToffoliImpl : b(298) isparent(0) a(299) 
 ToffoliImpl : b(299) isparent(0) a(300) 
 ToffoliImpl : b(301) isparent(0) a(301) 
-SIMD k=4 d=1024 SETPARENT 0 19416587736 10820 3607 leaf= 0
+SIMD k=4 d=1024 SETPARENT 0 15191453144 10820 3607 leaf= 0
 
 #Function CADDNUMCLEAR
 ToffoliImpl : scratch(299) a(299) scratch(298) 
@@ -6178,7 +6178,7 @@ ToffoliImpl : scratch(4) a(4) scratch(3)
 ToffoliImpl : scratch(3) a(3) scratch(2) 
 ToffoliImpl : scratch(2) a(2) scratch(1) 
 ToffoliImpl : scratch(1) a(1) scratch(0) 
-SIMD k=4 d=1024 CADDNUMCLEAR 0 19287573864 10820 3607 leaf= 0
+SIMD k=4 d=1024 CADDNUMCLEAR 0 15090513256 10820 3607 leaf= 0
 
 #Function CADDNUM
 ToffoliImpl : b(0) a(0) addsub(0) 
@@ -7380,7 +7380,7 @@ ToffoliImpl : b(299) scratch(298) addsub(0)
 llvm.PrepZ : scratch(299) 
 ToffoliImpl : scratch(299) scratch(298) a(299) 
 CADDNUMCLEAR : scratch(-1) a(-1) 
-SIMD k=4 d=1024 CADDNUM 2 57991735464 22240 7513 leaf= 0
+SIMD k=4 d=1024 CADDNUM 2 45372479656 22240 7513 leaf= 0
 
 #Function CSUBNUMCLEAR
 llvm.X : a(299) 
@@ -8280,7 +8280,7 @@ llvm.X : a(290)
 llvm.X : a(69) 
 llvm.X : a(291) 
 llvm.X : a(287) 
-SIMD k=4 d=1024 CSUBNUMCLEAR 4 19287574239 23436 7823 leaf= 0
+SIMD k=4 d=1024 CSUBNUMCLEAR 4 15090513631 23436 7823 leaf= 0
 
 #Function CSUBNUM
 ToffoliImpl : b(0) a(0) addsub(0) 
@@ -10080,7 +10080,7 @@ llvm.X : a(170)
 llvm.X : a(171) 
 llvm.X : a(163) 
 CSUBNUMCLEAR : scratch(-1) a(-1) 
-SIMD k=4 d=1024 CSUBNUM 4 57991736209 48668 16131 leaf= 0
+SIMD k=4 d=1024 CSUBNUM 4 45372480401 48668 16131 leaf= 0
 
 #Function DOWELD0
 llvm.X : a(301) 
@@ -10090,7 +10090,7 @@ CADDNUM : addsub(-1) b(-1) a(-1)
 llvm.CNOT : addsub(0) weldctrl(0) 
 CSUBNUM : addsub(-1) b(-1) a(-1) 
 ToffoliImpl : addsub(0) weldctrl(0) a(301) 
-SIMD k=4 d=1024 DOWELD0 4 116112485560 119584 39778 leaf= 0
+SIMD k=4 d=1024 DOWELD0 4 90845899960 119584 39778 leaf= 0
 
 #Function DOWELD1
 llvm.PrepZ : ancl(0) 
@@ -10695,7 +10695,7 @@ ToffoliImpl : b(298) ancl(0) a(298)
 ToffoliImpl : ancl(0) weldctrl(0) g(299) 
 ToffoliImpl : b(300) a(300) weldctrl(0) 
 ToffoliImpl : b(299) ancl(0) a(299) 
-SIMD k=4 d=1024 DOWELD1 1 38704161605 119586 39779 leaf= 0
+SIMD k=4 d=1024 DOWELD1 1 30281966405 119586 39779 leaf= 0
 
 #Function SETWELD
 llvm.X : direction(0) 
@@ -10708,7 +10708,7 @@ ToffoliImpl : weldctrl(0) direction(0) childctrl(0)
 ToffoliImpl : b(301) a(301) childctrl(0) 
 llvm.CNOT : b(300) childctrl(0) 
 llvm.CNOT : b(301) childctrl(0) 
-SIMD k=4 d=1024 SETWELD 4 155010167993 358772 119340 leaf= 0
+SIMD k=4 d=1024 SETWELD 4 121279276217 358772 119340 leaf= 0
 
 #Function SETCHILDINTREE
 ToffoliImpl : b(0) childctrl(0) direction(0) 
@@ -11013,7 +11013,7 @@ ToffoliImpl : b(298) childctrl(0) a(297)
 ToffoliImpl : b(299) childctrl(0) a(298) 
 ToffoliImpl : b(300) childctrl(0) a(299) 
 ToffoliImpl : b(301) childctrl(0) a(301) 
-SIMD k=4 d=1024 SETCHILDINTREE 0 19481094672 358772 119340 leaf= 0
+SIMD k=4 d=1024 SETCHILDINTREE 0 15241923088 358772 119340 leaf= 0
 
 #Function SETCHILD
 ToffoliImpl : childctrl(0) ischild(0) a(300) 
@@ -11023,7 +11023,7 @@ SETCHILDINTREE : a(-1) b(-1) childctrl(-1) direction(-1)
 llvm.X : a(300) 
 ToffoliImpl : childctrl(0) ischild(0) a(300) 
 llvm.X : a(300) 
-SIMD k=4 d=1024 SETCHILD 4 174620276552 1076324 358023 leaf= 0
+SIMD k=4 d=1024 SETCHILD 4 136622139208 1076324 358023 leaf= 0
 
 #Function TESTISPARENT_IP0_IP0_IPx_IPx_DPx_DPx_DPx_DPx
 llvm.X : root(0) 
@@ -11037,7 +11037,7 @@ ToffoliImpl : isparent(0) root(0) ismatch(0)
 llvm.X : a(0) 
 llvm.X : even(0) 
 llvm.X : root(0) 
-SIMD k=4 d=1024 TESTISPARENT_IP0_IP0_IPx_IPx_DPx_DPx_DPx_DPx 3 193520823 1076340 358028 leaf= 0
+SIMD k=4 d=1024 TESTISPARENT_IP0_IP0_IPx_IPx_DPx_DPx_DPx_DPx 3 151409847 1076340 358028 leaf= 0
 
 #Function ORACLE_IP0_IPx_IPx_IPx_DPx_DPx_DPx_DPx
 PARSENODEROOT : a(-1) root.(-1) even.(-1) 
@@ -11055,22 +11055,22 @@ TESTISCHILD_IP0_IPx_IPx_IPx_DPx_DPx_DPx_DPx : even.(-1) ischild.(-1)
 TESTISPARENT_IP0_IP0_IPx_IPx_DPx_DPx_DPx_DPx : a(-1) root.(-1) even.(-1) isparent.(-1) ismatch.(-1) 
 PARSENODEEVEN : a(-1) even.(-1) 
 PARSENODEROOT : a(-1) root.(-1) even.(-1) 
-SIMD k=4 d=1024 ORACLE_IP0_IPx_IPx_IPx_DPx_DPx_DPx_DPx 4 368528162233 3283096 1092111 leaf= 0
+SIMD k=4 d=1024 ORACLE_IP0_IPx_IPx_IPx_DPx_DPx_DPx_DPx 4 288334826937 3283096 1092111 leaf= 0
 
 #Function W
-SIMD k=4 d=1024 W 0 64506936 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 W 0 50469944 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_n1_145900e02
-SIMD k=4 d=1024 DecomposeRotation_n1_145900e02 0 64506936 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_n1_145900e02 0 50469944 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_1_145900e02
-SIMD k=4 d=1024 DecomposeRotation_1_145900e02 0 64506936 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_1_145900e02 0 50469944 0 0 leaf= 1 (read from file)
 
 #Function controlled_expZ
 DecomposeRotation_n1_145900e02 : target(0) 
 llvm.CNOT : target(0) control(0) 
 DecomposeRotation_1_145900e02 : target(0) 
-SIMD k=4 d=1024 controlled_expZ 1 129013877 3283100 1092112 leaf= 0
+SIMD k=4 d=1024 controlled_expZ 1 100939893 3283100 1092112 leaf= 0
 
 #Function TIMESTEP
 W : a(0) b(0) 
@@ -13493,7 +13493,7 @@ W : a(95) b(95)
 W : a(94) b(94) 
 W : a(93) b(93) 
 W : a(102) b(102) 
-SIMD k=4 d=1024 TIMESTEP 4 39220217478 6568622 2184857 leaf= 0
+SIMD k=4 d=1024 TIMESTEP 4 30685726342 6568622 2184857 leaf= 0
 
 #Function TESTISPARENT_IP1_IP1_IPx_IPx_DPx_DPx_DPx_DPx
 llvm.X : even(0) 
@@ -13502,10 +13502,10 @@ llvm.X : root(0)
 ToffoliImpl : isparent(0) root(0) ismatch(0) 
 llvm.X : even(0) 
 llvm.X : root(0) 
-SIMD k=4 d=1024 TESTISPARENT_IP1_IP1_IPx_IPx_DPx_DPx_DPx_DPx 1 129013882 6568630 2184861 leaf= 0
+SIMD k=4 d=1024 TESTISPARENT_IP1_IP1_IPx_IPx_DPx_DPx_DPx_DPx 1 100939898 6568630 2184861 leaf= 0
 
 #Function TESTISCHILD_IP1_IPx_IPx_IPx_DPx_DPx_DPx_DPx
-SIMD k=4 d=1024 TESTISCHILD_IP1_IPx_IPx_IPx_DPx_DPx_DPx_DPx 0 64506936 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 TESTISCHILD_IP1_IPx_IPx_IPx_DPx_DPx_DPx_DPx 0 50469944 0 0 leaf= 1 (read from file)
 
 #Function TESTISPARENT_IP1_IP0_IPx_IPx_DPx_DPx_DPx_DPx
 llvm.X : root(0) 
@@ -13517,7 +13517,7 @@ llvm.X : root(0)
 ToffoliImpl : isparent(0) root(0) ismatch(0) 
 llvm.X : even(0) 
 llvm.X : root(0) 
-SIMD k=4 d=1024 TESTISPARENT_IP1_IP0_IPx_IPx_DPx_DPx_DPx_DPx 2 193520823 6568642 2184866 leaf= 0
+SIMD k=4 d=1024 TESTISPARENT_IP1_IP0_IPx_IPx_DPx_DPx_DPx_DPx 2 151409847 6568642 2184866 leaf= 0
 
 #Function ORACLE_IP1_IPx_IPx_IPx_DPx_DPx_DPx_DPx
 PARSENODEROOT : a(-1) root.(-1) even.(-1) 
@@ -13535,7 +13535,7 @@ TESTISCHILD_IP1_IPx_IPx_IPx_DPx_DPx_DPx_DPx : even.(-1) ischild.(-1) direction.(
 TESTISPARENT_IP1_IP0_IPx_IPx_DPx_DPx_DPx_DPx : a(-1) root.(-1) even.(-1) isparent.(-1) ismatch.(-1) 
 PARSENODEEVEN : a(-1) even.(-1) 
 PARSENODEROOT : a(-1) root.(-1) even.(-1) 
-SIMD k=4 d=1024 ORACLE_IP1_IPx_IPx_IPx_DPx_DPx_DPx_DPx 4 368528162233 20825510 6927041 leaf= 0
+SIMD k=4 d=1024 ORACLE_IP1_IPx_IPx_IPx_DPx_DPx_DPx_DPx 4 288334826937 20825510 6927041 leaf= 0
 
 #Function TESTISPARENT_IP2_IP1_IPx_IPx_DPx_DPx_DPx_DPx
 llvm.X : a(0) 
@@ -13544,10 +13544,10 @@ llvm.X : root(0)
 ToffoliImpl : isparent(0) root(0) ismatch(0) 
 llvm.X : a(0) 
 llvm.X : root(0) 
-SIMD k=4 d=1024 TESTISPARENT_IP2_IP1_IPx_IPx_DPx_DPx_DPx_DPx 1 129013882 20825518 6927045 leaf= 0
+SIMD k=4 d=1024 TESTISPARENT_IP2_IP1_IPx_IPx_DPx_DPx_DPx_DPx 1 100939898 20825518 6927045 leaf= 0
 
 #Function TESTISCHILD_IP2_IPx_IPx_IPx_DPx_DPx_DPx_DPx
-SIMD k=4 d=1024 TESTISCHILD_IP2_IPx_IPx_IPx_DPx_DPx_DPx_DPx 0 64506936 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 TESTISCHILD_IP2_IPx_IPx_IPx_DPx_DPx_DPx_DPx 0 50469944 0 0 leaf= 1 (read from file)
 
 #Function TESTISPARENT_IP2_IP0_IPx_IPx_DPx_DPx_DPx_DPx
 llvm.X : root(0) 
@@ -13559,7 +13559,7 @@ llvm.X : root(0)
 ToffoliImpl : isparent(0) root(0) ismatch(0) 
 llvm.X : a(0) 
 llvm.X : root(0) 
-SIMD k=4 d=1024 TESTISPARENT_IP2_IP0_IPx_IPx_DPx_DPx_DPx_DPx 2 193520823 20825530 6927050 leaf= 0
+SIMD k=4 d=1024 TESTISPARENT_IP2_IP0_IPx_IPx_DPx_DPx_DPx_DPx 2 151409847 20825530 6927050 leaf= 0
 
 #Function ORACLE_IP2_IPx_IPx_IPx_DPx_DPx_DPx_DPx
 PARSENODEROOT : a(-1) root.(-1) even.(-1) 
@@ -13577,17 +13577,17 @@ TESTISCHILD_IP2_IPx_IPx_IPx_DPx_DPx_DPx_DPx : even.(-1) ischild.(-1)
 TESTISPARENT_IP2_IP0_IPx_IPx_DPx_DPx_DPx_DPx : a(-1) root.(-1) even.(-1) isparent.(-1) ismatch.(-1) 
 PARSENODEEVEN : a(-1) even.(-1) 
 PARSENODEROOT : a(-1) root.(-1) even.(-1) 
-SIMD k=4 d=1024 ORACLE_IP2_IPx_IPx_IPx_DPx_DPx_DPx_DPx 4 368528162233 63596174 21153593 leaf= 0
+SIMD k=4 d=1024 ORACLE_IP2_IPx_IPx_IPx_DPx_DPx_DPx_DPx 4 288334826937 63596174 21153593 leaf= 0
 
 #Function TESTISPARENT_IP3_IP1_IPx_IPx_DPx_DPx_DPx_DPx
 ToffoliImpl : ismatch(0) even(0) a(0) 
 llvm.X : root(0) 
 ToffoliImpl : isparent(0) root(0) ismatch(0) 
 llvm.X : root(0) 
-SIMD k=4 d=1024 TESTISPARENT_IP3_IP1_IPx_IPx_DPx_DPx_DPx_DPx 1 129013877 63596178 21153595 leaf= 0
+SIMD k=4 d=1024 TESTISPARENT_IP3_IP1_IPx_IPx_DPx_DPx_DPx_DPx 1 100939893 63596178 21153595 leaf= 0
 
 #Function TESTISCHILD_IP3_IPx_IPx_IPx_DPx_DPx_DPx_DPx
-SIMD k=4 d=1024 TESTISCHILD_IP3_IPx_IPx_IPx_DPx_DPx_DPx_DPx 0 64506936 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 TESTISCHILD_IP3_IPx_IPx_IPx_DPx_DPx_DPx_DPx 0 50469944 0 0 leaf= 1 (read from file)
 
 #Function TESTISPARENT_IP3_IP0_IPx_IPx_DPx_DPx_DPx_DPx
 llvm.X : root(0) 
@@ -13597,7 +13597,7 @@ ToffoliImpl : ismatch(0) even(0) a(0)
 llvm.X : root(0) 
 ToffoliImpl : isparent(0) root(0) ismatch(0) 
 llvm.X : root(0) 
-SIMD k=4 d=1024 TESTISPARENT_IP3_IP0_IPx_IPx_DPx_DPx_DPx_DPx 2 193520818 63596186 21153598 leaf= 0
+SIMD k=4 d=1024 TESTISPARENT_IP3_IP0_IPx_IPx_DPx_DPx_DPx_DPx 2 151409842 63596186 21153598 leaf= 0
 
 #Function ORACLE_IP3_IPx_IPx_IPx_DPx_DPx_DPx_DPx
 PARSENODEROOT : a(-1) root.(-1) even.(-1) 
@@ -13615,7 +13615,7 @@ TESTISCHILD_IP3_IPx_IPx_IPx_DPx_DPx_DPx_DPx : even.(-1) ischild.(-1) direction.(
 TESTISPARENT_IP3_IP0_IPx_IPx_DPx_DPx_DPx_DPx : a(-1) root.(-1) even.(-1) isparent.(-1) ismatch.(-1) 
 PARSENODEEVEN : a(-1) even.(-1) 
 PARSENODEROOT : a(-1) root.(-1) even.(-1) 
-SIMD k=4 d=1024 ORACLE_IP3_IPx_IPx_IPx_DPx_DPx_DPx_DPx 4 368528162223 191908146 63833239 leaf= 0
+SIMD k=4 d=1024 ORACLE_IP3_IPx_IPx_IPx_DPx_DPx_DPx_DPx 4 288334826927 191908146 63833239 leaf= 0
 
 #Function main
 llvm.PrepZ : b(198) 
@@ -50525,6 +50525,6 @@ llvm.MeasZ : a(96)
 llvm.MeasZ : a(95) 
 llvm.MeasZ : a(94) 
 llvm.MeasZ : a(103) 
-SIMD k=4 d=1024 main 4 9315318503269144 1756692929960 584318021467 leaf= 0
+SIMD k=4 d=1024 main 4 7288264562533144 1756692929960 584318021467 leaf= 0
 
-#Num of SIMD time steps for function main : 9315318503269144
+#Num of SIMD time steps for function main : 7288264562533144
