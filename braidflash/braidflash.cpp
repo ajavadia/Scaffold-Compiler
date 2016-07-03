@@ -51,7 +51,7 @@ int code_distance;          // coding distance of the surface code
 // number of magic_state_factories
 unsigned int num_magic_factories = 1;
 // Physical operation latencies -- determines surface code cycle length
-const std::unordered_map<std::string, int> op_delays 
+const unordered_map<string, int> op_delays 
       = {{"PrepZ",1}, {"X",1}, {"Z",1}, {"H",1}, {"CNOT",10}, {"T",1}, {"Tdag",1}, {"S",1}, {"Sdag",1}, {"MeasZ",10}};
 int surface_code_cycle;
 
@@ -754,21 +754,21 @@ template<typename T, size_t N>
 T * endof(T (&ra)[N]) {
     return ra + N;
 }
-std::string::size_type is_there(std::vector<std::string> needles, std::string haystack) {
-  std::vector<std::string>::iterator needle;
-  std::string::size_type pos;
+string::size_type is_there(vector<string> needles, string haystack) {
+  vector<string>::iterator needle;
+  string::size_type pos;
   for(needle=needles.begin(); needle!=needles.end(); ++needle){
     pos = haystack.find(*needle);
-    if(pos != std::string::npos){
+    if(pos != string::npos){
       return pos;
     }
   }  
-  return std::string::npos;
+  return string::npos;
 }
 // tokenize string
-std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
-    std::stringstream ss(s);
-    std::string item;
+vector<string> &split(const string &s, char delim, vector<string> &elems) {
+    stringstream ss(s);
+    string item;
     while (std::getline(ss, item, delim)) {
         if (!item.empty())       
           elems.push_back(item);
@@ -998,7 +998,7 @@ int main (int argc, char *argv[]) {
         P_error_rate = atoi(argv[i+1]);
       }
       else {
-        std::cout<<"Usage: $ braidflash <benchmark> --p <P_error_rate>";
+        cout<<"Usage: $ braidflash <benchmark> --p <P_error_rate>";
         return 1;
       }
     }  
@@ -1007,7 +1007,7 @@ int main (int argc, char *argv[]) {
         attempt_th_yx = atoi(argv[i+1]);
       }
       else {
-        std::cout<<"Usage: $ braidflash <benchmark> --yx <attempt_th_yx>";
+        cout<<"Usage: $ braidflash <benchmark> --yx <attempt_th_yx>";
         return 1;
       }
     }    
@@ -1016,7 +1016,7 @@ int main (int argc, char *argv[]) {
         attempt_th_drop = atoi(argv[i+1]);
       }
       else {
-        std::cout<<"Usage: $ braidflash <benchmark> --p <attempt_th_drop>";
+        cout<<"Usage: $ braidflash <benchmark> --p <attempt_th_drop>";
         return 1;
       }
     }     
@@ -1026,7 +1026,7 @@ int main (int argc, char *argv[]) {
   // mark gate seq numbers from 1 upwards
   string benchmark_path(argv[1]);
   string benchmark_dir = benchmark_path.substr(0, benchmark_path.find_last_of('/'));  
-  std::string benchmark_name = benchmark_path.substr(benchmark_path.find_last_of('/')+1, benchmark_path.length());  
+  string benchmark_name = benchmark_path.substr(benchmark_path.find_last_of('/')+1, benchmark_path.length());  
   string LPFS_path = benchmark_path+".lpfs";
   string profile_freq_path = benchmark_path+".freq";
   parse_LPFS(LPFS_path, cnot_only);
@@ -1045,11 +1045,11 @@ int main (int argc, char *argv[]) {
     if ( module_freqs.find(module_name) != module_freqs.end() )
       module_freq = module_freqs[module_name];
 #ifdef _PROGRESS
-      std::cerr<<"leaf: "<<module_name<<" - size: "<<module_size<<" - freq: "<<module_freq<<std::endl;
+      cerr<<"\nleaf: "<<module_name<<" - size: "<<module_size<<" - freq: "<<module_freq;
 #endif      
     total_logical_gates += module_size * module_freq;      
   }
-  cerr << "total logical gates: " << total_logical_gates << endl;
+  cerr << "\ntotal logical gates: " << total_logical_gates << endl;
   L_error_rate = (double)epsilon/(double)total_logical_gates;   
   code_distance = 
           2*(int)( ceil(log( (100.0/3.0) * (double)L_error_rate ) / 
@@ -1160,6 +1160,11 @@ int main (int argc, char *argv[]) {
     cout << "Size: " << num_rows << "X" << num_cols << endl;
     if (num_rows == 1 && num_cols == 1) continue;
 
+#ifdef _PROGRESS
+    cerr << "\nModule: " << module_name << endl;    
+    cerr << "Size: " << num_rows << "X" << num_cols << endl;
+#endif   
+    
     // build mesh
     // add all nodes   
 #ifdef _PROGRESS
@@ -1277,7 +1282,7 @@ int main (int argc, char *argv[]) {
       if (clk % 1000000 == 0) {
         cerr << "ParallelCLOCK = " << clk << " ..." << endl;        
         cerr << num_edges(dag) << " edges remaining..." << endl;
-        if (prev_remaining_edges == num_edges(dag)) {
+        if (prev_remaining_edges == num_edges(dag) && num_edges(dag)!=0) {
           cerr << "STUCK -- Terminating..." << endl;
           return 1;
         }
@@ -1455,25 +1460,25 @@ int main (int argc, char *argv[]) {
   // KQ: total number of logical gates
   // k: total number of physical timesteps
   // q: total number of physical qubits
-  std::string output_dir = benchmark_dir+"/braid_simulation/";
-  std::string mkdir_command = "mkdir -p "+output_dir;
+  string output_dir = benchmark_dir+"/braid_simulation/";
+  string mkdir_command = "mkdir -p "+output_dir;
   system(mkdir_command.c_str());
-  std::string kq_file_path;  
-  std::ofstream kq_file;      
+  string kq_file_path;  
+  ofstream kq_file;      
   kq_file_path = output_dir+benchmark_name
                     +".p."+(std::to_string(P_error_rate))
                     +".yx."+std::to_string(attempt_th_yx)
                     +".drop."+std::to_string(attempt_th_drop)                             
                     +(opt ? ".opt.kq" : ".kq");
   kq_file.open(kq_file_path);
-  kq_file << "error rate: " << "10^-" << P_error_rate << std::endl;
-  kq_file << "code distance: " << code_distance << std::endl;
-  kq_file << "total cycles: " << surface_code_cycle * total_cycles << std::endl;
-  kq_file << "max qubits: " << num_physical_qubits << std::endl;
-  kq_file << "logical KQ: " << total_logical_gates << std::endl;
-  kq_file << "physical kq: " << (surface_code_cycle*total_cycles) * num_physical_qubits << std::endl;  
+  kq_file << "error rate: " << "10^-" << P_error_rate << endl;
+  kq_file << "code distance: " << code_distance << endl;
+  kq_file << "total cycles: " << surface_code_cycle * total_cycles << endl;
+  kq_file << "max qubits: " << num_physical_qubits << endl;
+  kq_file << "logical KQ: " << total_logical_gates << endl;
+  kq_file << "physical kq: " << (surface_code_cycle*total_cycles) * num_physical_qubits << endl;  
   kq_file.close();  
-  std::cerr << "kq report written to:\t" << kq_file_path << std::endl; 
+  cerr << "kq report written to:\t" << kq_file_path << endl; 
 
   
   cout << "\t****** FINISHED SIMULATION *******" << endl;

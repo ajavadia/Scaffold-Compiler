@@ -6,7 +6,7 @@ OPT=$ROOT/build/Release+Asserts/bin/opt
 SCAF=$ROOT/build/Release+Asserts/lib/Scaffold.so
 
 # change the desired thresholds below. that's the only change needed.
-error_rates=(9)
+error_rates=(5 6 7 8 9)
 
 # surface codes
 attempt_th_yx=(4)

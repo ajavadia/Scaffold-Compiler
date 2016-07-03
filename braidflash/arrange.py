@@ -35,7 +35,7 @@ def main():
 def trace_to_graph(infile):
   """Converts .tr file to .graph file."""
   assert '.tr' in infile
-  outfile = infile.replace('tr', 'graph')
+  outfile = infile.replace('.tr', '.graph')
 
   infile = open(infile)
   outfile = open(outfile, 'w')
@@ -99,7 +99,7 @@ def parser():
     module_nodes[src].weights[dst] += 1
     module_nodes[dst].weights[src] += 1
 
-  f = open(sys.argv[1].replace('tr', 'graph'))
+  f = open(sys.argv[1].replace('.tr', '.graph'))
   line = f.readline()
 
   module_name = ''
