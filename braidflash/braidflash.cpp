@@ -29,6 +29,8 @@
 #include <stack>
 #include <cstring>    //strcmp
 #include <iterator>
+#include <limits.h>
+#include <unistd.h>
 #include <memory>     //std::shared_ptr, std::make_unique
 #include <limits>     //std::numeric_limits
 #include <boost/graph/adjacency_list.hpp>
@@ -1095,7 +1097,9 @@ int main (int argc, char *argv[]) {
     }
     tr_file.close();  
     // use metis to rearrange qubits for more optimal interaction distances
-    string metis_command = "python arrange.py "+tr_path;
+    string exe_path(argv[0]);
+    string exe_dir = exe_path.substr(0, exe_path.find_last_of('/'));  
+    string metis_command = "python "+exe_dir+"/arrange.py "+tr_path;
     system(metis_command.c_str());
 
     // read opimized trace (.opt.tr) file into all_gates_opt    
