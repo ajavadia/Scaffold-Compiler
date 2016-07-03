@@ -1268,6 +1268,7 @@ int main (int argc, char *argv[]) {
     // find parallel completion time
 #ifdef _PROGRESS
     cerr << "Calculating ParallelCLOCK..." << endl;
+    unsigned long long prev_remaining_edges = 0;
 #endif        
     while ( !event_queues.empty() || !ready_events.empty() ||
             !(num_edges(dag)==0) || !ready_gates.empty() ) {
@@ -1276,6 +1277,12 @@ int main (int argc, char *argv[]) {
       if (clk % 1000000 == 0) {
         cerr << "ParallelCLOCK = " << clk << " ..." << endl;        
         cerr << num_edges(dag) << " edges remaining..." << endl;
+        if (prev_remaining_edges == num_edges(dag)) {
+          cerr << "STUCK -- Terminating..." << endl;
+          return 1;
+        }
+        else
+          prev_remaining_edges = num_edges(dag);
       }
 #endif         
       // queue events of any ready gate
