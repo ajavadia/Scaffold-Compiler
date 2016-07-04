@@ -7,6 +7,8 @@
 #    - placement of nodes on the rectangle
 
 import os, sys, math, re
+from os.path import basename
+from os.path import splitext
 
 module_num_nodes = 0
 
@@ -17,7 +19,7 @@ def main():
   nodes_dic, tl_dic, br_dic = parser()  # tl = top left coordinate, br = bottom right coordinate
   for module_name, nodes in nodes_dic.iteritems():
     locations = get_locations(nodes, tl=tl_dic[module_name], br=br_dic[module_name])
-    os.system('rm -f delete_*')  # partition function creates many files prefixed with delete_
+    os.system('rm -f *delete_*')  # partition function creates many files prefixed with delete_
     node_map = {v: k for k, v in locations.items()}
     mapping = ''
     for y in range(br_dic[module_name].y + 1):
@@ -29,7 +31,7 @@ def main():
       mapping += '\n'
     mapping_dic[module_name] = mapping
   replace(mapping_dic, sys.argv[1])
-  os.system('rm -f delete_*')
+  os.system('rm -f *delete_*')
 
 
 def trace_to_graph(infile):
@@ -196,11 +198,11 @@ def get_locations(nodes, tl, br):
           i += 1
     return ret
 
-  filename = '_'.join(['delete', str(tl.x), str(tl.y), str(br.x), str(br.y)])
+  filename = splitext(basename(sys.argv[1]))[0] + '.' + '_'.join(['delete', str(tl.x), str(tl.y), str(br.x), str(br.y)])
 
   # special case for the very first call of get_locations. For example, suppose that there are
   # 97 nodes on a 10x10 grid. Instead of dividing the 97 nodes into 2 equal partitions, we should
-  # divide them into a partiion of 90 nodes and a partition of 7 nodes. The former should be
+  # divide them into a partition of 90 nodes and a partition of 7 nodes. The former should be
   # placed on a 10x9 grid and te latter should be placed on a 1x7 grid.
   if len(nodes) < (br.x - tl.x + 1) * (br.y - tl.y + 1):
     assert tl == Point(0, 0)

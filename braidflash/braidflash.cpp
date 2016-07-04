@@ -1000,7 +1000,7 @@ int main (int argc, char *argv[]) {
         P_error_rate = atoi(argv[i+1]);
       }
       else {
-        cout<<"Usage: $ braidflash <benchmark> --p <P_error_rate>";
+        cerr<<"Usage: $ braidflash <benchmark> --p <P_error_rate>";
         return 1;
       }
     }  
@@ -1009,7 +1009,7 @@ int main (int argc, char *argv[]) {
         attempt_th_yx = atoi(argv[i+1]);
       }
       else {
-        cout<<"Usage: $ braidflash <benchmark> --yx <attempt_th_yx>";
+        cerr<<"Usage: $ braidflash <benchmark> --yx <attempt_th_yx>";
         return 1;
       }
     }    
@@ -1018,7 +1018,7 @@ int main (int argc, char *argv[]) {
         attempt_th_drop = atoi(argv[i+1]);
       }
       else {
-        cout<<"Usage: $ braidflash <benchmark> --p <attempt_th_drop>";
+        cerr<<"Usage: $ braidflash <benchmark> --p <attempt_th_drop>";
         return 1;
       }
     }     
