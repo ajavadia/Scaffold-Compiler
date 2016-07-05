@@ -119,8 +119,8 @@ def parser():
       module_nodes = []
 
       if len(sys.argv) == 4:        # if width and height are specified from command line
-        module_width = int(sys.argv[2])
-        module_height = int(sys.argv[3])
+        module_width = int(sys.argv[6])
+        module_height = int(sys.argv[7])
         assert module_width * module_height >= module_num_nodes
       else:
         square_size = _square_size(module_num_nodes)
@@ -198,7 +198,8 @@ def get_locations(nodes, tl, br):
           i += 1
     return ret
 
-  filename = splitext(basename(sys.argv[1]))[0] + '.' + '_'.join(['delete', str(tl.x), str(tl.y), str(br.x), str(br.y)])
+  filename = splitext(basename(sys.argv[1]))[0] + '.p' + sys.argv[2] + '.yx' + sys.argv[3] + '.drop' + sys.argv[4] + '.' + sys.argv[5] + '.' +\
+      '_'.join(['delete', str(tl.x), str(tl.y), str(br.x), str(br.y)])
 
   # special case for the very first call of get_locations. For example, suppose that there are
   # 97 nodes on a 10x10 grid. Instead of dividing the 97 nodes into 2 equal partitions, we should

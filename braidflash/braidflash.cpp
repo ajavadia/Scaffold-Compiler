@@ -1099,7 +1099,8 @@ int main (int argc, char *argv[]) {
     // use metis to rearrange qubits for more optimal interaction distances
     string exe_path(argv[0]);
     string exe_dir = exe_path.substr(0, exe_path.find_last_of('/'));  
-    string metis_command = "python "+exe_dir+"/arrange.py "+tr_path;
+    string metis_command = "python "+exe_dir+"/arrange.py "+tr_path+
+                           " "+to_string(P_error_rate)+" "+to_string(attempt_th_yx)+" "+to_string(attempt_th_drop)+" "+(opt?"opt":"noopt");
     system(metis_command.c_str());
 
     // read opimized trace (.opt.tr) file into all_gates_opt    
@@ -1470,9 +1471,9 @@ int main (int argc, char *argv[]) {
   string kq_file_path;  
   ofstream kq_file;      
   kq_file_path = output_dir+benchmark_name
-                    +".p."+(std::to_string(P_error_rate))
-                    +".yx."+std::to_string(attempt_th_yx)
-                    +".drop."+std::to_string(attempt_th_drop)                             
+                    +".p."+(to_string(P_error_rate))
+                    +".yx."+to_string(attempt_th_yx)
+                    +".drop."+to_string(attempt_th_drop)                             
                     +(opt ? ".opt.kq" : ".kq");
   kq_file.open(kq_file_path);
   kq_file << "error rate: " << "10^-" << P_error_rate << endl;
