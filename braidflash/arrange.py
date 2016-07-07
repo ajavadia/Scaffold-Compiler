@@ -17,9 +17,10 @@ def main():
   trace_to_graph(sys.argv[1])
   mapping_dic = {}
   nodes_dic, tl_dic, br_dic = parser()  # tl = top left coordinate, br = bottom right coordinate
+  benchname = splitext(basename(sys.argv[1]))[0] + '.p.' + sys.argv[2] + '.yx.' + sys.argv[3] + '.drop.' + sys.argv[4]  
   for module_name, nodes in nodes_dic.iteritems():
     locations = get_locations(nodes, tl=tl_dic[module_name], br=br_dic[module_name])
-    os.system('rm -f *delete_*')  # partition function creates many files prefixed with delete_
+    os.system('rm -f '+benchname+'.delete_*')  # partition function creates many files prefixed with delete_
     node_map = {v: k for k, v in locations.items()}
     mapping = ''
     for y in range(br_dic[module_name].y + 1):
@@ -31,7 +32,7 @@ def main():
       mapping += '\n'
     mapping_dic[module_name] = mapping
   replace(mapping_dic, sys.argv[1])
-  os.system('rm -f *delete_*')
+  os.system('rm -f '+benchname+'.delete_*')
 
 
 def trace_to_graph(infile):
@@ -119,8 +120,8 @@ def parser():
       module_nodes = []
 
       if len(sys.argv) == 4:        # if width and height are specified from command line
-        module_width = int(sys.argv[6])
-        module_height = int(sys.argv[7])
+        module_width = int(sys.argv[5])
+        module_height = int(sys.argv[6])
         assert module_width * module_height >= module_num_nodes
       else:
         square_size = _square_size(module_num_nodes)
@@ -198,8 +199,8 @@ def get_locations(nodes, tl, br):
           i += 1
     return ret
 
-  filename = splitext(basename(sys.argv[1]))[0] + '.p' + sys.argv[2] + '.yx' + sys.argv[3] + '.drop' + sys.argv[4] + '.' + sys.argv[5] + '.' +\
-      '_'.join(['delete', str(tl.x), str(tl.y), str(br.x), str(br.y)])
+  filename = splitext(basename(sys.argv[1]))[0] + '.p.' + sys.argv[2] + '.yx.' + sys.argv[3] + '.drop.' + sys.argv[4] + '.' +\
+      '_'.join(['delete', str(tl.x), str(tl.y), str(br.x), str(br.y)])  
 
   # special case for the very first call of get_locations. For example, suppose that there are
   # 97 nodes on a 10x10 grid. Instead of dividing the 97 nodes into 2 equal partitions, we should
@@ -266,11 +267,12 @@ def partition(nodes, size_nodes_tl, filename):
     f.write('\n')
   f.close()
 
-  f = open('delete_tpwgts', 'w')  # target partition weights file
+  benchname = splitext(basename(sys.argv[1]))[0] + '.p.' + sys.argv[2] + '.yx.' + sys.argv[3] + '.drop.' + sys.argv[4]  
+  f = open(benchname+'.delete_tpwgts', 'w')  # target partition weights file
   f.write('0 = %s' % str(weight_0))
   f.close()
 
-  os.system('gpmetis -ptype=rb -tpwgts=delete_tpwgts -ufactor=1 -ncuts=500 ' + filename + ' 2 > /dev/null')
+  os.system('gpmetis -ptype=rb -tpwgts='+benchname+'.delete_tpwgts -ufactor=1 -ncuts=500 ' + filename + ' 2 > /dev/null')
 
   f = open(filename + '.part.2')
   nodes_tl, nodes_br = [], []

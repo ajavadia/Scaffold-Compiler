@@ -1100,7 +1100,7 @@ int main (int argc, char *argv[]) {
     string exe_path(argv[0]);
     string exe_dir = exe_path.substr(0, exe_path.find_last_of('/'));  
     string metis_command = "python "+exe_dir+"/arrange.py "+tr_path+
-                           " "+to_string(P_error_rate)+" "+to_string(attempt_th_yx)+" "+to_string(attempt_th_drop)+" "+(opt?"opt":"noopt");
+                           " "+to_string(P_error_rate)+" "+to_string(attempt_th_yx)+" "+to_string(attempt_th_drop);
     system(metis_command.c_str());
 
     // read opimized trace (.opt.tr) file into all_gates_opt    
