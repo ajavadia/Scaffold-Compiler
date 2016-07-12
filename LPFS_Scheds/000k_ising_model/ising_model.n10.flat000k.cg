@@ -1,0 +1,1258 @@
+
+#Function DecomposeRotation_n3_000000en01
+SIMD k=4 d=1024 DecomposeRotation_n3_000000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_3_000000en01
+SIMD k=4 d=1024 DecomposeRotation_3_000000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n1_200000e00
+SIMD k=4 d=1024 DecomposeRotation_n1_200000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_6_000000en01
+SIMD k=4 d=1024 DecomposeRotation_6_000000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP0.6_DPx_DPx_DPx
+DecomposeRotation_n1_200000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_6_000000en01 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP0.6_DPx_DPx_DPx 1 37082778 8 2 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP-0.3_DPx_DPx_DPx
+DecomposeRotation_n3_000000en01 : q1(0) 
+DecomposeRotation_3_000000en01 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP0.6_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP-0.3_DPx_DPx_DPx 1 55624162 16 4 leaf= 0
+
+#Function DecomposeRotation_n3_600000en01
+SIMD k=4 d=1024 DecomposeRotation_n3_600000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_3_600000en01
+SIMD k=4 d=1024 DecomposeRotation_3_600000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n1_440000e00
+SIMD k=4 d=1024 DecomposeRotation_n1_440000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_7_200000en01
+SIMD k=4 d=1024 DecomposeRotation_7_200000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP0.72_DPx_DPx_DPx
+DecomposeRotation_n1_440000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_7_200000en01 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP0.72_DPx_DPx_DPx 1 37082778 24 6 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP-0.36_DPx_DPx_DPx
+DecomposeRotation_n3_600000en01 : q1(0) 
+DecomposeRotation_3_600000en01 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP0.72_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP-0.36_DPx_DPx_DPx 1 55624162 48 12 leaf= 0
+
+#Function DecomposeRotation_n1_200000en01
+SIMD k=4 d=1024 DecomposeRotation_n1_200000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_1_200000en01
+SIMD k=4 d=1024 DecomposeRotation_1_200000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n4_800000en01
+SIMD k=4 d=1024 DecomposeRotation_n4_800000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_2_400000en01
+SIMD k=4 d=1024 DecomposeRotation_2_400000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP0.24_DPx_DPx_DPx
+DecomposeRotation_n4_800000en01 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_2_400000en01 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP0.24_DPx_DPx_DPx 1 37082778 56 14 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP-0.12_DPx_DPx_DPx
+DecomposeRotation_n1_200000en01 : q1(0) 
+DecomposeRotation_1_200000en01 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP0.24_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP-0.12_DPx_DPx_DPx 1 55624162 112 28 leaf= 0
+
+#Function DecomposeRotation_2_200000en01
+SIMD k=4 d=1024 DecomposeRotation_2_200000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n2_200000en01
+SIMD k=4 d=1024 DecomposeRotation_n2_200000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_8_800000en01
+SIMD k=4 d=1024 DecomposeRotation_8_800000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n4_400000en01
+SIMD k=4 d=1024 DecomposeRotation_n4_400000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP-0.44_DPx_DPx_DPx
+DecomposeRotation_8_800000en01 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_n4_400000en01 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP-0.44_DPx_DPx_DPx 1 37082778 120 30 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP0.22_DPx_DPx_DPx
+DecomposeRotation_2_200000en01 : q1(0) 
+DecomposeRotation_n2_200000en01 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP-0.44_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP0.22_DPx_DPx_DPx 1 55624162 240 60 leaf= 0
+
+#Function DecomposeRotation_8_000000en02
+SIMD k=4 d=1024 DecomposeRotation_8_000000en02 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n8_000000en02
+SIMD k=4 d=1024 DecomposeRotation_n8_000000en02 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_3_200000en01
+SIMD k=4 d=1024 DecomposeRotation_3_200000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n1_600000en01
+SIMD k=4 d=1024 DecomposeRotation_n1_600000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP-0.16_DPx_DPx_DPx
+DecomposeRotation_3_200000en01 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_n1_600000en01 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP-0.16_DPx_DPx_DPx 1 37082778 248 62 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP0.08_DPx_DPx_DPx
+DecomposeRotation_8_000000en02 : q1(0) 
+DecomposeRotation_n8_000000en02 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP-0.16_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP0.08_DPx_DPx_DPx 1 55624162 496 124 leaf= 0
+
+#Function DecomposeRotation_2_600000en01
+SIMD k=4 d=1024 DecomposeRotation_2_600000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n2_600000en01
+SIMD k=4 d=1024 DecomposeRotation_n2_600000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_1_040000e00
+SIMD k=4 d=1024 DecomposeRotation_1_040000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n5_200000en01
+SIMD k=4 d=1024 DecomposeRotation_n5_200000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP-0.52_DPx_DPx_DPx
+DecomposeRotation_1_040000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_n5_200000en01 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP-0.52_DPx_DPx_DPx 1 37082778 504 126 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP0.26_DPx_DPx_DPx
+DecomposeRotation_2_600000en01 : q1(0) 
+DecomposeRotation_n2_600000en01 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP-0.52_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP0.26_DPx_DPx_DPx 1 55624162 1008 252 leaf= 0
+
+#Function DecomposeRotation_n1_040000e00
+SIMD k=4 d=1024 DecomposeRotation_n1_040000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_5_200000en01
+SIMD k=4 d=1024 DecomposeRotation_5_200000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP0.52_DPx_DPx_DPx
+DecomposeRotation_n1_040000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_5_200000en01 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP0.52_DPx_DPx_DPx 1 37082778 1016 254 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP-0.26_DPx_DPx_DPx
+DecomposeRotation_n2_600000en01 : q1(0) 
+DecomposeRotation_2_600000en01 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP0.52_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP-0.26_DPx_DPx_DPx 1 55624162 2032 508 leaf= 0
+
+#Function DecomposeRotation_3_800000en01
+SIMD k=4 d=1024 DecomposeRotation_3_800000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n3_800000en01
+SIMD k=4 d=1024 DecomposeRotation_n3_800000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_1_520000e00
+SIMD k=4 d=1024 DecomposeRotation_1_520000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n7_600000en01
+SIMD k=4 d=1024 DecomposeRotation_n7_600000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP-0.76_DPx_DPx_DPx
+DecomposeRotation_1_520000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_n7_600000en01 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP-0.76_DPx_DPx_DPx 1 37082778 2040 510 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP0.38_DPx_DPx_DPx
+DecomposeRotation_3_800000en01 : q1(0) 
+DecomposeRotation_n3_800000en01 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP-0.76_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP0.38_DPx_DPx_DPx 1 55624162 4080 1020 leaf= 0
+
+#Function DecomposeRotation_n1_920000e00
+SIMD k=4 d=1024 DecomposeRotation_n1_920000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n2_880000en01
+SIMD k=4 d=1024 DecomposeRotation_n2_880000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_8_640000en01
+SIMD k=4 d=1024 DecomposeRotation_8_640000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_1_152000e00
+SIMD k=4 d=1024 DecomposeRotation_1_152000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n1_056000e00
+SIMD k=4 d=1024 DecomposeRotation_n1_056000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n5_760000en01
+SIMD k=4 d=1024 DecomposeRotation_n5_760000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_1_536000e00
+SIMD k=4 d=1024 DecomposeRotation_1_536000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_1_248000e00
+SIMD k=4 d=1024 DecomposeRotation_1_248000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n1_824000e00
+SIMD k=4 d=1024 DecomposeRotation_n1_824000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n9_000000en01
+SIMD k=4 d=1024 DecomposeRotation_n9_000000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_9_000000en01
+SIMD k=4 d=1024 DecomposeRotation_9_000000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n3_600000e00
+SIMD k=4 d=1024 DecomposeRotation_n3_600000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_1_800000e00
+SIMD k=4 d=1024 DecomposeRotation_1_800000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP1.8_DPx_DPx_DPx
+DecomposeRotation_n3_600000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_1_800000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP1.8_DPx_DPx_DPx 1 37082778 4088 1022 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP-0.9_DPx_DPx_DPx
+DecomposeRotation_n9_000000en01 : q1(0) 
+DecomposeRotation_9_000000en01 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP1.8_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP-0.9_DPx_DPx_DPx 1 55624162 8176 2044 leaf= 0
+
+#Function DecomposeRotation_n1_080000e00
+SIMD k=4 d=1024 DecomposeRotation_n1_080000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_1_080000e00
+SIMD k=4 d=1024 DecomposeRotation_1_080000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n4_320000e00
+SIMD k=4 d=1024 DecomposeRotation_n4_320000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_2_160000e00
+SIMD k=4 d=1024 DecomposeRotation_2_160000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP2.16_DPx_DPx_DPx
+DecomposeRotation_n4_320000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_2_160000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP2.16_DPx_DPx_DPx 1 37082778 8184 2046 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP-1.08_DPx_DPx_DPx
+DecomposeRotation_n1_080000e00 : q1(0) 
+DecomposeRotation_1_080000e00 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP2.16_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP-1.08_DPx_DPx_DPx 1 55624162 16368 4092 leaf= 0
+
+#Function DecomposeRotation_6_600000en01
+SIMD k=4 d=1024 DecomposeRotation_6_600000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n6_600000en01
+SIMD k=4 d=1024 DecomposeRotation_n6_600000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_2_640000e00
+SIMD k=4 d=1024 DecomposeRotation_2_640000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n1_320000e00
+SIMD k=4 d=1024 DecomposeRotation_n1_320000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP-1.32_DPx_DPx_DPx
+DecomposeRotation_2_640000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_n1_320000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP-1.32_DPx_DPx_DPx 1 37082778 16376 4094 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP0.66_DPx_DPx_DPx
+DecomposeRotation_6_600000en01 : q1(0) 
+DecomposeRotation_n6_600000en01 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP-1.32_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP0.66_DPx_DPx_DPx 1 55624162 32752 8188 leaf= 0
+
+#Function DecomposeRotation_n2_400000en01
+SIMD k=4 d=1024 DecomposeRotation_n2_400000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_9_600000en01
+SIMD k=4 d=1024 DecomposeRotation_9_600000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP-0.48_DPx_DPx_DPx
+DecomposeRotation_9_600000en01 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_n4_800000en01 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP-0.48_DPx_DPx_DPx 1 37082778 32760 8190 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP0.24_DPx_DPx_DPx
+DecomposeRotation_2_400000en01 : q1(0) 
+DecomposeRotation_n2_400000en01 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP-0.48_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP0.24_DPx_DPx_DPx 1 55624162 65520 16380 leaf= 0
+
+#Function DecomposeRotation_7_800000en01
+SIMD k=4 d=1024 DecomposeRotation_7_800000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n7_800000en01
+SIMD k=4 d=1024 DecomposeRotation_n7_800000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_3_120000e00
+SIMD k=4 d=1024 DecomposeRotation_3_120000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n1_560000e00
+SIMD k=4 d=1024 DecomposeRotation_n1_560000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP-1.56_DPx_DPx_DPx
+DecomposeRotation_3_120000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_n1_560000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP-1.56_DPx_DPx_DPx 1 37082778 65528 16382 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP0.78_DPx_DPx_DPx
+DecomposeRotation_7_800000en01 : q1(0) 
+DecomposeRotation_n7_800000en01 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP-1.56_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP0.78_DPx_DPx_DPx 1 55624162 131056 32764 leaf= 0
+
+#Function DecomposeRotation_n3_120000e00
+SIMD k=4 d=1024 DecomposeRotation_n3_120000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_1_560000e00
+SIMD k=4 d=1024 DecomposeRotation_1_560000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP1.56_DPx_DPx_DPx
+DecomposeRotation_n3_120000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_1_560000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP1.56_DPx_DPx_DPx 1 37082778 131064 32766 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP-0.78_DPx_DPx_DPx
+DecomposeRotation_n7_800000en01 : q1(0) 
+DecomposeRotation_7_800000en01 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP1.56_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP-0.78_DPx_DPx_DPx 1 55624162 262128 65532 leaf= 0
+
+#Function DecomposeRotation_1_140000e00
+SIMD k=4 d=1024 DecomposeRotation_1_140000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n1_140000e00
+SIMD k=4 d=1024 DecomposeRotation_n1_140000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_4_560000e00
+SIMD k=4 d=1024 DecomposeRotation_4_560000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n2_280000e00
+SIMD k=4 d=1024 DecomposeRotation_n2_280000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP-2.28_DPx_DPx_DPx
+DecomposeRotation_4_560000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_n2_280000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP-2.28_DPx_DPx_DPx 1 37082778 262136 65534 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP1.14_DPx_DPx_DPx
+DecomposeRotation_1_140000e00 : q1(0) 
+DecomposeRotation_n1_140000e00 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP-2.28_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP1.14_DPx_DPx_DPx 1 55624162 524272 131068 leaf= 0
+
+#Function DecomposeRotation_n9_600000en01
+SIMD k=4 d=1024 DecomposeRotation_n9_600000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n1_440000en01
+SIMD k=4 d=1024 DecomposeRotation_n1_440000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_4_320000en01
+SIMD k=4 d=1024 DecomposeRotation_4_320000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_5_760000en01
+SIMD k=4 d=1024 DecomposeRotation_5_760000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n5_280000en01
+SIMD k=4 d=1024 DecomposeRotation_n5_280000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n7_200000en01
+SIMD k=4 d=1024 DecomposeRotation_n7_200000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_7_680000en01
+SIMD k=4 d=1024 DecomposeRotation_7_680000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_6_240000en01
+SIMD k=4 d=1024 DecomposeRotation_6_240000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n9_120000en01
+SIMD k=4 d=1024 DecomposeRotation_n9_120000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n1_500000e00
+SIMD k=4 d=1024 DecomposeRotation_n1_500000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_1_500000e00
+SIMD k=4 d=1024 DecomposeRotation_1_500000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n6_000000e00
+SIMD k=4 d=1024 DecomposeRotation_n6_000000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_3_000000e00
+SIMD k=4 d=1024 DecomposeRotation_3_000000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP3_DPx_DPx_DPx
+DecomposeRotation_n6_000000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_3_000000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP3_DPx_DPx_DPx 1 37082778 524280 131070 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP-1.5_DPx_DPx_DPx
+DecomposeRotation_n1_500000e00 : q1(0) 
+DecomposeRotation_1_500000e00 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP3_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP-1.5_DPx_DPx_DPx 1 55624162 1048560 262140 leaf= 0
+
+#Function DecomposeRotation_n1_800000e00
+SIMD k=4 d=1024 DecomposeRotation_n1_800000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n7_200000e00
+SIMD k=4 d=1024 DecomposeRotation_n7_200000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_3_600000e00
+SIMD k=4 d=1024 DecomposeRotation_3_600000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP3.6_DPx_DPx_DPx
+DecomposeRotation_n7_200000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_3_600000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP3.6_DPx_DPx_DPx 1 37082778 1048568 262142 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP-1.8_DPx_DPx_DPx
+DecomposeRotation_n1_800000e00 : q1(0) 
+DecomposeRotation_1_800000e00 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP3.6_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP-1.8_DPx_DPx_DPx 1 55624162 2097136 524284 leaf= 0
+
+#Function DecomposeRotation_n6_000000en01
+SIMD k=4 d=1024 DecomposeRotation_n6_000000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n2_400000e00
+SIMD k=4 d=1024 DecomposeRotation_n2_400000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_1_200000e00
+SIMD k=4 d=1024 DecomposeRotation_1_200000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP1.2_DPx_DPx_DPx
+DecomposeRotation_n2_400000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_1_200000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP1.2_DPx_DPx_DPx 1 37082778 2097144 524286 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP-0.6_DPx_DPx_DPx
+DecomposeRotation_n6_000000en01 : q1(0) 
+DecomposeRotation_6_000000en01 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP1.2_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP-0.6_DPx_DPx_DPx 1 55624162 4194288 1048572 leaf= 0
+
+#Function DecomposeRotation_1_100000e00
+SIMD k=4 d=1024 DecomposeRotation_1_100000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n1_100000e00
+SIMD k=4 d=1024 DecomposeRotation_n1_100000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_4_400000e00
+SIMD k=4 d=1024 DecomposeRotation_4_400000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n2_200000e00
+SIMD k=4 d=1024 DecomposeRotation_n2_200000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP-2.2_DPx_DPx_DPx
+DecomposeRotation_4_400000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_n2_200000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP-2.2_DPx_DPx_DPx 1 37082778 4194296 1048574 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP1.1_DPx_DPx_DPx
+DecomposeRotation_1_100000e00 : q1(0) 
+DecomposeRotation_n1_100000e00 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP-2.2_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP1.1_DPx_DPx_DPx 1 55624162 8388592 2097148 leaf= 0
+
+#Function DecomposeRotation_4_000000en01
+SIMD k=4 d=1024 DecomposeRotation_4_000000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n4_000000en01
+SIMD k=4 d=1024 DecomposeRotation_n4_000000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_1_600000e00
+SIMD k=4 d=1024 DecomposeRotation_1_600000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n8_000000en01
+SIMD k=4 d=1024 DecomposeRotation_n8_000000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP-0.8_DPx_DPx_DPx
+DecomposeRotation_1_600000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_n8_000000en01 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP-0.8_DPx_DPx_DPx 1 37082778 8388600 2097150 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP0.4_DPx_DPx_DPx
+DecomposeRotation_4_000000en01 : q1(0) 
+DecomposeRotation_n4_000000en01 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP-0.8_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP0.4_DPx_DPx_DPx 1 55624162 16777200 4194300 leaf= 0
+
+#Function DecomposeRotation_1_300000e00
+SIMD k=4 d=1024 DecomposeRotation_1_300000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n1_300000e00
+SIMD k=4 d=1024 DecomposeRotation_n1_300000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_5_200000e00
+SIMD k=4 d=1024 DecomposeRotation_5_200000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n2_600000e00
+SIMD k=4 d=1024 DecomposeRotation_n2_600000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP-2.6_DPx_DPx_DPx
+DecomposeRotation_5_200000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_n2_600000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP-2.6_DPx_DPx_DPx 1 37082778 16777208 4194302 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP1.3_DPx_DPx_DPx
+DecomposeRotation_1_300000e00 : q1(0) 
+DecomposeRotation_n1_300000e00 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP-2.6_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP1.3_DPx_DPx_DPx 1 55624162 33554416 8388604 leaf= 0
+
+#Function DecomposeRotation_n5_200000e00
+SIMD k=4 d=1024 DecomposeRotation_n5_200000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_2_600000e00
+SIMD k=4 d=1024 DecomposeRotation_2_600000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP2.6_DPx_DPx_DPx
+DecomposeRotation_n5_200000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_2_600000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP2.6_DPx_DPx_DPx 1 37082778 33554424 8388606 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP-1.3_DPx_DPx_DPx
+DecomposeRotation_n1_300000e00 : q1(0) 
+DecomposeRotation_1_300000e00 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP2.6_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP-1.3_DPx_DPx_DPx 1 55624162 67108848 16777212 leaf= 0
+
+#Function DecomposeRotation_1_900000e00
+SIMD k=4 d=1024 DecomposeRotation_1_900000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n1_900000e00
+SIMD k=4 d=1024 DecomposeRotation_n1_900000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_7_600000e00
+SIMD k=4 d=1024 DecomposeRotation_7_600000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n3_800000e00
+SIMD k=4 d=1024 DecomposeRotation_n3_800000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP-3.8_DPx_DPx_DPx
+DecomposeRotation_7_600000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_n3_800000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP-3.8_DPx_DPx_DPx 1 37082778 67108856 16777214 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP1.9_DPx_DPx_DPx
+DecomposeRotation_1_900000e00 : q1(0) 
+DecomposeRotation_n1_900000e00 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP-3.8_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP1.9_DPx_DPx_DPx 1 55624162 134217712 33554428 leaf= 0
+
+#Function DecomposeRotation_n2_100000e00
+SIMD k=4 d=1024 DecomposeRotation_n2_100000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_2_100000e00
+SIMD k=4 d=1024 DecomposeRotation_2_100000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n8_400000e00
+SIMD k=4 d=1024 DecomposeRotation_n8_400000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_4_200000e00
+SIMD k=4 d=1024 DecomposeRotation_4_200000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP4.2_DPx_DPx_DPx
+DecomposeRotation_n8_400000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_4_200000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP4.2_DPx_DPx_DPx 1 37082778 134217720 33554430 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP-2.1_DPx_DPx_DPx
+DecomposeRotation_n2_100000e00 : q1(0) 
+DecomposeRotation_2_100000e00 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP4.2_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP-2.1_DPx_DPx_DPx 1 55624162 268435440 67108860 leaf= 0
+
+#Function DecomposeRotation_n2_520000e00
+SIMD k=4 d=1024 DecomposeRotation_n2_520000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_2_520000e00
+SIMD k=4 d=1024 DecomposeRotation_2_520000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n1_008000e01
+SIMD k=4 d=1024 DecomposeRotation_n1_008000e01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_5_040000e00
+SIMD k=4 d=1024 DecomposeRotation_5_040000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP5.04_DPx_DPx_DPx
+DecomposeRotation_n1_008000e01 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_5_040000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP5.04_DPx_DPx_DPx 1 37082778 268435448 67108862 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP-2.52_DPx_DPx_DPx
+DecomposeRotation_n2_520000e00 : q1(0) 
+DecomposeRotation_2_520000e00 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP5.04_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP-2.52_DPx_DPx_DPx 1 55624162 536870896 134217724 leaf= 0
+
+#Function DecomposeRotation_n8_400000en01
+SIMD k=4 d=1024 DecomposeRotation_n8_400000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_8_400000en01
+SIMD k=4 d=1024 DecomposeRotation_8_400000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n3_360000e00
+SIMD k=4 d=1024 DecomposeRotation_n3_360000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_1_680000e00
+SIMD k=4 d=1024 DecomposeRotation_1_680000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP1.68_DPx_DPx_DPx
+DecomposeRotation_n3_360000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_1_680000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP1.68_DPx_DPx_DPx 1 37082778 536870904 134217726 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP-0.84_DPx_DPx_DPx
+DecomposeRotation_n8_400000en01 : q1(0) 
+DecomposeRotation_8_400000en01 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP1.68_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP-0.84_DPx_DPx_DPx 1 55624162 1073741808 268435452 leaf= 0
+
+#Function DecomposeRotation_1_540000e00
+SIMD k=4 d=1024 DecomposeRotation_1_540000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n1_540000e00
+SIMD k=4 d=1024 DecomposeRotation_n1_540000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_6_160000e00
+SIMD k=4 d=1024 DecomposeRotation_6_160000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n3_080000e00
+SIMD k=4 d=1024 DecomposeRotation_n3_080000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP-3.08_DPx_DPx_DPx
+DecomposeRotation_6_160000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_n3_080000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP-3.08_DPx_DPx_DPx 1 37082778 1073741816 268435454 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP1.54_DPx_DPx_DPx
+DecomposeRotation_1_540000e00 : q1(0) 
+DecomposeRotation_n1_540000e00 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP-3.08_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP1.54_DPx_DPx_DPx 1 55624162 2147483632 536870908 leaf= 0
+
+#Function DecomposeRotation_5_600000en01
+SIMD k=4 d=1024 DecomposeRotation_5_600000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n5_600000en01
+SIMD k=4 d=1024 DecomposeRotation_n5_600000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_2_240000e00
+SIMD k=4 d=1024 DecomposeRotation_2_240000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n1_120000e00
+SIMD k=4 d=1024 DecomposeRotation_n1_120000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP-1.12_DPx_DPx_DPx
+DecomposeRotation_2_240000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_n1_120000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP-1.12_DPx_DPx_DPx 1 37082778 2147483640 536870910 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP0.56_DPx_DPx_DPx
+DecomposeRotation_5_600000en01 : q1(0) 
+DecomposeRotation_n5_600000en01 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP-1.12_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP0.56_DPx_DPx_DPx 1 55624162 4294967280 1073741820 leaf= 0
+
+#Function DecomposeRotation_1_820000e00
+SIMD k=4 d=1024 DecomposeRotation_1_820000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n1_820000e00
+SIMD k=4 d=1024 DecomposeRotation_n1_820000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_7_280000e00
+SIMD k=4 d=1024 DecomposeRotation_7_280000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n3_640000e00
+SIMD k=4 d=1024 DecomposeRotation_n3_640000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP-3.64_DPx_DPx_DPx
+DecomposeRotation_7_280000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_n3_640000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP-3.64_DPx_DPx_DPx 1 37082778 4294967288 1073741822 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP1.82_DPx_DPx_DPx
+DecomposeRotation_1_820000e00 : q1(0) 
+DecomposeRotation_n1_820000e00 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP-3.64_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP1.82_DPx_DPx_DPx 1 55624162 8589934576 2147483644 leaf= 0
+
+#Function DecomposeRotation_n7_280000e00
+SIMD k=4 d=1024 DecomposeRotation_n7_280000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_3_640000e00
+SIMD k=4 d=1024 DecomposeRotation_3_640000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP3.64_DPx_DPx_DPx
+DecomposeRotation_n7_280000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_3_640000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP3.64_DPx_DPx_DPx 1 37082778 8589934584 2147483646 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP-1.82_DPx_DPx_DPx
+DecomposeRotation_n1_820000e00 : q1(0) 
+DecomposeRotation_1_820000e00 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP3.64_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP-1.82_DPx_DPx_DPx 1 55624162 17179869168 4294967292 leaf= 0
+
+#Function DecomposeRotation_2_660000e00
+SIMD k=4 d=1024 DecomposeRotation_2_660000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n2_660000e00
+SIMD k=4 d=1024 DecomposeRotation_n2_660000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_1_064000e01
+SIMD k=4 d=1024 DecomposeRotation_1_064000e01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n5_320000e00
+SIMD k=4 d=1024 DecomposeRotation_n5_320000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP-5.32_DPx_DPx_DPx
+DecomposeRotation_1_064000e01 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_n5_320000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP-5.32_DPx_DPx_DPx 1 37082778 17179869176 4294967294 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP2.66_DPx_DPx_DPx
+DecomposeRotation_2_660000e00 : q1(0) 
+DecomposeRotation_n2_660000e00 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP-5.32_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP2.66_DPx_DPx_DPx 1 55624162 34359738352 8589934588 leaf= 0
+
+#Function DecomposeRotation_1_440000en01
+SIMD k=4 d=1024 DecomposeRotation_1_440000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n4_320000en01
+SIMD k=4 d=1024 DecomposeRotation_n4_320000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_5_280000en01
+SIMD k=4 d=1024 DecomposeRotation_5_280000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_2_880000en01
+SIMD k=4 d=1024 DecomposeRotation_2_880000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n7_680000en01
+SIMD k=4 d=1024 DecomposeRotation_n7_680000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n6_240000en01
+SIMD k=4 d=1024 DecomposeRotation_n6_240000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_9_120000en01
+SIMD k=4 d=1024 DecomposeRotation_9_120000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n2_700000e00
+SIMD k=4 d=1024 DecomposeRotation_n2_700000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_2_700000e00
+SIMD k=4 d=1024 DecomposeRotation_2_700000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n1_080000e01
+SIMD k=4 d=1024 DecomposeRotation_n1_080000e01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_5_400000e00
+SIMD k=4 d=1024 DecomposeRotation_5_400000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP5.4_DPx_DPx_DPx
+DecomposeRotation_n1_080000e01 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_5_400000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP5.4_DPx_DPx_DPx 1 37082778 34359738360 8589934590 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP-2.7_DPx_DPx_DPx
+DecomposeRotation_n2_700000e00 : q1(0) 
+DecomposeRotation_2_700000e00 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP5.4_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP-2.7_DPx_DPx_DPx 1 55624162 68719476720 17179869180 leaf= 0
+
+#Function DecomposeRotation_n3_240000e00
+SIMD k=4 d=1024 DecomposeRotation_n3_240000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_3_240000e00
+SIMD k=4 d=1024 DecomposeRotation_3_240000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n1_296000e01
+SIMD k=4 d=1024 DecomposeRotation_n1_296000e01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_6_480000e00
+SIMD k=4 d=1024 DecomposeRotation_6_480000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP6.48_DPx_DPx_DPx
+DecomposeRotation_n1_296000e01 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_6_480000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP6.48_DPx_DPx_DPx 1 37082778 68719476728 17179869182 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP-3.24_DPx_DPx_DPx
+DecomposeRotation_n3_240000e00 : q1(0) 
+DecomposeRotation_3_240000e00 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP6.48_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP-3.24_DPx_DPx_DPx 1 55624162 137438953456 34359738364 leaf= 0
+
+#Function DecomposeRotation_1_980000e00
+SIMD k=4 d=1024 DecomposeRotation_1_980000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n1_980000e00
+SIMD k=4 d=1024 DecomposeRotation_n1_980000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_7_920000e00
+SIMD k=4 d=1024 DecomposeRotation_7_920000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n3_960000e00
+SIMD k=4 d=1024 DecomposeRotation_n3_960000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP-3.96_DPx_DPx_DPx
+DecomposeRotation_7_920000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_n3_960000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP-3.96_DPx_DPx_DPx 1 37082778 137438953464 34359738366 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP1.98_DPx_DPx_DPx
+DecomposeRotation_1_980000e00 : q1(0) 
+DecomposeRotation_n1_980000e00 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP-3.96_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP1.98_DPx_DPx_DPx 1 55624162 274877906928 68719476732 leaf= 0
+
+#Function DecomposeRotation_2_880000e00
+SIMD k=4 d=1024 DecomposeRotation_2_880000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP-1.44_DPx_DPx_DPx
+DecomposeRotation_2_880000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_n1_440000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP-1.44_DPx_DPx_DPx 1 37082778 274877906936 68719476734 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP0.72_DPx_DPx_DPx
+DecomposeRotation_7_200000en01 : q1(0) 
+DecomposeRotation_n7_200000en01 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP-1.44_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP0.72_DPx_DPx_DPx 1 55624162 549755813872 137438953468 leaf= 0
+
+#Function DecomposeRotation_2_340000e00
+SIMD k=4 d=1024 DecomposeRotation_2_340000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n2_340000e00
+SIMD k=4 d=1024 DecomposeRotation_n2_340000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_9_360000e00
+SIMD k=4 d=1024 DecomposeRotation_9_360000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n4_680000e00
+SIMD k=4 d=1024 DecomposeRotation_n4_680000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP-4.68_DPx_DPx_DPx
+DecomposeRotation_9_360000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_n4_680000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP-4.68_DPx_DPx_DPx 1 37082778 549755813880 137438953470 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP2.34_DPx_DPx_DPx
+DecomposeRotation_2_340000e00 : q1(0) 
+DecomposeRotation_n2_340000e00 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP-4.68_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP2.34_DPx_DPx_DPx 1 55624162 1099511627760 274877906940 leaf= 0
+
+#Function DecomposeRotation_n9_360000e00
+SIMD k=4 d=1024 DecomposeRotation_n9_360000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_4_680000e00
+SIMD k=4 d=1024 DecomposeRotation_4_680000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP4.68_DPx_DPx_DPx
+DecomposeRotation_n9_360000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_4_680000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP4.68_DPx_DPx_DPx 1 37082778 1099511627768 274877906942 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP-2.34_DPx_DPx_DPx
+DecomposeRotation_n2_340000e00 : q1(0) 
+DecomposeRotation_2_340000e00 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP4.68_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP-2.34_DPx_DPx_DPx 1 55624162 2199023255536 549755813884 leaf= 0
+
+#Function DecomposeRotation_3_420000e00
+SIMD k=4 d=1024 DecomposeRotation_3_420000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n3_420000e00
+SIMD k=4 d=1024 DecomposeRotation_n3_420000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_1_368000e01
+SIMD k=4 d=1024 DecomposeRotation_1_368000e01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n6_840000e00
+SIMD k=4 d=1024 DecomposeRotation_n6_840000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function CZ_IPx_IPx_IPx_IPx_DP-6.84_DPx_DPx_DPx
+DecomposeRotation_1_368000e01 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+DecomposeRotation_n6_840000e00 : q2(0) 
+llvm.CNOT : q1(0) q2(0) 
+SIMD k=4 d=1024 CZ_IPx_IPx_IPx_IPx_DP-6.84_DPx_DPx_DPx 1 37082778 2199023255544 549755813886 leaf= 0
+
+#Function ZcrossZ_IPx_IPx_IPx_IPx_DP3.42_DPx_DPx_DPx
+DecomposeRotation_3_420000e00 : q1(0) 
+DecomposeRotation_n3_420000e00 : q2(0) 
+CZ_IPx_IPx_IPx_IPx_DP-6.84_DPx_DPx_DPx : q1(0) q2(0) 
+SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP3.42_DPx_DPx_DPx 1 55624162 4398046511088 1099511627772 leaf= 0
+
+#Function DecomposeRotation_1_920000e00
+SIMD k=4 d=1024 DecomposeRotation_1_920000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n8_640000en01
+SIMD k=4 d=1024 DecomposeRotation_n8_640000en01 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n1_152000e00
+SIMD k=4 d=1024 DecomposeRotation_n1_152000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_1_056000e00
+SIMD k=4 d=1024 DecomposeRotation_1_056000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_1_440000e00
+SIMD k=4 d=1024 DecomposeRotation_1_440000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n1_536000e00
+SIMD k=4 d=1024 DecomposeRotation_n1_536000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_n1_248000e00
+SIMD k=4 d=1024 DecomposeRotation_n1_248000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function DecomposeRotation_1_824000e00
+SIMD k=4 d=1024 DecomposeRotation_1_824000e00 0 18541384 0 0 leaf= 1 (read from file)
+
+#Function main
+llvm.PrepZ : reg(9) 
+llvm.PrepZ : reg(8) 
+llvm.PrepZ : reg(7) 
+llvm.PrepZ : reg(6) 
+llvm.PrepZ : reg(5) 
+llvm.PrepZ : reg(4) 
+llvm.PrepZ : reg(3) 
+llvm.PrepZ : reg(2) 
+llvm.PrepZ : reg(1) 
+llvm.PrepZ : reg(0) 
+llvm.H : reg(3) 
+llvm.H : reg(2) 
+llvm.H : reg(4) 
+llvm.H : reg(5) 
+llvm.H : reg(1) 
+llvm.H : reg(6) 
+llvm.H : reg(7) 
+llvm.H : reg(0) 
+llvm.H : reg(8) 
+llvm.H : reg(9) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP-0.12_DPx_DPx_DPx : reg(4) reg(5) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP0.08_DPx_DPx_DPx : reg(8) reg(9) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP-0.36_DPx_DPx_DPx : reg(2) reg(3) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP-0.3_DPx_DPx_DPx : reg(0) reg(1) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP0.22_DPx_DPx_DPx : reg(6) reg(7) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP0.26_DPx_DPx_DPx : reg(1) reg(2) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP-0.26_DPx_DPx_DPx : reg(3) reg(4) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP0.38_DPx_DPx_DPx : reg(5) reg(6) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP-0.26_DPx_DPx_DPx : reg(7) reg(8) 
+llvm.H : reg(5) 
+llvm.H : reg(6) 
+llvm.H : reg(4) 
+llvm.H : reg(3) 
+llvm.H : reg(2) 
+llvm.H : reg(1) 
+llvm.H : reg(0) 
+llvm.H : reg(7) 
+DecomposeRotation_n1_920000e00 : reg(1) 
+DecomposeRotation_n1_920000e00 : reg(2) 
+DecomposeRotation_n1_920000e00 : reg(7) 
+DecomposeRotation_n1_920000e00 : reg(3) 
+DecomposeRotation_n1_920000e00 : reg(6) 
+DecomposeRotation_n1_920000e00 : reg(0) 
+DecomposeRotation_n1_920000e00 : reg(4) 
+DecomposeRotation_n1_920000e00 : reg(5) 
+llvm.H : reg(6) 
+llvm.H : reg(5) 
+llvm.H : reg(4) 
+llvm.H : reg(3) 
+llvm.H : reg(2) 
+llvm.H : reg(1) 
+llvm.H : reg(0) 
+llvm.H : reg(7) 
+DecomposeRotation_n2_880000en01 : reg(7) 
+DecomposeRotation_n5_760000en01 : reg(5) 
+DecomposeRotation_n1_440000e00 : reg(4) 
+DecomposeRotation_n1_056000e00 : reg(3) 
+DecomposeRotation_1_152000e00 : reg(2) 
+DecomposeRotation_8_640000en01 : reg(1) 
+DecomposeRotation_n2_880000en01 : reg(0) 
+DecomposeRotation_1_536000e00 : reg(6) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP-0.9_DPx_DPx_DPx : reg(0) reg(1) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP-1.08_DPx_DPx_DPx : reg(2) reg(3) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP-0.36_DPx_DPx_DPx : reg(4) reg(5) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP0.66_DPx_DPx_DPx : reg(6) reg(7) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP0.78_DPx_DPx_DPx : reg(1) reg(2) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP-0.78_DPx_DPx_DPx : reg(3) reg(4) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP1.14_DPx_DPx_DPx : reg(5) reg(6) 
+llvm.H : reg(3) 
+llvm.H : reg(2) 
+llvm.H : reg(1) 
+llvm.H : reg(4) 
+llvm.H : reg(5) 
+llvm.H : reg(0) 
+DecomposeRotation_n9_600000en01 : reg(3) 
+DecomposeRotation_n9_600000en01 : reg(2) 
+DecomposeRotation_n9_600000en01 : reg(1) 
+DecomposeRotation_n9_600000en01 : reg(0) 
+DecomposeRotation_n9_600000en01 : reg(4) 
+DecomposeRotation_n9_600000en01 : reg(5) 
+llvm.H : reg(3) 
+llvm.H : reg(0) 
+llvm.H : reg(1) 
+llvm.H : reg(4) 
+llvm.H : reg(2) 
+llvm.H : reg(5) 
+DecomposeRotation_n2_880000en01 : reg(5) 
+DecomposeRotation_n7_200000en01 : reg(4) 
+DecomposeRotation_n5_280000en01 : reg(3) 
+DecomposeRotation_5_760000en01 : reg(2) 
+DecomposeRotation_n1_440000en01 : reg(0) 
+llvm.H : reg(8) 
+llvm.H : reg(9) 
+DecomposeRotation_4_320000en01 : reg(1) 
+DecomposeRotation_n1_920000e00 : reg(8) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP-0.6_DPx_DPx_DPx : reg(4) reg(5) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP-1.8_DPx_DPx_DPx : reg(2) reg(3) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP-1.5_DPx_DPx_DPx : reg(0) reg(1) 
+DecomposeRotation_n1_920000e00 : reg(9) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP-1.3_DPx_DPx_DPx : reg(3) reg(4) 
+llvm.H : reg(8) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP1.3_DPx_DPx_DPx : reg(1) reg(2) 
+llvm.H : reg(9) 
+llvm.H : reg(1) 
+llvm.H : reg(2) 
+llvm.H : reg(3) 
+llvm.H : reg(0) 
+DecomposeRotation_n1_824000e00 : reg(9) 
+DecomposeRotation_1_248000e00 : reg(8) 
+llvm.H : reg(0) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP0.24_DPx_DPx_DPx : reg(8) reg(9) 
+llvm.H : reg(1) 
+llvm.H : reg(2) 
+llvm.H : reg(3) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP-2.52_DPx_DPx_DPx : reg(2) reg(3) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP-2.1_DPx_DPx_DPx : reg(0) reg(1) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP-0.78_DPx_DPx_DPx : reg(7) reg(8) 
+llvm.H : reg(8) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP1.82_DPx_DPx_DPx : reg(1) reg(2) 
+llvm.H : reg(7) 
+llvm.H : reg(9) 
+llvm.H : reg(6) 
+llvm.H : reg(1) 
+llvm.H : reg(0) 
+DecomposeRotation_n9_600000en01 : reg(8) 
+DecomposeRotation_n9_600000en01 : reg(6) 
+DecomposeRotation_n9_600000en01 : reg(7) 
+DecomposeRotation_n9_600000en01 : reg(9) 
+llvm.H : reg(9) 
+llvm.H : reg(8) 
+DecomposeRotation_9_600000en01 : reg(0) 
+llvm.H : reg(6) 
+llvm.H : reg(7) 
+DecomposeRotation_9_600000en01 : reg(1) 
+DecomposeRotation_n9_120000en01 : reg(9) 
+DecomposeRotation_6_240000en01 : reg(8) 
+DecomposeRotation_n1_440000en01 : reg(7) 
+DecomposeRotation_7_680000en01 : reg(6) 
+llvm.H : reg(0) 
+llvm.H : reg(1) 
+DecomposeRotation_n4_320000en01 : reg(1) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP1.1_DPx_DPx_DPx : reg(6) reg(7) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP0.4_DPx_DPx_DPx : reg(8) reg(9) 
+DecomposeRotation_1_440000en01 : reg(0) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP-2.7_DPx_DPx_DPx : reg(0) reg(1) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP-1.3_DPx_DPx_DPx : reg(7) reg(8) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP1.9_DPx_DPx_DPx : reg(5) reg(6) 
+llvm.H : reg(0) 
+llvm.H : reg(6) 
+llvm.H : reg(4) 
+llvm.H : reg(5) 
+llvm.H : reg(9) 
+llvm.H : reg(7) 
+llvm.H : reg(8) 
+llvm.H : reg(4) 
+llvm.H : reg(5) 
+DecomposeRotation_1_920000e00 : reg(0) 
+llvm.H : reg(6) 
+llvm.H : reg(7) 
+llvm.H : reg(8) 
+llvm.H : reg(9) 
+llvm.H : reg(0) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP0.56_DPx_DPx_DPx : reg(8) reg(9) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP1.54_DPx_DPx_DPx : reg(6) reg(7) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP-0.84_DPx_DPx_DPx : reg(4) reg(5) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP-1.82_DPx_DPx_DPx : reg(7) reg(8) 
+DecomposeRotation_2_880000en01 : reg(0) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP2.66_DPx_DPx_DPx : reg(5) reg(6) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP-1.82_DPx_DPx_DPx : reg(3) reg(4) 
+llvm.H : reg(6) 
+llvm.H : reg(9) 
+llvm.MeasZ : reg(0) 
+llvm.H : reg(7) 
+llvm.H : reg(2) 
+llvm.H : reg(8) 
+llvm.H : reg(3) 
+llvm.H : reg(5) 
+llvm.H : reg(4) 
+llvm.MeasZ : reg(0) 
+DecomposeRotation_9_600000en01 : reg(2) 
+DecomposeRotation_9_600000en01 : reg(3) 
+DecomposeRotation_9_600000en01 : reg(4) 
+DecomposeRotation_9_600000en01 : reg(8) 
+DecomposeRotation_9_600000en01 : reg(7) 
+DecomposeRotation_9_600000en01 : reg(6) 
+DecomposeRotation_9_600000en01 : reg(5) 
+DecomposeRotation_9_600000en01 : reg(9) 
+llvm.H : reg(8) 
+llvm.H : reg(4) 
+llvm.H : reg(9) 
+llvm.H : reg(7) 
+llvm.H : reg(3) 
+llvm.H : reg(2) 
+llvm.H : reg(6) 
+llvm.MeasZ : reg(0) 
+llvm.H : reg(5) 
+llvm.MeasZ : reg(0) 
+DecomposeRotation_9_120000en01 : reg(9) 
+DecomposeRotation_n6_240000en01 : reg(8) 
+DecomposeRotation_1_440000en01 : reg(7) 
+DecomposeRotation_n7_680000en01 : reg(6) 
+DecomposeRotation_7_200000en01 : reg(4) 
+DecomposeRotation_5_280000en01 : reg(3) 
+DecomposeRotation_n5_760000en01 : reg(2) 
+DecomposeRotation_2_880000en01 : reg(5) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP-3.24_DPx_DPx_DPx : reg(2) reg(3) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP-1.08_DPx_DPx_DPx : reg(4) reg(5) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP1.98_DPx_DPx_DPx : reg(6) reg(7) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP0.72_DPx_DPx_DPx : reg(8) reg(9) 
+llvm.MeasZ : reg(0) 
+llvm.MeasZ : reg(0) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP3.42_DPx_DPx_DPx : reg(5) reg(6) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP2.34_DPx_DPx_DPx : reg(1) reg(2) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP-2.34_DPx_DPx_DPx : reg(3) reg(4) 
+ZcrossZ_IPx_IPx_IPx_IPx_DP-2.34_DPx_DPx_DPx : reg(7) reg(8) 
+llvm.H : reg(9) 
+llvm.H : reg(8) 
+llvm.H : reg(7) 
+llvm.H : reg(6) 
+llvm.H : reg(1) 
+llvm.H : reg(5) 
+llvm.H : reg(4) 
+llvm.MeasZ : reg(0) 
+llvm.H : reg(3) 
+llvm.H : reg(2) 
+DecomposeRotation_1_920000e00 : reg(5) 
+DecomposeRotation_1_920000e00 : reg(1) 
+DecomposeRotation_1_920000e00 : reg(4) 
+DecomposeRotation_1_920000e00 : reg(6) 
+DecomposeRotation_1_920000e00 : reg(7) 
+DecomposeRotation_1_920000e00 : reg(3) 
+DecomposeRotation_1_920000e00 : reg(8) 
+llvm.MeasZ : reg(0) 
+DecomposeRotation_1_920000e00 : reg(2) 
+DecomposeRotation_1_920000e00 : reg(9) 
+llvm.H : reg(1) 
+llvm.H : reg(2) 
+llvm.H : reg(3) 
+llvm.H : reg(4) 
+llvm.H : reg(5) 
+llvm.H : reg(6) 
+llvm.H : reg(7) 
+llvm.H : reg(8) 
+llvm.MeasZ : reg(0) 
+llvm.H : reg(9) 
+DecomposeRotation_n1_248000e00 : reg(8) 
+DecomposeRotation_1_824000e00 : reg(9) 
+llvm.MeasZ : reg(0) 
+DecomposeRotation_2_880000en01 : reg(7) 
+DecomposeRotation_n1_536000e00 : reg(6) 
+DecomposeRotation_5_760000en01 : reg(5) 
+DecomposeRotation_1_440000e00 : reg(4) 
+DecomposeRotation_1_056000e00 : reg(3) 
+DecomposeRotation_n1_152000e00 : reg(2) 
+DecomposeRotation_n8_640000en01 : reg(1) 
+SIMD k=4 d=1024 main 4 1242273067 15410410047044 2949725185622 leaf= 0
+
+#Num of SIMD time steps for function main : 1242273067

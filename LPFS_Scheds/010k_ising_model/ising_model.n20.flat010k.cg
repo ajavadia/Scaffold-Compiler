@@ -1,0 +1,22 @@
+terminate called after throwing an instance of 'std::bad_alloc'
+  what():  std::bad_alloc
+0  opt             0x00000000008b0fb2
+1  opt             0x00000000008b13a7
+2  libpthread.so.0 0x00007ffe817ff340
+3  libc.so.6       0x00007ffe80a3ccc9 gsignal + 57
+4  libc.so.6       0x00007ffe80a400d8 abort + 328
+5  libstdc++.so.6  0x00007ffe81041535 __gnu_cxx::__verbose_terminate_handler() + 341
+6  libstdc++.so.6  0x00007ffe8103f6d6
+7  libstdc++.so.6  0x00007ffe8103f703
+8  libstdc++.so.6  0x00007ffe8103f922
+9  libstdc++.so.6  0x00007ffe8103fe0d operator new(unsigned long) + 125
+10 Scaffold.so     0x00007ffe807b129a void std::vector<unsigned long, std::allocator<unsigned long> >::_M_range_insert<__gnu_cxx::__normal_iterator<unsigned long*, std::vector<unsigned long, std::allocator<unsigned long> > > >(__gnu_cxx::__normal_iterator<unsigned long*, std::vector<unsigned long, std::allocator<unsigned long> > >, __gnu_cxx::__normal_iterator<unsigned long*, std::vector<unsigned long, std::allocator<unsigned long> > >, __gnu_cxx::__normal_iterator<unsigned long*, std::vector<unsigned long, std::allocator<unsigned long> > >, std::forward_iterator_tag) + 170
+11 Scaffold.so     0x00007ffe807a935b
+12 opt             0x000000000084a034 llvm::MPPassManager::runOnModule(llvm::Module&) + 324
+13 opt             0x000000000084a840 llvm::PassManagerImpl::run(llvm::Module&) + 432
+14 opt             0x0000000000486be9 main + 4809
+15 libc.so.6       0x00007ffe80a27ec5 __libc_start_main + 245
+16 opt             0x0000000000481193
+Stack dump:
+0.	Program arguments: .././../build/Release+Asserts/bin/opt -load .././../build/Release+Asserts/lib/Scaffold.so -GenCGSIMDSchedule -simd-kconstraint-cg 4 -simd-dconstraint-cg 1024 ising_model.n20.flat010k.ll 
+1.	Running pass 'Generate CoarseGrained SIMD Schedule' on module 'ising_model.n20.flat010k.ll'.

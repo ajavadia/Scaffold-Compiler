@@ -21,6 +21,9 @@
 *.bc
 # Fuse hidden files
 *fuse_hidden*
+# simulator intermediate files
+*.tr
+*.graph
 
 #==============================================================================#
 # Explicit files to ignore (only matches one).

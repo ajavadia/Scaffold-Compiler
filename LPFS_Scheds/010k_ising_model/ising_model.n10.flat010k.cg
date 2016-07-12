@@ -6522,34 +6522,34 @@ llvm.CNOT : q1(0) q2(0)
 SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP0.38_DPx_DPx_DPx 1 610 0 0 leaf= 1
 
 #Function DecomposeRotation_n1_920000e00
-SIMD k=4 d=1024 DecomposeRotation_n1_920000e00 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_n1_920000e00 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_n2_880000en01
-SIMD k=4 d=1024 DecomposeRotation_n2_880000en01 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_n2_880000en01 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_8_640000en01
-SIMD k=4 d=1024 DecomposeRotation_8_640000en01 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_8_640000en01 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_1_152000e00
-SIMD k=4 d=1024 DecomposeRotation_1_152000e00 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_1_152000e00 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_n1_056000e00
-SIMD k=4 d=1024 DecomposeRotation_n1_056000e00 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_n1_056000e00 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_n1_440000e00
-SIMD k=4 d=1024 DecomposeRotation_n1_440000e00 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_n1_440000e00 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_n5_760000en01
-SIMD k=4 d=1024 DecomposeRotation_n5_760000en01 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_n5_760000en01 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_1_536000e00
-SIMD k=4 d=1024 DecomposeRotation_1_536000e00 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_1_536000e00 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_1_248000e00
-SIMD k=4 d=1024 DecomposeRotation_1_248000e00 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_1_248000e00 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_n1_824000e00
-SIMD k=4 d=1024 DecomposeRotation_n1_824000e00 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_n1_824000e00 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function ZcrossZ_IPx_IPx_IPx_IPx_DP-0.9_DPx_DPx_DPx
 llvm.X : q2(0) 
@@ -12240,31 +12240,31 @@ llvm.CNOT : q1(0) q2(0)
 SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP1.14_DPx_DPx_DPx 2 602 0 0 leaf= 1
 
 #Function DecomposeRotation_n9_600000en01
-SIMD k=4 d=1024 DecomposeRotation_n9_600000en01 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_n9_600000en01 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_n1_440000en01
-SIMD k=4 d=1024 DecomposeRotation_n1_440000en01 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_n1_440000en01 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_4_320000en01
-SIMD k=4 d=1024 DecomposeRotation_4_320000en01 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_4_320000en01 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_5_760000en01
-SIMD k=4 d=1024 DecomposeRotation_5_760000en01 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_5_760000en01 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_n5_280000en01
-SIMD k=4 d=1024 DecomposeRotation_n5_280000en01 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_n5_280000en01 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_n7_200000en01
-SIMD k=4 d=1024 DecomposeRotation_n7_200000en01 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_n7_200000en01 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_7_680000en01
-SIMD k=4 d=1024 DecomposeRotation_7_680000en01 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_7_680000en01 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_6_240000en01
-SIMD k=4 d=1024 DecomposeRotation_6_240000en01 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_6_240000en01 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_n9_120000en01
-SIMD k=4 d=1024 DecomposeRotation_n9_120000en01 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_n9_120000en01 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function ZcrossZ_IPx_IPx_IPx_IPx_DP-1.5_DPx_DPx_DPx
 llvm.X : q2(0) 
@@ -25203,31 +25203,31 @@ llvm.CNOT : q1(0) q2(0)
 SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP2.66_DPx_DPx_DPx 1 601 0 0 leaf= 1
 
 #Function DecomposeRotation_9_600000en01
-SIMD k=4 d=1024 DecomposeRotation_9_600000en01 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_9_600000en01 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_1_440000en01
-SIMD k=4 d=1024 DecomposeRotation_1_440000en01 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_1_440000en01 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_n4_320000en01
-SIMD k=4 d=1024 DecomposeRotation_n4_320000en01 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_n4_320000en01 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_5_280000en01
-SIMD k=4 d=1024 DecomposeRotation_5_280000en01 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_5_280000en01 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_7_200000en01
-SIMD k=4 d=1024 DecomposeRotation_7_200000en01 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_7_200000en01 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_2_880000en01
-SIMD k=4 d=1024 DecomposeRotation_2_880000en01 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_2_880000en01 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_n7_680000en01
-SIMD k=4 d=1024 DecomposeRotation_n7_680000en01 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_n7_680000en01 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_n6_240000en01
-SIMD k=4 d=1024 DecomposeRotation_n6_240000en01 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_n6_240000en01 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_9_120000en01
-SIMD k=4 d=1024 DecomposeRotation_9_120000en01 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_9_120000en01 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function ZcrossZ_IPx_IPx_IPx_IPx_DP-2.7_DPx_DPx_DPx
 llvm.H : q2(0) 
@@ -30964,28 +30964,28 @@ llvm.CNOT : q1(0) q2(0)
 SIMD k=4 d=1024 ZcrossZ_IPx_IPx_IPx_IPx_DP3.42_DPx_DPx_DPx 1 602 0 0 leaf= 1
 
 #Function DecomposeRotation_1_920000e00
-SIMD k=4 d=1024 DecomposeRotation_1_920000e00 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_1_920000e00 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_n8_640000en01
-SIMD k=4 d=1024 DecomposeRotation_n8_640000en01 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_n8_640000en01 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_n1_152000e00
-SIMD k=4 d=1024 DecomposeRotation_n1_152000e00 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_n1_152000e00 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_1_056000e00
-SIMD k=4 d=1024 DecomposeRotation_1_056000e00 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_1_056000e00 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_1_440000e00
-SIMD k=4 d=1024 DecomposeRotation_1_440000e00 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_1_440000e00 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_n1_536000e00
-SIMD k=4 d=1024 DecomposeRotation_n1_536000e00 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_n1_536000e00 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_n1_248000e00
-SIMD k=4 d=1024 DecomposeRotation_n1_248000e00 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_n1_248000e00 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function DecomposeRotation_1_824000e00
-SIMD k=4 d=1024 DecomposeRotation_1_824000e00 0 32876248 0 0 leaf= 1 (read from file)
+SIMD k=4 d=1024 DecomposeRotation_1_824000e00 0 45057752 0 0 leaf= 1 (read from file)
 
 #Function main
 llvm.PrepZ : reg(9) 
@@ -31243,6 +31243,6 @@ DecomposeRotation_1_440000e00 : reg(4)
 DecomposeRotation_1_056000e00 : reg(3) 
 DecomposeRotation_n1_152000e00 : reg(2) 
 DecomposeRotation_n8_640000en01 : reg(1) 
-SIMD k=4 d=1024 main 4 558907394 260 41 leaf= 0
+SIMD k=4 d=1024 main 4 765992962 260 41 leaf= 0
 
-#Num of SIMD time steps for function main : 558907394
+#Num of SIMD time steps for function main : 765992962

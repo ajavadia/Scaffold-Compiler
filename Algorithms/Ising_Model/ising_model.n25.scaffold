@@ -1,0 +1,109 @@
+/*
+Input format:
+N
+Bx
+Bz_0
+Bz_1
+...
+Bz_N
+J_{0,1}
+J_{1,2}
+...
+J{n-2,n-1}
+*/
+
+#include <stdio.h>
+
+
+const int N = 25;
+const double Bx = 2;
+// elements of Bz and J are randomly generated from uniform(-2, 2)
+const double Bz[] = {0.24128399041448878, 1.6148128485125484, -0.3880178234043492, -1.6005225464212143, 1.4691979524338623, -1.174902876350631, 1.4634194567467405, -0.17662837295643685, 1.844367406474979, -0.6298718090792095, -0.19895299923205778, 0.9484969450590546, -0.7020975585051681, -0.2414766468218601, 1.9838003631989674, 1.9532322366758699, -0.6813836310217667, -1.2937174104334384, -1.846437495988531, -1.3844118789157078, 0.24564196035470331, -0.18060053660253983, 0.7708103174804064, -0.33463662043809483, -1.6902642052863843};
+const double J[] = {0.39185789201620347, 1.1542734883673504, -0.03166009811951076, 0.48126196650450304, 0.2176612426850455, -1.4946876164093652, -1.797441875626414, -1.8409578088971288, 0.24706631813186686, -0.3943766328639966, 1.8602790515056835, 0.4577684869295111, 0.5704085297406989, -1.4639587482477379, -0.2634509678412207, 0.03862372444121265, -1.9393834547022126, -0.773707788340348, 1.8264090823431585, -0.7826111852261479, -0.1986753778637671, 0.6619694718635087, 0.05697452989305063, -1.2153260556340562};
+
+void CZ(qbit q1, qbit q2, double phi) {
+    // printf("performing Controlled -2phi Z rotation\n");
+    Rz(q2, -2.0*phi);
+    CNOT(q1, q2);
+    Rz(q2, phi);
+    CNOT(q1, q2);
+}
+
+void ZcrossZ(qbit q1, qbit q2, double phi) {
+    // printf("performing sigma_z cross sigma_z Hamiltonian\n");
+    Rz(q1, phi);
+    Rz(q2, -phi);
+    CZ(q1, q2, -2.0*phi);
+}
+
+
+void IsingModel() {
+    qbit reg[N];
+
+    // Initialize all qubits to |+> state
+    int n;
+    for(n=0; n < N; n++) {
+        PrepZ(reg[n], 0);
+        H(reg[n]);
+    }
+
+    double T = 15;  // total duration of adiabatic evolution
+    int M = 25;  // number of Trotter steps
+    double dt = M / T;  // time per Trotter step
+
+    int m;
+    for(m = 1; m <= M; m++) {
+
+        // Z-Z hamiltonian, executed in parallel
+        for (n = 0; n < N-1; n += 2) {  // red pairs
+            double phi = J[n] * (2.0*m - 1) / M;
+            ZcrossZ(reg[n], reg[n + 1], phi);
+        }
+        for (n = 1; n < N-1; n += 2) {  // black pairs
+            double phi = J[n] * (2.0*m - 1) / M;
+            ZcrossZ(reg[n], reg[n + 1], phi);
+        }
+
+        double theta1 = (1.0 - (2.0*m-1)/M) * -2 * Bx * T / M;
+        for (n = 0; n < N; n++) {
+            H(reg[n]);
+            Rz(reg[n], theta1);
+            H(reg[n]);
+        }
+
+        // Bz hamiltonian
+        for (n = 0; n < N; n++) {
+            double theta2 = (1.0 - (2.0*m-1)/M) * -2 * Bz[n] * T / M;
+            Rz(reg[n], theta2);
+        }
+    }
+
+
+    for (n = 0; n < N; n++) {
+        MeasZ(reg[0]);
+    }
+}
+
+
+int main() {
+    /*
+    FILE *fp;
+    fp = fopen("input.txt", "r");
+    int N = 0;
+    double Bx = 0;
+    fscanf(fp, "%d", &N);
+    fscanf(fp, "%lf", &Bx);
+    double Bz[N];
+    int i;
+    for (i = 0; i < N; i++) {
+        fscanf(fp, "%lf", &Bz[i]);
+    }
+    double J[N-1];
+    for (i = 0; i < N-1; i++) {
+        fscanf(fp, "%lf", &J[i]);
+    }
+    */
+    
+    IsingModel();
+    return 0;
+}
