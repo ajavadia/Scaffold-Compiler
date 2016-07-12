@@ -286,7 +286,11 @@ bool FunctionClone::runOnModule (Module &M) {
               unsigned pos = std::find(posOfDouble.begin(), posOfDouble.end(), i->first) - posOfDouble.begin();
               std::stringstream tmp2;
               tmp2 << i->second;
-              originalDoubles[pos] = tmp2.str(); 
+              std::string tmp_str = tmp2.str();
+              replace(tmp_str.begin(), tmp_str.end(), '-', 'n'); //replace "-" with "n" to keep with C declaration syntax
+              replace(tmp_str.begin(), tmp_str.end(), '.', '_'); //replace "-" with "n" to keep with C declaration syntax              
+              originalDoubles[pos] = tmp_str;  
+              errs() << "originalDoubles = " << originalDoubles[pos] << "\n"; 
             }           
 
             for (std::vector<std::string>::iterator i = originalInts.begin(), e = originalInts.end(); i!=e; ++i)

@@ -16,7 +16,7 @@ D=(1024)
 # Number of SIMD regions
 K=(4)
 # Module flattening thresholds: must be picked from the set in scripts/flattening_thresh.py
-THRESHOLDS=(000k 010k)
+THRESHOLDS=(010k)
 # Full schedule? otherwise only generates metrics (faster)
 FULL_SCHED=true
 
@@ -111,7 +111,7 @@ for f in $*; do
       fi
     done
   done
-  rm -f comm_aware_schedule.txt histogram_data.txt
+  #rm -f comm_aware_schedule.txt histogram_data.txt
   cd ..
 done
 

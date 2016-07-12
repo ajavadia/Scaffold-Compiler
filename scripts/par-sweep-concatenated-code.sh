@@ -5,6 +5,9 @@ ROOT=$DIR/..
 OPT=$ROOT/build/Release+Asserts/bin/opt
 SCAF=$ROOT/build/Release+Asserts/lib/Scaffold.so
 
+#usage
+#./par-sweep-concatenated.sh <path/to/DIR>
+
 # change the desired thresholds below. that's the only change needed.
 error_rates=(5 6 7 8 9)
 

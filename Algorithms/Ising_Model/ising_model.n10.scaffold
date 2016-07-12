@@ -84,30 +84,3 @@ int main() {
 
     return 0;
 }
-
-/*
-int main() {
-    // make sure to define these as const:
-
-    
-    FILE *fp;
-    fp = fopen("input.txt", "r");
-    int N = 0;
-    double Bx = 0;
-    fscanf(fp, "%d", &N);
-    fscanf(fp, "%lf", &Bx);
-    double Bz[N];
-    int i;
-    for (i = 0; i < N; i++) {
-        fscanf(fp, "%lf", &Bz[i]);
-    }
-    double J[N-1];
-    for (i = 0; i < N-1; i++) {
-        fscanf(fp, "%lf", &J[i]);
-    }
-    
-    
-    IsingModel();
-    return 0;
-}
-*/

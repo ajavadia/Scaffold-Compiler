@@ -167,8 +167,6 @@ struct qGate{
 
     bool isFirstMeas;
 
-    vector<uint64_t> histogramData;
-
     map<string, modularInfo > fileContents;
 
     GenSIMDSchedCG() : ModulePass(ID) {}
@@ -1220,16 +1218,14 @@ void GenSIMDSchedCG::read_schedule_file(){
       iss >> mySize.tgates;
       //TODO Track move information
       for(int i = 0; i < len; i++){
-	iss >> temp;
-	mySize.moveInfo.push_back(temp);
+      	iss >> temp;
+      	mySize.moveInfo.push_back(temp);
       }
       // Use comm-weighted length if weight is set
       mySize.length = (MOVE_WEIGHT) ? wlen : len;
       
-      histogramData.insert(histogramData.end(), mySize.moveInfo.begin(), mySize.moveInfo.end());
-
       fileContents[lineFile] = mySize;
-      //errs() << lineFile << " " << mySize.width << " " << mySize.length << " " << mySize.mts << " " << mySize.moves << " " << mySize.tgates << "\n";
+      errs() << lineFile << " " << mySize.width << " " << mySize.length << " " << mySize.mts << " " << mySize.moves << " " << mySize.tgates << "\n";
     }
     file.close(); 
  }
@@ -1498,17 +1494,18 @@ void GenSIMDSchedCG::init_gates_as_functions(){
 bool GenSIMDSchedCG::runOnModule (Module &M) {
   init_gate_names();
   init_gates_as_functions();
-  
+  errs() << "readin..\n";
   read_schedule_file();
-
+  errs() << "read it.\n";
   // iterate over all functions, and over all instructions in those functions
   CallGraphNode* rootNode = getAnalysis<CallGraph>().getRoot();
-  
+  errs() << "analyzed.\n"; 
   //Post-order
   for (scc_iterator<CallGraphNode*> sccIb = scc_begin(rootNode), E = scc_end(rootNode); sccIb != E; ++sccIb) {
     const std::vector<CallGraphNode*> &nextSCC = *sccIb;
     for (std::vector<CallGraphNode*>::const_iterator nsccI = nextSCC.begin(), E = nextSCC.end(); nsccI != E; ++nsccI) {
       Function *F = (*nsccI)->getFunction();      
+        errs() << "\n#Function " << F->getName() << "\n";      
             
       if(F && !F->isDeclaration()){
         errs() << "\n#Function " << F->getName() << "\n";      
@@ -1528,12 +1525,6 @@ bool GenSIMDSchedCG::runOnModule (Module &M) {
         if(F->getName() == "main"){
           //print_ArrParGates(F);
          
-	  //Print Histogram Data
-	  ofstream outputFile;    
-          outputFile.open("histogram_data.txt");
-          // outputFile << "\nHistogram Data\n" << endl;
-          ostream_iterator<int> output_iterator(outputFile, " ");
-          copy(histogramData.begin(), histogramData.end(), output_iterator);
 
           errs() << "\n#Num of SIMD time steps for function main : " << getNumCritSteps(F) << "\n";               
         }
