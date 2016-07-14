@@ -290,7 +290,6 @@ bool FunctionClone::runOnModule (Module &M) {
               replace(tmp_str.begin(), tmp_str.end(), '-', 'n'); //replace "-" with "n" to keep with C declaration syntax
               replace(tmp_str.begin(), tmp_str.end(), '.', '_'); //replace "-" with "n" to keep with C declaration syntax              
               originalDoubles[pos] = tmp_str;  
-              errs() << "originalDoubles = " << originalDoubles[pos] << "\n"; 
             }           
 
             for (std::vector<std::string>::iterator i = originalInts.begin(), e = originalInts.end(); i!=e; ++i)

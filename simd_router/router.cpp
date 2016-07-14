@@ -860,7 +860,7 @@ InstTableTy parse_CG_file (const std::string file_path) {
         std::vector<std::string> elems;
         split(line, ' ', elems);
         std::string module_name = elems[3];
-        std::string leaf_status = elems[9];
+        std::string leaf_status = elems[5];
         bool is_leaf = atoi(leaf_status.c_str());
         if (is_leaf == 0) {
           if (bodyInst_v.size() == 0) {

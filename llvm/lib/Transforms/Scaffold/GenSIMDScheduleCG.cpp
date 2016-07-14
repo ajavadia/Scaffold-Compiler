@@ -853,7 +853,7 @@ void GenSIMDSchedCG::save_blackbox_info(Function* F){
   if(vit==isLeaf.end()) //not a leaf
     funcIsLeaf=false;
   
-  errs() << "SIMD k="<<RES_CONSTRAINT<<" d=" << DATA_CONSTRAINT << " " << F->getName() << " " << tmpMod.width << " " << tmpMod.length << " " << tmpMod.moves << " " << tmpMod.mts << " leaf= " << funcIsLeaf << "\n";
+  errs() << "SIMD k="<<RES_CONSTRAINT<<" d=" << DATA_CONSTRAINT << " " << F->getName() << " leaf= " << funcIsLeaf << "\n";
 
 }
 
@@ -1216,16 +1216,18 @@ void GenSIMDSchedCG::read_schedule_file(){
       iss >> mySize.mts;
       iss >> mySize.moves;
       iss >> mySize.tgates;
-      //TODO Track move information
-      for(int i = 0; i < len; i++){
-      	iss >> temp;
-      	mySize.moveInfo.push_back(temp);
-      }
+
+      mySize.width = 0;
+      wlen = 0;
+      len = 0;
+      mySize.mts = 0;
+      mySize.moves = 0;
+      mySize.tgates = 0;
       // Use comm-weighted length if weight is set
       mySize.length = (MOVE_WEIGHT) ? wlen : len;
       
       fileContents[lineFile] = mySize;
-      errs() << lineFile << " " << mySize.width << " " << mySize.length << " " << mySize.mts << " " << mySize.moves << " " << mySize.tgates << "\n";
+      //errs() << lineFile << "\n";
     }
     file.close(); 
  }
@@ -1245,10 +1247,8 @@ void GenSIMDSchedCG::read_schedule_file(){
 bool GenSIMDSchedCG::check_if_pre_schedule(Function* F){
   //check if the function has been scheduled by another algorithm
   //eg: using communication aware algorithm
-  
   //open the input file and search for function name
   string fname = F->getName();
-  //errs() << "Func Name = " << fname << "\n";
   //search for fname in fileContents
   map<string, modularInfo >::iterator foundFn = fileContents.find(fname);
   if(foundFn == fileContents.end()){
@@ -1258,7 +1258,7 @@ bool GenSIMDSchedCG::check_if_pre_schedule(Function* F){
 
   funcInfo[F] = (*foundFn).second;
 
-  errs() << "SIMD k="<<RES_CONSTRAINT<<" d=" << DATA_CONSTRAINT << " " << F->getName() << " " << (*foundFn).second.width << " " << (*foundFn).second.length << " " << (*foundFn).second.moves << " " << (*foundFn).second.mts << " leaf= 1" << " (read from file)\n";
+  errs() << "SIMD k="<<RES_CONSTRAINT<<" d=" << DATA_CONSTRAINT << " " << F->getName() << " leaf= 1" << " (read from file)\n";
 
   return true;
 
@@ -1494,18 +1494,14 @@ void GenSIMDSchedCG::init_gates_as_functions(){
 bool GenSIMDSchedCG::runOnModule (Module &M) {
   init_gate_names();
   init_gates_as_functions();
-  errs() << "readin..\n";
   read_schedule_file();
-  errs() << "read it.\n";
   // iterate over all functions, and over all instructions in those functions
   CallGraphNode* rootNode = getAnalysis<CallGraph>().getRoot();
-  errs() << "analyzed.\n"; 
   //Post-order
   for (scc_iterator<CallGraphNode*> sccIb = scc_begin(rootNode), E = scc_end(rootNode); sccIb != E; ++sccIb) {
     const std::vector<CallGraphNode*> &nextSCC = *sccIb;
     for (std::vector<CallGraphNode*>::const_iterator nsccI = nextSCC.begin(), E = nextSCC.end(); nsccI != E; ++nsccI) {
       Function *F = (*nsccI)->getFunction();      
-        errs() << "\n#Function " << F->getName() << "\n";      
             
       if(F && !F->isDeclaration()){
         errs() << "\n#Function " << F->getName() << "\n";      
