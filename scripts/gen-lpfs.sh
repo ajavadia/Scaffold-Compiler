@@ -16,9 +16,9 @@ D=(1024)
 # Number of SIMD regions
 K=(4)
 # Module flattening thresholds: must be picked from the set in scripts/flattening_thresh.py
-THRESHOLDS=(000k)
+THRESHOLDS=(010k)
 # Full schedule? otherwise only generates metrics (faster)
-FULL_SCHED=true
+FULL_SCHED=1
 
 # Create directory to put all byproduct and output files in
 for f in $*; do
@@ -78,7 +78,7 @@ for f in $*; do
       for th in ${THRESHOLDS[@]}; do
         echo "[gen-lpfs.sh] $b.flat${th}: Generating SIMD K=$k D=$d leaves ..."        
         if [ ! -e ${b}/${b}.flat${th}.simd.${k}.${d}.leaves.local ]; then
-          $OPT -load $SCAF -GenLPFSSchedule -simd-kconstraint-lpfs $k -simd-dconstraint-lpfs $d -simd_l 1 -local_mem 1 ${b}/${b}.flat${th}.ll > /dev/null 2> ${b}/${b}.flat${th}.simd.${k}.${d}.leaves.local
+          $OPT -load $SCAF -GenLPFSSchedule -simd-kconstraint-lpfs $k -simd-dconstraint-lpfs $d -simd_l 1 -full_sched $FULL_SCHED -local_mem 1 ${b}/${b}.flat${th}.ll > /dev/null 2> ${b}/${b}.flat${th}.simd.${k}.${d}.leaves.local
         fi
       done
     done
