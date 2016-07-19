@@ -86,7 +86,7 @@
 //#define _DEBUG_CG_INSTS
 //#define _DEBUG_ANNOTATE_GLOBAL_MEM
 //#define _DEBUG_EPR_INJECTION
-//#define _DEBUG_PHYSICAL_INSTS
+#define _DEBUG_PHYSICAL_INSTS
 //#define _DEBUG_DAG
 //#define _DEBUG_CALL_GRAPH
 //#define _DEBUG_READY_QUEUE       

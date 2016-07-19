@@ -1163,7 +1163,7 @@ int main (int argc, char *argv[]) {
     num_cols = (num_rows*(num_rows-1) < module_q_count) ? num_rows : num_rows-1;
     cout << "\nModule: " << module_name << endl;    
     cout << "Size: " << num_rows << "X" << num_cols << endl;
-    if (num_rows == 1 && num_cols == 1) continue;
+    //if (num_rows == 1 && num_cols == 1) continue;
 
 #ifdef _PROGRESS
     cerr << "\nModule: " << module_name << endl;    
