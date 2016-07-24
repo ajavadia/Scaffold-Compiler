@@ -1,3 +1,4 @@
+M: $::SIMD_K=4; $::SIMD_D=1024; $::SIMD_L=1
 
 LPFS:
 Function: ToffoliImpl (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
@@ -55,9 +56,9 @@ Function: TESTISPARENT_IP0_IP1_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 2,1 CNOT a0 even0
 2,1 CNOT ismatch0 root0
 3,0 TMOV 0 1 a0
-3,0 TMOV 0 1 root0
 3,0 TMOV 1 2 isparent0
 3,0 TMOV 0 1 ismatch0
+3,0 BMOV 10 1 root0
 3,1 CNOT even0 isparent0
 4,0 TMOV 2 1 isparent0
 4,0 TMOV 2 0 a0
@@ -69,10 +70,10 @@ Function: TESTISPARENT_IP0_IP1_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 6,1 Tdag even0
 6,1 Tdag a0
 7,0 TMOV 1 2 isparent0
-7,0 TMOV 0 1 a0
+7,0 BMOV 10 1 a0
 7,1 CNOT even0 isparent0
 8,0 TMOV 2 1 even0
-8,0 TMOV 1 0 a0
+8,0 BMOV 1 10 a0
 8,1 CNOT isparent0 a0
 8,2 S even0
 9,0 TMOV 2 1 a0
@@ -82,7 +83,7 @@ Function: TESTISPARENT_IP0_IP1_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 10,2 X even0
 10,2 X a0
 11,1 T isparent0
-12,0 TMOV 1 0 root0
+12,0 BMOV 1 10 root0
 12,1 CNOT root0 isparent0
 13,0 TMOV 0 2 even0
 13,0 TMOV 2 1 isparent0
@@ -96,17 +97,17 @@ Function: TESTISPARENT_IP0_IP1_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 15,1 Tdag root0
 15,1 Tdag ismatch0
 16,0 TMOV 1 2 isparent0
-16,0 TMOV 0 1 ismatch0
+16,0 BMOV 10 1 ismatch0
 16,1 CNOT root0 isparent0
 17,0 TMOV 2 1 root0
-17,0 TMOV 1 0 ismatch0
+17,0 BMOV 1 10 ismatch0
 17,1 CNOT isparent0 ismatch0
 17,2 S root0
 18,0 TMOV 2 1 ismatch0
 18,1 H isparent0
 18,2 CNOT ismatch0 root0
-19,0 TMOV 0 1 isparent0
 19,0 TMOV 1 2 root0
+19,0 TMOV 0 1 isparent0
 19,1 X root0
 
 LPFS:
@@ -2628,7 +2629,6 @@ Function: SETPARENT (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0)
 1,1 T b499
 1,1 T b501
 1,2 CNOT a1 isparent0
-2,0 TMOV 0 1 b1
 2,0 TMOV 0 1 b2
 2,0 TMOV 0 1 b3
 2,0 TMOV 0 1 b4
@@ -3129,6 +3129,7 @@ Function: SETPARENT (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0)
 2,0 TMOV 0 1 b499
 2,0 TMOV 0 1 b501
 2,0 TMOV 1 2 isparent0
+2,0 BMOV 10 1 b1
 2,1 CNOT isparent0 b0
 3,0 TMOV 2 1 b0
 3,1 Tdag isparent0
@@ -3153,7 +3154,7 @@ Function: SETPARENT (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0)
 10,0 TMOV 1 3 a2
 10,1 CNOT a2 isparent0
 11,0 TMOV 0 1 a2
-11,0 TMOV 1 0 b1
+11,0 BMOV 1 10 b1
 11,1 CNOT isparent0 b1
 12,0 TMOV 0 2 b0
 12,0 TMOV 2 1 b1
@@ -20150,7 +20151,6 @@ Function: CADDNUMCLEAR (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0)
 3,0 TMOV 0 2 a3
 3,0 TMOV 0 2 a2
 3,0 TMOV 0 2 a1
-3,0 TMOV 0 2 scratch497
 3,0 TMOV 0 2 scratch496
 3,0 TMOV 0 2 scratch495
 3,0 TMOV 0 2 scratch494
@@ -20648,6 +20648,7 @@ Function: CADDNUMCLEAR (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0)
 3,0 TMOV 0 2 scratch2
 3,0 TMOV 0 2 scratch1
 3,0 TMOV 0 2 scratch0
+3,0 BMOV 20 2 scratch497
 3,1 Tdag a499
 3,2 CNOT scratch499 scratch498
 4,0 TMOV 1 2 scratch498
@@ -20672,7 +20673,7 @@ Function: CADDNUMCLEAR (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0)
 11,1 CNOT a498 scratch498
 12,0 TMOV 0 2 scratch499
 12,0 TMOV 2 1 scratch498
-12,0 TMOV 2 0 scratch497
+12,0 BMOV 2 20 scratch497
 12,1 Tdag a498
 12,2 CNOT scratch498 scratch497
 13,0 TMOV 1 2 scratch497
@@ -20680,8 +20681,8 @@ Function: CADDNUMCLEAR (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0)
 13,2 T scratch498
 14,1 Tdag a498
 14,1 Tdag scratch497
-15,0 TMOV 1 2 scratch498
 15,0 TMOV 0 1 scratch497
+15,0 TMOV 1 2 scratch498
 15,1 CNOT a498 scratch498
 16,0 TMOV 2 1 scratch498
 16,0 TMOV 2 0 scratch497
@@ -36615,7 +36616,6 @@ Function: CSUBNUMCLEAR (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0)
 2,1 CNOT scratch2 a3
 2,1 CNOT scratch1 a2
 2,1 CNOT scratch0 a1
-3,0 TMOV 0 1 a498
 3,0 TMOV 0 1 a497
 3,0 TMOV 0 1 a496
 3,0 TMOV 0 1 a495
@@ -37613,6 +37613,7 @@ Function: CSUBNUMCLEAR (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0)
 3,0 TMOV 0 1 scratch2
 3,0 TMOV 0 1 scratch1
 3,0 TMOV 0 1 scratch0
+3,0 BMOV 10 1 a498
 3,1 CNOT a499 scratch499
 4,0 TMOV 2 1 scratch499
 4,0 TMOV 2 0 scratch498
@@ -37638,7 +37639,7 @@ Function: CSUBNUMCLEAR (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0)
 10,1 H scratch498
 10,2 X a499
 11,1 T scratch498
-12,0 TMOV 1 0 a498
+12,0 BMOV 1 10 a498
 12,1 CNOT a498 scratch498
 13,0 TMOV 0 2 a499
 13,0 TMOV 2 1 scratch498
@@ -37660,8 +37661,8 @@ Function: CSUBNUMCLEAR (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0)
 18,0 TMOV 1 2 scratch497
 18,1 CNOT scratch497 a498
 18,2 H scratch498
-19,0 TMOV 0 2 scratch498
 19,0 TMOV 2 1 a498
+19,0 TMOV 0 2 scratch498
 19,1 H scratch497
 19,2 X a498
 20,1 T scratch497
@@ -51070,10 +51071,10 @@ Function: CSUBNUMCLEAR (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0)
 4488,1 Tdag a1
 4488,1 Tdag scratch0
 4489,0 TMOV 1 2 scratch1
-4489,0 TMOV 0 1 scratch0
+4489,0 BMOV 10 1 scratch0
 4489,1 CNOT a1 scratch1
 4490,0 TMOV 2 1 a1
-4490,0 TMOV 1 0 scratch0
+4490,0 BMOV 1 10 scratch0
 4490,1 CNOT scratch1 scratch0
 4490,2 S a1
 4491,0 TMOV 2 1 scratch0
@@ -53600,7 +53601,6 @@ Function: SETCHILDINTREE (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0)
 1,1 T b500
 1,1 T b501
 1,2 CNOT direction0 childctrl0
-2,0 TMOV 0 1 b1
 2,0 TMOV 0 1 b2
 2,0 TMOV 0 1 b3
 2,0 TMOV 0 1 b4
@@ -54102,6 +54102,7 @@ Function: SETCHILDINTREE (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0)
 2,0 TMOV 0 1 b500
 2,0 TMOV 0 1 b501
 2,0 TMOV 1 2 childctrl0
+2,0 BMOV 10 1 b1
 2,1 CNOT childctrl0 b0
 3,0 TMOV 2 1 b0
 3,1 Tdag childctrl0
@@ -54126,7 +54127,7 @@ Function: SETCHILDINTREE (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0)
 10,0 TMOV 1 3 a0
 10,1 CNOT a0 childctrl0
 11,0 TMOV 0 1 a0
-11,0 TMOV 1 0 b1
+11,0 BMOV 1 10 b1
 11,1 CNOT childctrl0 b1
 12,0 TMOV 0 2 b0
 12,0 TMOV 2 1 b1
@@ -67671,10 +67672,10 @@ Function: TESTISPARENT_IP0_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 2,0 TMOV 1 3 ismatch0
 2,1 CNOT ismatch0 root0
 2,1 CNOT a0 even0
-3,0 TMOV 0 1 even0
 3,0 TMOV 0 1 a0
 3,0 TMOV 1 2 isparent0
 3,0 TMOV 0 1 ismatch0
+3,0 BMOV 10 1 even0
 3,1 CNOT root0 isparent0
 4,0 TMOV 2 1 isparent0
 4,0 TMOV 2 0 ismatch0
@@ -67686,10 +67687,10 @@ Function: TESTISPARENT_IP0_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 6,1 Tdag root0
 6,1 Tdag ismatch0
 7,0 TMOV 1 2 isparent0
-7,0 TMOV 0 1 ismatch0
+7,0 BMOV 10 1 ismatch0
 7,1 CNOT root0 isparent0
 8,0 TMOV 2 1 root0
-8,0 TMOV 1 0 ismatch0
+8,0 BMOV 1 10 ismatch0
 8,1 CNOT isparent0 ismatch0
 8,2 S root0
 9,0 TMOV 2 1 ismatch0
@@ -67701,7 +67702,7 @@ Function: TESTISPARENT_IP0_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 10,3 T ismatch0
 11,1 T isparent0
 11,2 X root0
-12,0 TMOV 1 0 even0
+12,0 BMOV 1 10 even0
 12,1 CNOT even0 isparent0
 12,2 Tdag root0
 13,0 TMOV 2 1 isparent0
@@ -67711,17 +67712,17 @@ Function: TESTISPARENT_IP0_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 13,2 CNOT isparent0 a0
 13,2 CNOT ismatch0 root0
 14,0 TMOV 0 2 root0
-14,0 TMOV 0 2 ismatch0
 14,0 TMOV 1 2 a0
+14,0 BMOV 20 2 ismatch0
 14,1 CNOT even0 a0
 14,2 T isparent0
 15,1 Tdag even0
 15,1 Tdag a0
 16,0 TMOV 1 2 isparent0
-16,0 TMOV 0 1 a0
+16,0 BMOV 10 1 a0
 16,1 CNOT even0 isparent0
 17,0 TMOV 2 1 even0
-17,0 TMOV 1 0 a0
+17,0 BMOV 1 10 a0
 17,1 CNOT isparent0 a0
 17,2 S even0
 18,0 TMOV 2 1 a0
@@ -67733,10 +67734,10 @@ Function: TESTISPARENT_IP0_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 20,1 T isparent0
 21,0 TMOV 1 0 root0
 21,1 CNOT root0 isparent0
-22,0 TMOV 2 1 isparent0
 22,0 TMOV 0 2 even0
+22,0 TMOV 2 1 isparent0
 22,0 TMOV 0 2 a0
-22,0 TMOV 2 0 ismatch0
+22,0 BMOV 2 20 ismatch0
 22,1 Tdag root0
 22,2 CNOT isparent0 ismatch0
 23,0 TMOV 1 2 ismatch0
@@ -67745,10 +67746,10 @@ Function: TESTISPARENT_IP0_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 24,1 Tdag root0
 24,1 Tdag ismatch0
 25,0 TMOV 1 2 isparent0
-25,0 TMOV 0 1 ismatch0
+25,0 BMOV 10 1 ismatch0
 25,1 CNOT root0 isparent0
 26,0 TMOV 2 1 root0
-26,0 TMOV 1 0 ismatch0
+26,0 BMOV 1 10 ismatch0
 26,1 CNOT isparent0 ismatch0
 26,2 S root0
 27,0 TMOV 2 1 ismatch0
@@ -67764,428 +67765,432 @@ Function: W (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0)
 0,0 TMOV 1 0 q10
 0,0 TMOV 1 0 q20
 0,1 CNOT q10 q20
-1,0 TMOV 0 1 q10
+1,0 BMOV 10 1 q10
 1,1 X q20
 2,1 Sdag q20
 3,1 H q20
 4,1 Tdag q20
-5,0 TMOV 1 0 q10
+5,0 BMOV 1 10 q10
 5,1 CNOT q20 q10
-6,0 TMOV 0 1 q10
+6,0 BMOV 10 1 q10
 6,1 T q20
 7,1 H q20
 8,1 S q20
 9,1 X q20
+10,0 BMOV 1 10 q10
+10,1 CNOT q10 q20
 
 LPFS:
 Function: controlled_expZ (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
 0,0 TMOV 1 0 target0
-0,1 H target0
-1,1 T target0
-2,1 H target0
-3,1 T target0
-4,1 H target0
-5,1 T target0
-6,1 H target0
-7,1 T target0
-8,1 H target0
-9,1 T target0
-10,1 H target0
-11,1 T target0
-12,1 H target0
-13,1 T target0
-14,1 H target0
-15,1 T target0
-16,1 H target0
-17,1 T target0
-18,1 H target0
-19,1 T target0
-20,1 H target0
-21,1 T target0
-22,1 H target0
-23,1 T target0
-24,1 H target0
-25,1 T target0
-26,1 H target0
-27,1 T target0
-28,1 H target0
-29,1 T target0
-30,1 H target0
-31,1 T target0
-32,1 H target0
-33,1 T target0
-34,1 H target0
-35,1 T target0
-36,1 H target0
-37,1 T target0
-38,1 H target0
-39,1 T target0
-40,1 H target0
-41,1 T target0
-42,1 H target0
-43,1 T target0
-44,1 H target0
-45,1 T target0
-46,1 H target0
-47,1 T target0
-48,1 H target0
-49,1 T target0
-50,1 H target0
-51,1 T target0
-52,1 H target0
-53,1 T target0
-54,1 H target0
-55,1 T target0
-56,1 H target0
-57,1 T target0
-58,1 H target0
-59,1 T target0
-60,1 H target0
-61,1 T target0
-62,1 H target0
-63,1 T target0
-64,1 H target0
-65,1 T target0
-66,1 H target0
-67,1 T target0
-68,1 H target0
-69,1 T target0
-70,1 H target0
-71,1 T target0
-72,1 H target0
-73,1 T target0
-74,1 H target0
-75,1 T target0
-76,1 H target0
-77,1 T target0
-78,1 H target0
-79,1 T target0
-80,1 H target0
-81,1 T target0
-82,1 H target0
-83,1 T target0
-84,1 H target0
-85,1 T target0
-86,1 H target0
-87,1 T target0
-88,1 H target0
-89,1 T target0
-90,1 H target0
-91,1 T target0
-92,1 H target0
-93,1 T target0
-94,1 H target0
-95,1 T target0
-96,1 H target0
-97,1 T target0
-98,1 H target0
-99,1 T target0
-100,1 H target0
-101,1 T target0
-102,1 H target0
-103,1 T target0
-104,1 H target0
-105,1 T target0
-106,1 H target0
-107,1 T target0
-108,1 H target0
-109,1 T target0
-110,1 H target0
-111,1 T target0
-112,1 H target0
-113,1 T target0
-114,1 H target0
-115,1 T target0
-116,1 H target0
-117,1 T target0
-118,1 H target0
-119,1 T target0
-120,1 H target0
-121,1 T target0
-122,1 H target0
-123,1 T target0
-124,1 H target0
-125,1 T target0
-126,1 H target0
-127,1 T target0
-128,1 H target0
-129,1 T target0
-130,1 H target0
-131,1 T target0
-132,1 H target0
-133,1 T target0
-134,1 H target0
-135,1 T target0
-136,1 H target0
-137,1 T target0
-138,1 H target0
-139,1 T target0
-140,1 H target0
-141,1 T target0
-142,1 H target0
-143,1 T target0
-144,1 H target0
-145,1 T target0
-146,1 H target0
-147,1 T target0
-148,1 H target0
-149,1 T target0
-150,1 H target0
-151,1 T target0
-152,1 H target0
-153,1 T target0
-154,1 H target0
-155,1 T target0
-156,1 H target0
-157,1 T target0
-158,1 H target0
-159,1 T target0
-160,1 H target0
-161,1 T target0
-162,1 H target0
-163,1 T target0
-164,1 H target0
-165,1 T target0
-166,1 H target0
-167,1 T target0
-168,1 H target0
-169,1 T target0
-170,1 H target0
-171,1 T target0
-172,1 H target0
-173,1 T target0
-174,1 H target0
-175,1 T target0
-176,1 H target0
-177,1 T target0
-178,1 H target0
-179,1 T target0
-180,1 H target0
-181,1 T target0
-182,1 H target0
-183,1 T target0
-184,1 H target0
-185,1 T target0
-186,1 H target0
-187,1 T target0
-188,1 H target0
-189,1 T target0
-190,1 H target0
-191,1 T target0
-192,1 H target0
-193,1 T target0
-194,1 H target0
-195,1 T target0
-196,1 H target0
-197,1 T target0
-198,1 H target0
-199,1 T target0
-200,1 H target0
-201,0 TMOV 1 0 control0
-201,1 CNOT target0 control0
-202,0 TMOV 0 1 control0
-202,1 X target0
-203,1 H target0
-204,1 T target0
-205,1 H target0
-206,1 T target0
-207,1 H target0
-208,1 T target0
-209,1 H target0
-210,1 T target0
-211,1 H target0
-212,1 T target0
-213,1 H target0
-214,1 T target0
-215,1 H target0
-216,1 T target0
-217,1 H target0
-218,1 T target0
-219,1 H target0
-220,1 T target0
-221,1 H target0
-222,1 T target0
-223,1 H target0
-224,1 T target0
-225,1 H target0
-226,1 T target0
-227,1 H target0
-228,1 T target0
-229,1 H target0
-230,1 T target0
-231,1 H target0
-232,1 T target0
-233,1 H target0
-234,1 T target0
-235,1 H target0
-236,1 T target0
-237,1 H target0
-238,1 T target0
-239,1 H target0
-240,1 T target0
-241,1 H target0
-242,1 T target0
-243,1 H target0
-244,1 T target0
-245,1 H target0
-246,1 T target0
-247,1 H target0
-248,1 T target0
-249,1 H target0
-250,1 T target0
-251,1 H target0
-252,1 T target0
-253,1 H target0
-254,1 T target0
-255,1 H target0
-256,1 T target0
-257,1 H target0
-258,1 T target0
-259,1 H target0
-260,1 T target0
-261,1 H target0
-262,1 T target0
-263,1 H target0
-264,1 T target0
-265,1 H target0
-266,1 T target0
-267,1 H target0
-268,1 T target0
-269,1 H target0
-270,1 T target0
-271,1 H target0
-272,1 T target0
-273,1 H target0
-274,1 T target0
-275,1 H target0
-276,1 T target0
-277,1 H target0
-278,1 T target0
-279,1 H target0
-280,1 T target0
-281,1 H target0
-282,1 T target0
-283,1 H target0
-284,1 T target0
-285,1 H target0
-286,1 T target0
-287,1 H target0
-288,1 T target0
-289,1 H target0
-290,1 T target0
-291,1 H target0
-292,1 T target0
-293,1 H target0
-294,1 T target0
-295,1 H target0
-296,1 T target0
-297,1 H target0
-298,1 T target0
-299,1 H target0
-300,1 T target0
-301,1 H target0
-302,1 T target0
-303,1 H target0
-304,1 T target0
-305,1 H target0
-306,1 T target0
-307,1 H target0
-308,1 T target0
-309,1 H target0
-310,1 T target0
-311,1 H target0
-312,1 T target0
-313,1 H target0
-314,1 T target0
-315,1 H target0
-316,1 T target0
-317,1 H target0
-318,1 T target0
-319,1 H target0
-320,1 T target0
-321,1 H target0
-322,1 T target0
-323,1 H target0
-324,1 T target0
-325,1 H target0
-326,1 T target0
-327,1 H target0
-328,1 T target0
-329,1 H target0
-330,1 T target0
-331,1 H target0
-332,1 T target0
-333,1 H target0
-334,1 T target0
-335,1 H target0
-336,1 T target0
-337,1 H target0
-338,1 T target0
-339,1 H target0
-340,1 T target0
-341,1 H target0
-342,1 T target0
-343,1 H target0
-344,1 T target0
-345,1 H target0
-346,1 T target0
-347,1 H target0
-348,1 T target0
-349,1 H target0
-350,1 T target0
-351,1 H target0
-352,1 T target0
-353,1 H target0
-354,1 T target0
-355,1 H target0
-356,1 T target0
-357,1 H target0
-358,1 T target0
-359,1 H target0
-360,1 T target0
-361,1 H target0
-362,1 T target0
-363,1 H target0
-364,1 T target0
-365,1 H target0
-366,1 T target0
-367,1 H target0
-368,1 T target0
-369,1 H target0
-370,1 T target0
-371,1 H target0
-372,1 T target0
-373,1 H target0
-374,1 T target0
-375,1 H target0
-376,1 T target0
-377,1 H target0
-378,1 T target0
-379,1 H target0
-380,1 T target0
-381,1 H target0
-382,1 T target0
-383,1 H target0
-384,1 T target0
-385,1 H target0
-386,1 T target0
-387,1 H target0
-388,1 T target0
-389,1 H target0
-390,1 T target0
-391,1 H target0
-392,1 T target0
-393,1 H target0
-394,1 T target0
-395,1 H target0
-396,1 T target0
-397,1 H target0
-398,1 T target0
-399,1 H target0
-400,1 T target0
-401,1 H target0
-402,1 T target0
+0,1 X target0
+1,1 H target0
+2,1 T target0
+3,1 H target0
+4,1 T target0
+5,1 H target0
+6,1 T target0
+7,1 H target0
+8,1 T target0
+9,1 H target0
+10,1 T target0
+11,1 H target0
+12,1 T target0
+13,1 H target0
+14,1 T target0
+15,1 H target0
+16,1 T target0
+17,1 H target0
+18,1 T target0
+19,1 H target0
+20,1 T target0
+21,1 H target0
+22,1 T target0
+23,1 H target0
+24,1 T target0
+25,1 H target0
+26,1 T target0
+27,1 H target0
+28,1 T target0
+29,1 H target0
+30,1 T target0
+31,1 H target0
+32,1 T target0
+33,1 H target0
+34,1 T target0
+35,1 H target0
+36,1 T target0
+37,1 H target0
+38,1 T target0
+39,1 H target0
+40,1 T target0
+41,1 H target0
+42,1 T target0
+43,1 H target0
+44,1 T target0
+45,1 H target0
+46,1 T target0
+47,1 H target0
+48,1 T target0
+49,1 H target0
+50,1 T target0
+51,1 H target0
+52,1 T target0
+53,1 H target0
+54,1 T target0
+55,1 H target0
+56,1 T target0
+57,1 H target0
+58,1 T target0
+59,1 H target0
+60,1 T target0
+61,1 H target0
+62,1 T target0
+63,1 H target0
+64,1 T target0
+65,1 H target0
+66,1 T target0
+67,1 H target0
+68,1 T target0
+69,1 H target0
+70,1 T target0
+71,1 H target0
+72,1 T target0
+73,1 H target0
+74,1 T target0
+75,1 H target0
+76,1 T target0
+77,1 H target0
+78,1 T target0
+79,1 H target0
+80,1 T target0
+81,1 H target0
+82,1 T target0
+83,1 H target0
+84,1 T target0
+85,1 H target0
+86,1 T target0
+87,1 H target0
+88,1 T target0
+89,1 H target0
+90,1 T target0
+91,1 H target0
+92,1 T target0
+93,1 H target0
+94,1 T target0
+95,1 H target0
+96,1 T target0
+97,1 H target0
+98,1 T target0
+99,1 H target0
+100,1 T target0
+101,1 H target0
+102,1 T target0
+103,1 H target0
+104,1 T target0
+105,1 H target0
+106,1 T target0
+107,1 H target0
+108,1 T target0
+109,1 H target0
+110,1 T target0
+111,1 H target0
+112,1 T target0
+113,1 H target0
+114,1 T target0
+115,1 H target0
+116,1 T target0
+117,1 H target0
+118,1 T target0
+119,1 H target0
+120,1 T target0
+121,1 H target0
+122,1 T target0
+123,1 H target0
+124,1 T target0
+125,1 H target0
+126,1 T target0
+127,1 H target0
+128,1 T target0
+129,1 H target0
+130,1 T target0
+131,1 H target0
+132,1 T target0
+133,1 H target0
+134,1 T target0
+135,1 H target0
+136,1 T target0
+137,1 H target0
+138,1 T target0
+139,1 H target0
+140,1 T target0
+141,1 H target0
+142,1 T target0
+143,1 H target0
+144,1 T target0
+145,1 H target0
+146,1 T target0
+147,1 H target0
+148,1 T target0
+149,1 H target0
+150,1 T target0
+151,1 H target0
+152,1 T target0
+153,1 H target0
+154,1 T target0
+155,1 H target0
+156,1 T target0
+157,1 H target0
+158,1 T target0
+159,1 H target0
+160,1 T target0
+161,1 H target0
+162,1 T target0
+163,1 H target0
+164,1 T target0
+165,1 H target0
+166,1 T target0
+167,1 H target0
+168,1 T target0
+169,1 H target0
+170,1 T target0
+171,1 H target0
+172,1 T target0
+173,1 H target0
+174,1 T target0
+175,1 H target0
+176,1 T target0
+177,1 H target0
+178,1 T target0
+179,1 H target0
+180,1 T target0
+181,1 H target0
+182,1 T target0
+183,1 H target0
+184,1 T target0
+185,1 H target0
+186,1 T target0
+187,1 H target0
+188,1 T target0
+189,1 H target0
+190,1 T target0
+191,1 H target0
+192,1 T target0
+193,1 H target0
+194,1 T target0
+195,1 H target0
+196,1 T target0
+197,1 H target0
+198,1 T target0
+199,1 H target0
+200,1 T target0
+201,1 H target0
+202,0 TMOV 1 0 control0
+202,1 CNOT target0 control0
+203,0 TMOV 0 1 control0
+203,1 X target0
+204,1 H target0
+205,1 T target0
+206,1 H target0
+207,1 T target0
+208,1 H target0
+209,1 T target0
+210,1 H target0
+211,1 T target0
+212,1 H target0
+213,1 T target0
+214,1 H target0
+215,1 T target0
+216,1 H target0
+217,1 T target0
+218,1 H target0
+219,1 T target0
+220,1 H target0
+221,1 T target0
+222,1 H target0
+223,1 T target0
+224,1 H target0
+225,1 T target0
+226,1 H target0
+227,1 T target0
+228,1 H target0
+229,1 T target0
+230,1 H target0
+231,1 T target0
+232,1 H target0
+233,1 T target0
+234,1 H target0
+235,1 T target0
+236,1 H target0
+237,1 T target0
+238,1 H target0
+239,1 T target0
+240,1 H target0
+241,1 T target0
+242,1 H target0
+243,1 T target0
+244,1 H target0
+245,1 T target0
+246,1 H target0
+247,1 T target0
+248,1 H target0
+249,1 T target0
+250,1 H target0
+251,1 T target0
+252,1 H target0
+253,1 T target0
+254,1 H target0
+255,1 T target0
+256,1 H target0
+257,1 T target0
+258,1 H target0
+259,1 T target0
+260,1 H target0
+261,1 T target0
+262,1 H target0
+263,1 T target0
+264,1 H target0
+265,1 T target0
+266,1 H target0
+267,1 T target0
+268,1 H target0
+269,1 T target0
+270,1 H target0
+271,1 T target0
+272,1 H target0
+273,1 T target0
+274,1 H target0
+275,1 T target0
+276,1 H target0
+277,1 T target0
+278,1 H target0
+279,1 T target0
+280,1 H target0
+281,1 T target0
+282,1 H target0
+283,1 T target0
+284,1 H target0
+285,1 T target0
+286,1 H target0
+287,1 T target0
+288,1 H target0
+289,1 T target0
+290,1 H target0
+291,1 T target0
+292,1 H target0
+293,1 T target0
+294,1 H target0
+295,1 T target0
+296,1 H target0
+297,1 T target0
+298,1 H target0
+299,1 T target0
+300,1 H target0
+301,1 T target0
+302,1 H target0
+303,1 T target0
+304,1 H target0
+305,1 T target0
+306,1 H target0
+307,1 T target0
+308,1 H target0
+309,1 T target0
+310,1 H target0
+311,1 T target0
+312,1 H target0
+313,1 T target0
+314,1 H target0
+315,1 T target0
+316,1 H target0
+317,1 T target0
+318,1 H target0
+319,1 T target0
+320,1 H target0
+321,1 T target0
+322,1 H target0
+323,1 T target0
+324,1 H target0
+325,1 T target0
+326,1 H target0
+327,1 T target0
+328,1 H target0
+329,1 T target0
+330,1 H target0
+331,1 T target0
+332,1 H target0
+333,1 T target0
+334,1 H target0
+335,1 T target0
+336,1 H target0
+337,1 T target0
+338,1 H target0
+339,1 T target0
+340,1 H target0
+341,1 T target0
+342,1 H target0
+343,1 T target0
+344,1 H target0
+345,1 T target0
+346,1 H target0
+347,1 T target0
+348,1 H target0
+349,1 T target0
+350,1 H target0
+351,1 T target0
+352,1 H target0
+353,1 T target0
+354,1 H target0
+355,1 T target0
+356,1 H target0
+357,1 T target0
+358,1 H target0
+359,1 T target0
+360,1 H target0
+361,1 T target0
+362,1 H target0
+363,1 T target0
+364,1 H target0
+365,1 T target0
+366,1 H target0
+367,1 T target0
+368,1 H target0
+369,1 T target0
+370,1 H target0
+371,1 T target0
+372,1 H target0
+373,1 T target0
+374,1 H target0
+375,1 T target0
+376,1 H target0
+377,1 T target0
+378,1 H target0
+379,1 T target0
+380,1 H target0
+381,1 T target0
+382,1 H target0
+383,1 T target0
+384,1 H target0
+385,1 T target0
+386,1 H target0
+387,1 T target0
+388,1 H target0
+389,1 T target0
+390,1 H target0
+391,1 T target0
+392,1 H target0
+393,1 T target0
+394,1 H target0
+395,1 T target0
+396,1 H target0
+397,1 T target0
+398,1 H target0
+399,1 T target0
+400,1 H target0
+401,1 T target0
+402,1 H target0
+403,1 T target0
+404,1 H target0
 
 LPFS:
 Function: TESTISPARENT_IP1_IP1_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
@@ -68207,10 +68212,10 @@ Function: TESTISPARENT_IP1_IP1_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 2,0 TMOV 1 3 ismatch0
 2,1 CNOT a0 even0
 2,1 CNOT ismatch0 root0
-3,0 TMOV 0 1 root0
 3,0 TMOV 1 2 isparent0
 3,0 TMOV 0 1 a0
 3,0 TMOV 0 1 ismatch0
+3,0 BMOV 10 1 root0
 3,1 CNOT even0 isparent0
 4,0 TMOV 2 1 isparent0
 4,0 TMOV 2 0 a0
@@ -68222,10 +68227,10 @@ Function: TESTISPARENT_IP1_IP1_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 6,1 Tdag even0
 6,1 Tdag a0
 7,0 TMOV 1 2 isparent0
-7,0 TMOV 0 1 a0
+7,0 BMOV 10 1 a0
 7,1 CNOT even0 isparent0
 8,0 TMOV 2 1 even0
-8,0 TMOV 1 0 a0
+8,0 BMOV 1 10 a0
 8,1 CNOT isparent0 a0
 8,2 S even0
 9,0 TMOV 2 1 a0
@@ -68235,7 +68240,7 @@ Function: TESTISPARENT_IP1_IP1_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 10,1 H isparent0
 10,2 X even0
 11,1 T isparent0
-12,0 TMOV 1 0 root0
+12,0 BMOV 1 10 root0
 12,1 CNOT root0 isparent0
 13,0 TMOV 0 2 even0
 13,0 TMOV 2 1 isparent0
@@ -68248,17 +68253,17 @@ Function: TESTISPARENT_IP1_IP1_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 15,1 Tdag root0
 15,1 Tdag ismatch0
 16,0 TMOV 1 2 isparent0
-16,0 TMOV 0 1 ismatch0
+16,0 BMOV 10 1 ismatch0
 16,1 CNOT root0 isparent0
 17,0 TMOV 2 1 root0
-17,0 TMOV 1 0 ismatch0
+17,0 BMOV 1 10 ismatch0
 17,1 CNOT isparent0 ismatch0
 17,2 S root0
 18,0 TMOV 2 1 ismatch0
 18,1 H isparent0
 18,2 CNOT ismatch0 root0
-19,0 TMOV 0 1 isparent0
 19,0 TMOV 1 2 root0
+19,0 TMOV 0 1 isparent0
 19,1 X root0
 
 LPFS:
@@ -68266,7 +68271,9 @@ Function: TESTISCHILD_IP1_IPx_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 102
 ==================================================================
 0,0 TMOV 1 0 ischild0
 0,0 TMOV 1 0 even0
+0,0 TMOV 2 0 direction0
 0,1 CNOT ischild0 even0
+0,2 X direction0
 
 LPFS:
 Function: TESTISPARENT_IP1_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
@@ -68288,10 +68295,10 @@ Function: TESTISPARENT_IP1_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 2,0 TMOV 1 3 a0
 2,1 CNOT ismatch0 root0
 2,1 CNOT a0 even0
-3,0 TMOV 0 1 even0
 3,0 TMOV 1 2 isparent0
 3,0 TMOV 0 1 ismatch0
 3,0 TMOV 0 1 a0
+3,0 BMOV 10 1 even0
 3,1 CNOT root0 isparent0
 4,0 TMOV 2 1 isparent0
 4,0 TMOV 2 0 ismatch0
@@ -68303,10 +68310,10 @@ Function: TESTISPARENT_IP1_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 6,1 Tdag root0
 6,1 Tdag ismatch0
 7,0 TMOV 1 2 isparent0
-7,0 TMOV 0 1 ismatch0
+7,0 BMOV 10 1 ismatch0
 7,1 CNOT root0 isparent0
 8,0 TMOV 2 1 root0
-8,0 TMOV 1 0 ismatch0
+8,0 BMOV 1 10 ismatch0
 8,1 CNOT isparent0 ismatch0
 8,2 S root0
 9,0 TMOV 2 1 ismatch0
@@ -68318,7 +68325,7 @@ Function: TESTISPARENT_IP1_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 10,3 T ismatch0
 11,1 T isparent0
 11,2 X root0
-12,0 TMOV 1 0 even0
+12,0 BMOV 1 10 even0
 12,1 CNOT even0 isparent0
 12,2 Tdag root0
 13,0 TMOV 2 1 isparent0
@@ -68328,17 +68335,17 @@ Function: TESTISPARENT_IP1_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 13,2 CNOT isparent0 a0
 13,2 CNOT ismatch0 root0
 14,0 TMOV 0 2 root0
-14,0 TMOV 0 2 ismatch0
 14,0 TMOV 1 2 a0
+14,0 BMOV 20 2 ismatch0
 14,1 CNOT even0 a0
 14,2 T isparent0
 15,1 Tdag even0
 15,1 Tdag a0
 16,0 TMOV 1 2 isparent0
-16,0 TMOV 0 1 a0
+16,0 BMOV 10 1 a0
 16,1 CNOT even0 isparent0
 17,0 TMOV 2 1 even0
-17,0 TMOV 1 0 a0
+17,0 BMOV 1 10 a0
 17,1 CNOT isparent0 a0
 17,2 S even0
 18,0 TMOV 2 1 a0
@@ -68350,9 +68357,9 @@ Function: TESTISPARENT_IP1_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 20,1 T isparent0
 21,0 TMOV 1 0 root0
 21,1 CNOT root0 isparent0
-22,0 TMOV 2 1 isparent0
 22,0 TMOV 0 2 even0
-22,0 TMOV 2 0 ismatch0
+22,0 TMOV 2 1 isparent0
+22,0 BMOV 2 20 ismatch0
 22,1 Tdag root0
 22,2 CNOT isparent0 ismatch0
 23,0 TMOV 1 2 ismatch0
@@ -68361,10 +68368,10 @@ Function: TESTISPARENT_IP1_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 24,1 Tdag root0
 24,1 Tdag ismatch0
 25,0 TMOV 1 2 isparent0
-25,0 TMOV 0 1 ismatch0
+25,0 BMOV 10 1 ismatch0
 25,1 CNOT root0 isparent0
 26,0 TMOV 2 1 root0
-26,0 TMOV 1 0 ismatch0
+26,0 BMOV 1 10 ismatch0
 26,1 CNOT isparent0 ismatch0
 26,2 S root0
 27,0 TMOV 2 1 ismatch0
@@ -68394,12 +68401,12 @@ Function: TESTISPARENT_IP2_IP1_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 1,1 T ismatch0
 1,1 T isparent0
 1,2 Tdag root0
-2,0 TMOV 0 1 ismatch0
-2,0 TMOV 0 1 isparent0
 2,0 TMOV 1 3 even0
+2,0 BMOV 10 1 ismatch0
+2,0 BMOV 10 1 isparent0
 2,1 CNOT a0 even0
 3,0 TMOV 0 1 a0
-3,0 TMOV 1 0 ismatch0
+3,0 BMOV 1 10 ismatch0
 3,1 CNOT even0 ismatch0
 4,0 TMOV 0 2 root0
 4,0 TMOV 2 1 ismatch0
@@ -68412,10 +68419,10 @@ Function: TESTISPARENT_IP2_IP1_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 6,1 Tdag even0
 6,1 Tdag a0
 7,0 TMOV 1 2 ismatch0
-7,0 TMOV 0 1 a0
+7,0 BMOV 10 1 a0
 7,1 CNOT even0 ismatch0
 8,0 TMOV 2 1 even0
-8,0 TMOV 1 0 a0
+8,0 BMOV 1 10 a0
 8,1 CNOT ismatch0 a0
 8,2 S even0
 9,0 TMOV 2 1 a0
@@ -68427,10 +68434,10 @@ Function: TESTISPARENT_IP2_IP1_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 11,0 TMOV 1 0 root0
 11,1 CNOT ismatch0 root0
 12,0 TMOV 0 1 ismatch0
-12,0 TMOV 1 0 isparent0
+12,0 BMOV 1 10 isparent0
 12,1 CNOT root0 isparent0
-13,0 TMOV 0 2 a0
 13,0 TMOV 2 1 isparent0
+13,0 TMOV 0 2 a0
 13,0 TMOV 2 0 ismatch0
 13,1 Tdag root0
 13,2 CNOT isparent0 ismatch0
@@ -68440,17 +68447,17 @@ Function: TESTISPARENT_IP2_IP1_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 15,1 Tdag root0
 15,1 Tdag ismatch0
 16,0 TMOV 1 2 isparent0
-16,0 TMOV 0 1 ismatch0
+16,0 BMOV 10 1 ismatch0
 16,1 CNOT root0 isparent0
 17,0 TMOV 2 1 root0
-17,0 TMOV 1 0 ismatch0
+17,0 BMOV 1 10 ismatch0
 17,1 CNOT isparent0 ismatch0
 17,2 S root0
 18,0 TMOV 2 1 ismatch0
 18,1 H isparent0
 18,2 CNOT ismatch0 root0
-19,0 TMOV 1 2 root0
 19,0 TMOV 0 1 isparent0
+19,0 TMOV 1 2 root0
 19,1 X root0
 
 LPFS:
@@ -68460,6 +68467,8 @@ Function: TESTISCHILD_IP2_IPx_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 102
 0,1 X even0
 1,0 TMOV 1 0 ischild0
 1,1 CNOT ischild0 even0
+2,0 TMOV 0 1 ischild0
+2,1 X even0
 
 LPFS:
 Function: TESTISPARENT_IP2_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
@@ -68486,7 +68495,7 @@ Function: TESTISPARENT_IP2_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 3,0 TMOV 0 1 a0
 3,0 TMOV 1 2 isparent0
 3,0 TMOV 0 1 ismatch0
-3,0 TMOV 0 1 even0
+3,0 BMOV 10 1 even0
 3,1 CNOT root0 isparent0
 4,0 TMOV 2 1 isparent0
 4,0 TMOV 2 0 ismatch0
@@ -68515,8 +68524,8 @@ Function: TESTISPARENT_IP2_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 11,1 T ismatch0
 11,1 T isparent0
 11,2 X root0
-12,0 TMOV 0 1 isparent0
-12,0 TMOV 1 0 even0
+12,0 BMOV 10 1 isparent0
+12,0 BMOV 1 10 even0
 12,1 CNOT even0 ismatch0
 12,2 Tdag root0
 13,0 TMOV 0 2 root0
@@ -68530,10 +68539,10 @@ Function: TESTISPARENT_IP2_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 15,1 Tdag even0
 15,1 Tdag a0
 16,0 TMOV 1 2 ismatch0
-16,0 TMOV 0 1 a0
+16,0 BMOV 10 1 a0
 16,1 CNOT even0 ismatch0
 17,0 TMOV 2 1 even0
-17,0 TMOV 1 0 a0
+17,0 BMOV 1 10 a0
 17,1 CNOT ismatch0 a0
 17,2 S even0
 18,0 TMOV 2 1 a0
@@ -68545,10 +68554,10 @@ Function: TESTISPARENT_IP2_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 20,0 TMOV 1 0 root0
 20,1 CNOT ismatch0 root0
 21,0 TMOV 0 1 ismatch0
-21,0 TMOV 1 0 isparent0
+21,0 BMOV 1 10 isparent0
 21,1 CNOT root0 isparent0
-22,0 TMOV 0 2 a0
 22,0 TMOV 2 1 isparent0
+22,0 TMOV 0 2 a0
 22,0 TMOV 2 0 ismatch0
 22,1 Tdag root0
 22,2 CNOT isparent0 ismatch0
@@ -68558,17 +68567,17 @@ Function: TESTISPARENT_IP2_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 24,1 Tdag root0
 24,1 Tdag ismatch0
 25,0 TMOV 1 2 isparent0
-25,0 TMOV 0 1 ismatch0
+25,0 BMOV 10 1 ismatch0
 25,1 CNOT root0 isparent0
 26,0 TMOV 2 1 root0
-26,0 TMOV 1 0 ismatch0
+26,0 BMOV 1 10 ismatch0
 26,1 CNOT isparent0 ismatch0
 26,2 S root0
 27,0 TMOV 2 1 ismatch0
 27,1 H isparent0
 27,2 CNOT ismatch0 root0
-28,0 TMOV 1 2 root0
 28,0 TMOV 0 1 isparent0
+28,0 TMOV 1 2 root0
 28,1 X root0
 
 LPFS:
@@ -68590,8 +68599,8 @@ Function: TESTISPARENT_IP3_IP1_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 1,1 T isparent0
 1,2 CNOT a0 even0
 1,3 Tdag root0
-2,0 TMOV 0 1 isparent0
 2,0 TMOV 1 2 even0
+2,0 BMOV 10 1 isparent0
 2,1 CNOT even0 ismatch0
 3,0 TMOV 2 1 ismatch0
 3,1 Tdag even0
@@ -68602,10 +68611,10 @@ Function: TESTISPARENT_IP3_IP1_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 5,1 Tdag even0
 5,1 Tdag a0
 6,0 TMOV 1 2 ismatch0
-6,0 TMOV 0 1 a0
+6,0 BMOV 10 1 a0
 6,1 CNOT even0 ismatch0
 7,0 TMOV 2 1 even0
-7,0 TMOV 1 0 a0
+7,0 BMOV 1 10 a0
 7,1 CNOT ismatch0 a0
 7,2 S even0
 8,0 TMOV 2 1 a0
@@ -68615,11 +68624,11 @@ Function: TESTISPARENT_IP3_IP1_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 10,0 TMOV 1 3 root0
 10,1 CNOT ismatch0 root0
 11,0 TMOV 0 1 ismatch0
-11,0 TMOV 1 0 isparent0
+11,0 BMOV 1 10 isparent0
 11,1 CNOT root0 isparent0
+12,0 TMOV 2 1 isparent0
 12,0 TMOV 0 2 even0
 12,0 TMOV 0 2 a0
-12,0 TMOV 2 1 isparent0
 12,0 TMOV 2 0 ismatch0
 12,1 Tdag root0
 12,2 CNOT isparent0 ismatch0
@@ -68629,24 +68638,27 @@ Function: TESTISPARENT_IP3_IP1_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 14,1 Tdag root0
 14,1 Tdag ismatch0
 15,0 TMOV 1 2 isparent0
-15,0 TMOV 0 1 ismatch0
+15,0 BMOV 10 1 ismatch0
 15,1 CNOT root0 isparent0
 16,0 TMOV 2 1 root0
-16,0 TMOV 1 0 ismatch0
+16,0 BMOV 1 10 ismatch0
 16,1 CNOT isparent0 ismatch0
 16,2 S root0
 17,0 TMOV 2 1 ismatch0
 17,1 H isparent0
 17,2 CNOT ismatch0 root0
-18,0 TMOV 1 2 root0
 18,0 TMOV 0 1 isparent0
+18,0 TMOV 1 2 root0
 18,1 X root0
 
 LPFS:
 Function: TESTISCHILD_IP3_IPx_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
 ==================================================================
 0,0 TMOV 1 0 even0
+0,0 TMOV 1 0 direction0
 0,1 X even0
+0,1 X direction0
+1,0 TMOV 0 1 direction0
 1,0 TMOV 1 0 ischild0
 1,1 CNOT ischild0 even0
 2,0 TMOV 0 1 ischild0
@@ -68702,8 +68714,8 @@ Function: TESTISPARENT_IP3_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 11,1 T ismatch0
 11,1 T isparent0
 11,2 X root0
-12,0 TMOV 0 1 isparent0
 12,0 TMOV 1 3 even0
+12,0 BMOV 10 1 isparent0
 12,1 CNOT even0 ismatch0
 12,2 Tdag root0
 13,0 TMOV 0 2 root0
@@ -68716,11 +68728,11 @@ Function: TESTISPARENT_IP3_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 14,2 T ismatch0
 15,1 Tdag even0
 15,1 Tdag a0
-16,0 TMOV 0 1 a0
 16,0 TMOV 1 2 ismatch0
+16,0 BMOV 10 1 a0
 16,1 CNOT even0 ismatch0
 17,0 TMOV 2 1 even0
-17,0 TMOV 1 0 a0
+17,0 BMOV 1 10 a0
 17,1 CNOT ismatch0 a0
 17,2 S even0
 18,0 TMOV 2 1 a0
@@ -68730,11 +68742,11 @@ Function: TESTISPARENT_IP3_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 20,0 TMOV 1 0 root0
 20,1 CNOT ismatch0 root0
 21,0 TMOV 0 1 ismatch0
-21,0 TMOV 1 0 isparent0
+21,0 BMOV 1 10 isparent0
 21,1 CNOT root0 isparent0
-22,0 TMOV 0 2 even0
-22,0 TMOV 0 2 a0
 22,0 TMOV 2 1 isparent0
+22,0 TMOV 0 2 a0
+22,0 TMOV 0 2 even0
 22,0 TMOV 2 0 ismatch0
 22,1 Tdag root0
 22,2 CNOT isparent0 ismatch0
@@ -68744,15 +68756,15 @@ Function: TESTISPARENT_IP3_IP0_IPx_IPx_DPx_DPx_DPx_DPx (sched: lpfs, k: 4, d: 10
 24,1 Tdag root0
 24,1 Tdag ismatch0
 25,0 TMOV 1 2 isparent0
-25,0 TMOV 0 1 ismatch0
+25,0 BMOV 10 1 ismatch0
 25,1 CNOT root0 isparent0
 26,0 TMOV 2 1 root0
-26,0 TMOV 1 0 ismatch0
+26,0 BMOV 1 10 ismatch0
 26,1 CNOT isparent0 ismatch0
 26,2 S root0
 27,0 TMOV 2 1 ismatch0
 27,1 H isparent0
 27,2 CNOT ismatch0 root0
-28,0 TMOV 1 2 root0
 28,0 TMOV 0 1 isparent0
+28,0 TMOV 1 2 root0
 28,1 X root0

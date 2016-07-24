@@ -3,8 +3,8 @@
 $file = $ARGV[0];
 @names = split (/\./, $file);
 #$name = $names[0];
-$scaf = "$names[0]\_noctqg.scaffold";
-$merge = "$names[0]\_merged.scaffold";
+$scaf = "$names[0]\.$names[1]\_noctqg.scaffold";
+$merge = "$names[0]\.$names[1]\_merged.scaffold";
 $module = $names[-2];
 @defn = ();
 %ancilla = ();

@@ -86,7 +86,7 @@
 //#define _DEBUG_CG_INSTS
 //#define _DEBUG_ANNOTATE_GLOBAL_MEM
 //#define _DEBUG_EPR_INJECTION
-#define _DEBUG_PHYSICAL_INSTS
+//#define _DEBUG_PHYSICAL_INSTS
 //#define _DEBUG_DAG
 //#define _DEBUG_CALL_GRAPH
 //#define _DEBUG_READY_QUEUE       
@@ -2583,7 +2583,8 @@ int main (int argc, char *argv[]) {
                         +".usage";
     usage_file.open(usage_file_path);
     for (auto &it : ancillas_per_cycle) {
-      usage_file << it.first << "\t" << std::get<0>(it.second) << "\t" << std::get<1>(it.second) << "\t" << std::get<2>(it.second) << std::endl; 
+      usage_file << it.first << "\t" << std::get<0>(it.second) + std::get<1>(it.second) + std::get<2>(it.second) << std::endl; 
+      //usage_file << it.first << "\t" << std::get<0>(it.second) << "\t" << std::get<1>(it.second) << "\t" << std::get<2>(it.second) << std::endl; 
     }
     usage_file.close();
     std::cerr << "usage report written to:\t" << usage_file_path << std::endl;      

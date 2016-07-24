@@ -68,7 +68,7 @@
 /**********************************************
 * Further Reduced Problem Size
 **********************************************/
-
+/*
 #define n  5
 #define N  32	// N = 2 ^ n
 #define r  3  		// r = (3/5)n
@@ -83,7 +83,7 @@
 #define tbarm 2		// R/Rbar
 #define tbarw 2		// GFI originally had sqrt(R) but now changed to sqrt(Rbar)
 #define cn 11		// cn = 2*n + 1
-
+*/
 
 
 // Define globals first to propagate

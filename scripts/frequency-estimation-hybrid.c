@@ -10,7 +10,7 @@
 #include "uthash.h"    /* HASH_ADD  */
 #include <math.h>      /* floorf    */
 
-#define _MAX_FUNCTION_NAME 80
+#define _MAX_FUNCTION_NAME 90
 #define _MAX_INT_PARAMS 4
 #define _MAX_DOUBLE_PARAMS 4
 #define _MAX_CALL_DEPTH 16
