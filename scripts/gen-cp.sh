@@ -47,7 +47,7 @@ for f in $*; do
     fi
     if [ ! -e ${b}/${b}.flat${th}.cp ]; then
       echo "[gen-cp.sh] Critical path calculation ..."        
-      /usr/bin/time -v $OPT -load $SCAF -GetCriticalPath ${b}/${b}.flat${th}.ll >/dev/null 2> ${b}/${b}.flat${th}.cp
+      $OPT -load $SCAF -GetCriticalPath ${b}/${b}.flat${th}.ll >/dev/null 2> ${b}/${b}.flat${th}.cp
     fi
   done
   rm -f *flat*txt ${b}.out

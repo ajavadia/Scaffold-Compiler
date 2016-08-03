@@ -18,8 +18,8 @@ J{n-2,n-1}
 const int N = 5;
 const double Bx = 2;
 // elements of Bz and J are randomly generated from uniform(-2, 2)
-const double Bz[] = {-0.053, 0.288, 1.256, -0.747, 1.089};
-const double J[] = {-1.445, -1.225, 0.331, 0.942};
+const double Bz[] = {-0.05387319342421382, 0.28832772697661246, 1.2560360683632505, -0.7476751068030283, 1.0894159873509683};
+const double J[] = {-1.445672360393588, -1.2254118467747421, 0.3316136922114512, 0.9420924187353399};
 
 void CZ(qbit q1, qbit q2, double phi) {
     // printf("performing Controlled -2phi Z rotation\n");
@@ -37,7 +37,7 @@ void ZcrossZ(qbit q1, qbit q2, double phi) {
 }
 
 
-int main() {
+int main () {
     qbit reg[N];
 
     // Initialize all qubits to |+> state

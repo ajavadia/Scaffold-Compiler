@@ -17,8 +17,9 @@ J{n-2,n-1}
 
 const int N = 10;
 const double Bx = 2;
-const double Bz[] = {.3, -.9, -1.2, 1.1, 1.5, .6, -1.6, .3, -1.3, 1.9};
-const double J[] = {-1.5, 1.3, -1.8, -1.3, -.6, 1.9, 1.1, -1.3, .4};
+// elements of Bz and J are randomly generated from uniform(-2, 2)
+const double Bz[] = {0.28991416502123224, 0.3753979140489183, 1.833144980386955, -1.214086640171801, -0.7900439386714742, 0.6201635457990049, -1.1861122595832945, 1.3076099923675883, -1.9287338588361762, -1.1704835072299256};
+const double J[] = {-1.7916120932417199, 1.4333751492366509, 0.5499583088477014, -0.7547696285020669, -0.8774048828628391, 0.727240315430294, 0.21456953346320162, 0.2109661700329628, -0.11503335763215805};
 
 void CZ(qbit q1, qbit q2, double phi) {
     // printf("performing Controlled -2phi Z rotation\n");
@@ -46,8 +47,8 @@ int main() {
         H(reg[n]);
     }
 
-    double T = 3;  // total duration of adiabatic evolution
-    int M = 5;  // number of Trotter steps
+    double T = 15;  // total duration of adiabatic evolution
+    int M = 25;  // number of Trotter steps
     double dt = M / T;  // time per Trotter step
 
     int m;
