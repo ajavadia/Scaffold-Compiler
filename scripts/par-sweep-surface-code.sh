@@ -20,7 +20,7 @@ error_rates=(5 6 7 8 9)
 attempt_th_yx=(4 8)
 attempt_th_drop=(15 20)
 layout=("" "--opt")
-technologies=("ion" "sup")
+technologies=("sup")
 
 parallel="parallel --delay .2 -j 8 --joblog logs/sc.log --resume"
 
