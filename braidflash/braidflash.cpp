@@ -58,8 +58,11 @@ unsigned int num_magic_factories = 1;
 // Physical operation latencies -- also determines surface code cycle length
 //Trapped-ion: {{"PrepZ",1}, {"X",1}, {"Z",1}, {"H",1}, {"CNOT",100}, {"T",1}, {"Tdag",1}, {"S",1}, {"Sdag",1}, {"MeasZ",25}};
 //Superconduc: {{"PrepZ",1}, {"X",1}, {"Z",1}, {"H",1}, {"CNOT",40}, {"T",1}, {"Tdag",1}, {"S",1}, {"Sdag",1}, {"MeasZ",140}};
-std::unordered_map<std::string, int> op_delays; 
-int surface_code_cycle;
+std::unordered_map<std::string, int> op_delays_ion; 
+std::unordered_map<std::string, int> op_delays_sup; 
+int surface_code_cycle_ion;
+int surface_code_cycle_sup;
+
 
 // Note: this is for logical qubit layouts.
 // the number of router/nodes is one larger in both row and column
@@ -1038,30 +1041,38 @@ int main (int argc, char *argv[]) {
     }       
   }  
 
-  if(tech=="ion") {
-    op_delays["PrepZ"] = 1;
-    op_delays["X"] = 1;
-    op_delays["Z"] = 1;
-    op_delays["H"] = 1;
-    op_delays["CNOT"] = 100;
-    op_delays["T"] = 1;
-    op_delays["Tdag"] = 1;
-    op_delays["S"] = 1;
-    op_delays["Sdag"] = 1;
-    op_delays["MeasZ"] = 25;  
-  }
-  else if (tech=="sup"){
-    op_delays["PrepZ"] = 1;
-    op_delays["X"] = 1;
-    op_delays["Z"] = 1;
-    op_delays["H"] = 1;
-    op_delays["CNOT"] = 40;
-    op_delays["T"] = 1;
-    op_delays["Tdag"] = 1;
-    op_delays["S"] = 1;
-    op_delays["Sdag"] = 1;
-    op_delays["MeasZ"] = 140;  
-  }
+  op_delays_ion["PrepZ"] = 1;
+  op_delays_ion["X"] = 1;
+  op_delays_ion["Z"] = 1;
+  op_delays_ion["H"] = 1;
+  op_delays_ion["CNOT"] = 100;
+  op_delays_ion["T"] = 1;
+  op_delays_ion["Tdag"] = 1;
+  op_delays_ion["S"] = 1;
+  op_delays_ion["Sdag"] = 1;
+  op_delays_ion["MeasZ"] = 25;  
+    
+  op_delays_sup["PrepZ"] = 1;
+  op_delays_sup["X"] = 1;
+  op_delays_sup["Z"] = 1;
+  op_delays_sup["H"] = 1;
+  op_delays_sup["CNOT"] = 40;
+  op_delays_sup["T"] = 1;
+  op_delays_sup["Tdag"] = 1;
+  op_delays_sup["S"] = 1;
+  op_delays_sup["Sdag"] = 1;
+  op_delays_sup["MeasZ"] = 140;  
+  
+  // how long is each surface code cycle
+  surface_code_cycle_ion = op_delays_ion.find("PrepZ")->second + 
+                       2*op_delays_ion.find("H")->second + 
+                       4*op_delays_ion.find("CNOT")->second + 
+                       op_delays_ion.find("MeasZ")->second;
+  surface_code_cycle_sup = op_delays_sup.find("PrepZ")->second + 
+                       2*op_delays_sup.find("H")->second + 
+                       4*op_delays_sup.find("CNOT")->second + 
+                       op_delays_sup.find("MeasZ")->second;
+  
     
   // read program gates
   // mark gate seq numbers from 1 upwards
@@ -1105,12 +1116,6 @@ int main (int argc, char *argv[]) {
     cerr << "code distance too small for surface code operation. Try changing physical or logical error rates.\n";
     exit(1);
   }
-
-  // how long is each surface code cycle
-  surface_code_cycle = op_delays.find("PrepZ")->second + 
-                       2*op_delays.find("H")->second + 
-                       4*op_delays.find("CNOT")->second + 
-                       op_delays.find("MeasZ")->second;
 
   // optimize qubit placements
   // write all_gates to trace (.tr) file    
@@ -1518,7 +1523,7 @@ int main (int argc, char *argv[]) {
   // KQ: total number of logical gates
   // k: total number of physical timesteps
   // q: total number of physical qubits
-  string kq_file_path;  
+  string kq_file_path;  string kq_file_path_other; 
   ofstream kq_file;      
   kq_file_path = output_dir+benchmark_name
                     +".p."+(to_string(P_error_rate))
@@ -1534,12 +1539,37 @@ int main (int argc, char *argv[]) {
   kq_file << "logical KQ: " << total_logical_gates << endl;
   kq_file << "physical kq: " << (surface_code_cycle*total_cycles) * num_physical_qubits << endl;  
   kq_file.close();  
-  cerr << "kq report written to:\t" << kq_file_path << endl; 
 
+  string kq_file_path_other;  
+  ofstream kq_file_other;      
+  kq_file_path_other = output_dir+benchmark_name
+                    +".p."+(to_string(P_error_rate))
+                    +".yx."+to_string(attempt_th_yx)
+                    +".drop."+to_string(attempt_th_drop)    
+                    +"."+((tech=="ion") ? "sup" : "ion") 
+                    +(opt ? ".opt.kq" : ".kq");
+  kq_file_other.open(kq_file_path_other);
+  kq_file_other << "error rate: " << "10^-" << P_error_rate << endl;
+  kq_file_other << "code distance: " << code_distance << endl;
+  kq_file_other << "total cycles: " << surface_code_cycle_other * total_cycles << endl;
+  kq_file_other << "max qubits: " << num_physical_qubits << endl;
+  kq_file_other << "logical KQ: " << total_logical_gates << endl;
+  kq_file_other << "physical kq: " << (surface_code_cycle_other*total_cycles) * num_physical_qubits << endl;  
+  kq_file_other.close();  
+  cerr << "kq report written to:\t" << kq_file_path << " ||| " << kq_file_path_other << endl; 
+  
   
   br_file << "\t****** FINISHED SIMULATION *******" << endl;
 
-  cerr << "braid report written to:\t" << br_file_path << endl;   
   br_file.close();
+  string br_file_path_other = output_dir+benchmark_name
+                    +".p."+(to_string(P_error_rate))
+                    +".yx."+to_string(attempt_th_yx)
+                    +".drop."+to_string(attempt_th_drop)                             
+                    +"."+((tech=="ion") ? "sup" : "ion")                    
+                    +(opt ? ".opt.br" : ".br");   
+  string copy_command = "cp "+br_file_path+" "+br_file_path_other;
+
+  cerr << "braid report written to:\t" << br_file_path << " ||| " << br_file_path_other << endl;     
   return 0;
 }

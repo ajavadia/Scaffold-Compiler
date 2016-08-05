@@ -19,7 +19,7 @@ for bench in $*; do
   echo $bench_dir $bench_name
   output_simulation=$bench_dir/braid_simulation/$bench_name
   output_plot=$bench_dir/braid_simulation/braid_plot/$bench_name
-  rm -rf $bench_dir/braid_simulation/braid_plot && mkdir -p $bench_dir/braid_simulation/braid_plot
+  mkdir -p $bench_dir/braid_simulation/braid_plot
   
   for tech in "${technologies[@]}" 
   do
