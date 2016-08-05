@@ -20,7 +20,7 @@ error_rates=(5 6 7 8 9)
 caps=(10 100 "inf")
 windows=(10 100 "inf")
 directions=("--forward" "--backward")
-technologies=("ion" "superconductor")
+technologies=("ion" "sup")
 
 parallel="parallel --delay .2 -j 8 --joblog logs/cc.log --resume"
 

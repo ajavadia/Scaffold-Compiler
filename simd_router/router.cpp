@@ -108,7 +108,7 @@ bool report_storage = false;
 
 //TODO: make these input arguments later
 #define distribute 1
-#define LEAF_SIMULATION_MAX 3
+#define LEAF_SIMULATION_MAX 2
 
 #define P_th 4              // Steane code threshold = 10^-4   
 #define epsilon 0.5         // total desired logical error
@@ -1920,7 +1920,7 @@ int main (int argc, char *argv[]) {
     op_delays["Sdag"] = 1;
     op_delays["MeasZ"] = 25;  
   }
-  else if (tech=="superconductor"){
+  else if (tech=="sup"){
     op_delays["PrepZ"] = 1;
     op_delays["X"] = 1;
     op_delays["Z"] = 1;
@@ -2302,7 +2302,7 @@ int main (int argc, char *argv[]) {
               int route_distance = abs(src_row - dest_row) + abs(src_col - dest_col);
               if (tech=="ion")
               q->random = rand() % ( route_distance * (int)pow(7.0,(double)concatenation_level) ) + 1;                  
-              else if (tech=="superconductor")
+              else if (tech=="sup")
               q->random = rand() % ( 3*op_delays.find("CNOT")->second * route_distance * (int)pow(7.0,(double)concatenation_level) ) + 1;        
             }
           }
@@ -2369,7 +2369,7 @@ int main (int argc, char *argv[]) {
                   int route_distance = abs(src_row - dest_row) + abs(src_col - dest_col);
                   if (tech=="ion")
                   q->random = rand() % ( route_distance * (int)pow(7.0,(double)concatenation_level) ) + 1;                  
-                  else if (tech=="superconductor")
+                  else if (tech=="sup")
                   q->random = rand() % ( 3*op_delays.find("CNOT")->second * route_distance * (int)pow(7.0,(double)concatenation_level) ) + 1; 
                 }
               }
@@ -2568,8 +2568,8 @@ int main (int argc, char *argv[]) {
 
   // Technology
   std::string technology;
-  if (tech=="superconductor")
-    technology = std::string(".superconductor");
+  if (tech=="sup")
+    technology = std::string(".sup");
   else
     technology = std::string(".ion");
  
@@ -2606,7 +2606,7 @@ int main (int argc, char *argv[]) {
     if (it.second > max_q_count) max_q_count = it.second;
   }
   unsigned long long num_physical_qbits = (unsigned long long) max_q_count * (unsigned long long)pow(7.0,(double)concatenation_level);
-  if (tech=="superconductor") num_physical_qbits += SIMD_cols * SIMD_rows * total_peak_storage * (int)pow(7.0,(double)concatenation_level);
+  if (tech=="sup") num_physical_qbits += SIMD_cols * SIMD_rows * total_peak_storage * (int)pow(7.0,(double)concatenation_level);
   
 
   // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Report results for plotting %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

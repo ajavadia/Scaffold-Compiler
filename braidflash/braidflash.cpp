@@ -882,7 +882,7 @@ void parse_tr (const string file_path) {
     opt_tr_file.close();    
   }
   else
-    cout << "Unable to open opt.tr file" << endl;
+    cerr << "Unable to open opt.tr file" << endl;
 }
 // parse profile of module frequencies
 void parse_freq (const string file_path) {
@@ -901,7 +901,7 @@ void parse_freq (const string file_path) {
     }
   }
   else
-    cout << "Unable to open .freq file" << endl;
+    cerr << "Unable to open .freq file" << endl;
 }
 
 unsigned long long get_critical_clk (dag_t dag) {
@@ -993,7 +993,7 @@ int main (int argc, char *argv[]) {
   bool cnot_only=false;
   attempt_th_yx = 4;
   attempt_th_drop = 8;
-  tech = "superconductor";  // default is the braiding approach
+  tech = "sup";  // default is the braiding approach
   
   for (int i = 0; i<argc; i++) {
     if (strcmp(argv[i],"--opt")==0)
@@ -1050,7 +1050,7 @@ int main (int argc, char *argv[]) {
     op_delays["Sdag"] = 1;
     op_delays["MeasZ"] = 25;  
   }
-  else if (tech=="superconductor"){
+  else if (tech=="sup"){
     op_delays["PrepZ"] = 1;
     op_delays["X"] = 1;
     op_delays["Z"] = 1;
@@ -1176,6 +1176,20 @@ int main (int argc, char *argv[]) {
   if (opt) {
     mcost_ecount = compare_manhattan_costs();
   }
+
+  // braid file: all information to later collect results from
+  string output_dir = benchmark_dir+"/braid_simulation/";
+  string mkdir_command = "mkdir -p "+output_dir;
+  system(mkdir_command.c_str());
+  string br_file_path;  
+  ofstream br_file;      
+  br_file_path = output_dir+benchmark_name
+                    +".p."+(to_string(P_error_rate))
+                    +".yx."+to_string(attempt_th_yx)
+                    +".drop."+to_string(attempt_th_drop)                             
+                    +"."+tech                    
+                    +(opt ? ".opt.br" : ".br");
+  br_file.open(br_file_path);  
   
   // braidflash for each module of the benchmark
   all_gates = (opt) ? all_gates_opt : all_gates;
@@ -1200,8 +1214,8 @@ int main (int argc, char *argv[]) {
     unsigned long long module_q_count = all_q_counts[module_name];
     num_rows = (unsigned int)ceil( sqrt( (double)module_q_count ) );
     num_cols = (num_rows*(num_rows-1) < module_q_count) ? num_rows : num_rows-1;
-    cout << "\nModule: " << module_name << endl;    
-    cout << "Size: " << num_rows << "X" << num_cols << endl;
+    br_file << "\nModule: " << module_name << endl;    
+    br_file << "Size: " << num_rows << "X" << num_cols << endl;
     //if (num_rows == 1 && num_cols == 1) continue;
 
 #ifdef _PROGRESS
@@ -1258,7 +1272,7 @@ int main (int argc, char *argv[]) {
       dag[g].qid = (*I).qid;
       auto t = gate_map.emplace(dag[g].seq, g);
       if (t.second == false)
-        cout << "Error: reinserting a gate in the dag." << endl;
+        cerr << "Error: reinserting a gate in the dag." << endl;
     }
     // add all gate dependencies
     for (vector<Gate>::const_iterator I = module_gates.begin(); I != module_gates.end(); ++I) {  
@@ -1461,26 +1475,26 @@ int main (int argc, char *argv[]) {
     total_cycles += clk*module_freq;
 
     // Excel Sheet 'BraidFlash'
-    cout << "SerialCLOCK: " << serial_clk * module_freq << endl;    
-    cout << "ParallelCLOCK: " << clk * module_freq << endl;  
-    cout << "CriticalCLOCK: " << critical_clk * module_freq << endl;    
-    cout << "total_success: " << success_events.size() * module_freq << endl;
-    cout << "total_conflict: " << total_conflict_events.size() * module_freq << endl;    
-    cout << "unique_conflict: " << unique_conflict_events.size() * module_freq << endl;
+    br_file << "SerialCLOCK: " << serial_clk * module_freq << endl;    
+    br_file << "ParallelCLOCK: " << clk * module_freq << endl;  
+    br_file << "CriticalCLOCK: " << critical_clk * module_freq << endl;    
+    br_file << "total_success: " << success_events.size() * module_freq << endl;
+    br_file << "total_conflict: " << total_conflict_events.size() * module_freq << endl;    
+    br_file << "unique_conflict: " << unique_conflict_events.size() * module_freq << endl;
     // Excel Sheet 'DroppedGates'
-    cout << "total_dropped_gates: " << total_dropped_gates.size() * module_freq << endl;
-    cout << "unique_dropped_gates: " << unique_dropped_gates.size() * module_freq << endl; 
+    br_file << "total_dropped_gates: " << total_dropped_gates.size() * module_freq << endl;
+    br_file << "unique_dropped_gates: " << unique_dropped_gates.size() * module_freq << endl; 
     // Excel Sheet 'ConflictedAttempts'
     for (auto &i : attempts_hist)
-      cout << "attempt\t" << i.first << "\t" << i.second * module_freq << endl;
-    cout << endl;
+      br_file << "attempt\t" << i.first << "\t" << i.second * module_freq << endl;
+    br_file << endl;
   }
   // Excel Sheet 'ManhattanCost'
   if (opt) {
-    cout << "mcost: " << mcost_ecount.first.first << endl;
-    cout << "mcost_opt: " << mcost_ecount.first.second << endl;
-    cout << "event_count: " << mcost_ecount.second.first << endl;
-    cout << "event_count_opt: " << mcost_ecount.second.second << endl; 
+    br_file << "mcost: " << mcost_ecount.first.first << endl;
+    br_file << "mcost_opt: " << mcost_ecount.first.second << endl;
+    br_file << "event_count: " << mcost_ecount.second.first << endl;
+    br_file << "event_count_opt: " << mcost_ecount.second.second << endl; 
   }
   // Excel Sheet 'Area'
   int max_q_count = 0;
@@ -1497,22 +1511,20 @@ int main (int argc, char *argv[]) {
     + sqrt(max_q_count)*(width_channel*(width_channel+length_tile))
     + sqrt(max_q_count)*(width_channel*(width_channel+width_tile)) 
     + width_channel*width_channel;
-  cout << "code_distance(d): " << code_distance << endl;
-  cout << "num_logical_qubits: " << max_q_count << endl;
-  cout << "num_physical_qubits: " << num_physical_qubits << endl;
+  br_file << "code_distance(d): " << code_distance << endl;
+  br_file << "num_logical_qubits: " << max_q_count << endl;
+  br_file << "num_physical_qubits: " << num_physical_qubits << endl;
 
   // KQ: total number of logical gates
   // k: total number of physical timesteps
   // q: total number of physical qubits
-  string output_dir = benchmark_dir+"/braid_simulation/";
-  string mkdir_command = "mkdir -p "+output_dir;
-  system(mkdir_command.c_str());
   string kq_file_path;  
   ofstream kq_file;      
   kq_file_path = output_dir+benchmark_name
                     +".p."+(to_string(P_error_rate))
                     +".yx."+to_string(attempt_th_yx)
-                    +".drop."+to_string(attempt_th_drop)                             
+                    +".drop."+to_string(attempt_th_drop)    
+                    +"."+tech
                     +(opt ? ".opt.kq" : ".kq");
   kq_file.open(kq_file_path);
   kq_file << "error rate: " << "10^-" << P_error_rate << endl;
@@ -1525,7 +1537,9 @@ int main (int argc, char *argv[]) {
   cerr << "kq report written to:\t" << kq_file_path << endl; 
 
   
-  cout << "\t****** FINISHED SIMULATION *******" << endl;
+  br_file << "\t****** FINISHED SIMULATION *******" << endl;
 
+  cerr << "braid report written to:\t" << br_file_path << endl;   
+  br_file.close();
   return 0;
 }
