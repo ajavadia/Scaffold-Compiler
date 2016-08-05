@@ -44,6 +44,8 @@ using namespace std;
 unsigned int attempt_th_yx;    // when should i switch DOR routing priority? is evaluated first.
 unsigned int attempt_th_drop;  // when should i drop the entire operation and reinject it? is evaluated second.
 
+string tech;
+
 #define P_th 2              // surface code threshold = 10^-2
 #define epsilon 0.5         // total desired logical error
 double L_error_rate;        // desired logical error rate = 10^-(L_error_rate)
@@ -52,9 +54,11 @@ int code_distance;          // coding distance of the surface code
 
 // number of magic_state_factories
 unsigned int num_magic_factories = 1;
-// Physical operation latencies -- determines surface code cycle length
-const unordered_map<string, int> op_delays 
-      = {{"PrepZ",1}, {"X",1}, {"Z",1}, {"H",1}, {"CNOT",10}, {"T",1}, {"Tdag",1}, {"S",1}, {"Sdag",1}, {"MeasZ",10}};
+
+// Physical operation latencies -- also determines surface code cycle length
+//Trapped-ion: {{"PrepZ",1}, {"X",1}, {"Z",1}, {"H",1}, {"CNOT",100}, {"T",1}, {"Tdag",1}, {"S",1}, {"Sdag",1}, {"MeasZ",25}};
+//Superconduc: {{"PrepZ",1}, {"X",1}, {"Z",1}, {"H",1}, {"CNOT",40}, {"T",1}, {"Tdag",1}, {"S",1}, {"Sdag",1}, {"MeasZ",140}};
+std::unordered_map<std::string, int> op_delays; 
 int surface_code_cycle;
 
 // Note: this is for logical qubit layouts.
@@ -989,6 +993,7 @@ int main (int argc, char *argv[]) {
   bool cnot_only=false;
   attempt_th_yx = 4;
   attempt_th_drop = 8;
+  tech = "superconductor";  // default is the braiding approach
   
   for (int i = 0; i<argc; i++) {
     if (strcmp(argv[i],"--opt")==0)
@@ -1021,9 +1026,43 @@ int main (int argc, char *argv[]) {
         cerr<<"Usage: $ braidflash <benchmark> --p <attempt_th_drop>";
         return 1;
       }
-    }     
+    }   
+    if (strcmp(argv[i],"--tech")==0) {
+      if (argc > (i+1)) {
+        tech = argv[i+1];
+      }
+      else {
+        cerr<<"Usage: $ braidflash <benchmark> --tech <technology>";
+        return 1;
+      }
+    }       
   }  
 
+  if(tech=="ion") {
+    op_delays["PrepZ"] = 1;
+    op_delays["X"] = 1;
+    op_delays["Z"] = 1;
+    op_delays["H"] = 1;
+    op_delays["CNOT"] = 100;
+    op_delays["T"] = 1;
+    op_delays["Tdag"] = 1;
+    op_delays["S"] = 1;
+    op_delays["Sdag"] = 1;
+    op_delays["MeasZ"] = 25;  
+  }
+  else if (tech=="superconductor"){
+    op_delays["PrepZ"] = 1;
+    op_delays["X"] = 1;
+    op_delays["Z"] = 1;
+    op_delays["H"] = 1;
+    op_delays["CNOT"] = 40;
+    op_delays["T"] = 1;
+    op_delays["Tdag"] = 1;
+    op_delays["S"] = 1;
+    op_delays["Sdag"] = 1;
+    op_delays["MeasZ"] = 140;  
+  }
+    
   // read program gates
   // mark gate seq numbers from 1 upwards
   string benchmark_path(argv[1]);
@@ -1068,10 +1107,10 @@ int main (int argc, char *argv[]) {
   }
 
   // how long is each surface code cycle
-  surface_code_cycle = 1;/*op_delays.find("PrepZ")->second + 
+  surface_code_cycle = op_delays.find("PrepZ")->second + 
                        2*op_delays.find("H")->second + 
                        4*op_delays.find("CNOT")->second + 
-                       op_delays.find("MeasZ")->second;*/
+                       op_delays.find("MeasZ")->second;
 
   // optimize qubit placements
   // write all_gates to trace (.tr) file    

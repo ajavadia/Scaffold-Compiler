@@ -100,6 +100,8 @@ bool window = false;
 unsigned int mov_cap = std::numeric_limits<unsigned int>::max();
 unsigned int window_size = std::numeric_limits<unsigned int>::max();
 
+std::string tech = "ion";
+
 bool report_usage = false;
 bool report_ages = false;
 bool report_storage = false;
@@ -128,8 +130,10 @@ std::vector<unsigned int> magic_factories;
 std::vector<unsigned int> zero_factories;
 std::vector<unsigned int> epr_factories;
 
-const std::unordered_map<std::string, unsigned int> op_delays 
-      = {{"PrepZ",1}, {"X",1}, {"Z",1}, {"H",1}, {"CNOT",10}, {"T",1}, {"Tdag",1}, {"S",1}, {"Sdag",1}, {"MeasZ",10}};
+//Technology parameters      
+//Trapped-ion: {{"PrepZ",1}, {"X",1}, {"Z",1}, {"H",1}, {"CNOT",100}, {"T",1}, {"Tdag",1}, {"S",1}, {"Sdag",1}, {"MeasZ",25}};
+//Superconduc: {{"PrepZ",1}, {"X",1}, {"Z",1}, {"H",1}, {"CNOT",40}, {"T",1}, {"Tdag",1}, {"S",1}, {"Sdag",1}, {"MeasZ",140}};
+std::unordered_map<std::string, unsigned int> op_delays; 
 
 // For a given concatenation_level, what is the latency and area of creating one output from the ancilla factories?
 unsigned int zero_delay = 0;
@@ -1870,7 +1874,16 @@ int main (int argc, char *argv[]) {
         std::cout<<"Usage: $ router <benchmark> --window <window_size>";
         return 1;
       }
-    }    
+    } 
+    if (strcmp(argv[i],"--tech")==0) {
+      if (argc > (i+1)) {
+        tech = argv[i+1];
+      }
+      else {
+        std::cerr<<"Usage: $ braidflash <benchmark> --tech <technology>";
+        return 1;
+      }
+    }        
     if (strcmp(argv[i],"--forward")==0) {
       backward = false;
       forward = true;
@@ -1891,9 +1904,35 @@ int main (int argc, char *argv[]) {
     } 
     if (strcmp(argv[i],"--storage")==0) {
       report_storage = true;
-    }        
+    }            
   }
 
+
+  if(tech=="ion") {
+    op_delays["PrepZ"] = 1;
+    op_delays["X"] = 1;
+    op_delays["Z"] = 1;
+    op_delays["H"] = 1;
+    op_delays["CNOT"] = 100;
+    op_delays["T"] = 1;
+    op_delays["Tdag"] = 1;
+    op_delays["S"] = 1;
+    op_delays["Sdag"] = 1;
+    op_delays["MeasZ"] = 25;  
+  }
+  else if (tech=="superconductor"){
+    op_delays["PrepZ"] = 1;
+    op_delays["X"] = 1;
+    op_delays["Z"] = 1;
+    op_delays["H"] = 1;
+    op_delays["CNOT"] = 40;
+    op_delays["T"] = 1;
+    op_delays["Tdag"] = 1;
+    op_delays["S"] = 1;
+    op_delays["Sdag"] = 1;
+    op_delays["MeasZ"] = 140;  
+  }
+  
   // -------- Start processing benchmark
   // -------- Input: Logical LPFS schedule for leaves
   // -------- Input: Logical coarse-grain list schedule for modules
@@ -2261,7 +2300,10 @@ int main (int argc, char *argv[]) {
               if ( (src_col%2==0&&(source_sub==T||source_sub==TU_T)) || (src_col%2==1&&(source_sub==G||source_sub==TU_G)) ) src_row++;                          // adjust for subloc
               if ( (dest_col%2==0&&(destination_sub==T||destination_sub==TU_T)) || (dest_col%2==1&&(destination_sub==G||destination_sub==TU_G)) ) dest_row++;   // adjust for subloc 
               int route_distance = abs(src_row - dest_row) + abs(src_col - dest_col);
+              if (tech=="ion")
               q->random = rand() % ( route_distance * (int)pow(7.0,(double)concatenation_level) ) + 1;                  
+              else if (tech=="superconductor")
+              q->random = rand() % ( 3*op_delays.find("CNOT")->second * route_distance * (int)pow(7.0,(double)concatenation_level) ) + 1;        
             }
           }
         }
@@ -2325,7 +2367,10 @@ int main (int argc, char *argv[]) {
                   if ( (src_col%2==0&&(source_sub==T||source_sub==TU_T)) || (src_col%2==1&&(source_sub==G||source_sub==TU_G)) ) src_row++;                          // adjust for subloc
                   if ( (dest_col%2==0&&(destination_sub==T||destination_sub==TU_T)) || (dest_col%2==1&&(destination_sub==G||destination_sub==TU_G)) ) dest_row++;   // adjust for subloc     
                   int route_distance = abs(src_row - dest_row) + abs(src_col - dest_col);
+                  if (tech=="ion")
                   q->random = rand() % ( route_distance * (int)pow(7.0,(double)concatenation_level) ) + 1;                  
+                  else if (tech=="superconductor")
+                  q->random = rand() % ( 3*op_delays.find("CNOT")->second * route_distance * (int)pow(7.0,(double)concatenation_level) ) + 1; 
                 }
               }
             }          
@@ -2520,6 +2565,13 @@ int main (int argc, char *argv[]) {
   //            cap.inf.window.inf.backforth: greedily send all the possible qubits of CURRENT AND EPRs of NEXT module in the first cycle of this module. 
   else if (backward && forward)
     direction = std::string(".backforth");
+
+  // Technology
+  std::string technology;
+  if (tech=="superconductor")
+    technology = std::string(".superconductor");
+  else
+    technology = std::string(".ion");
  
   // KQ: total number of logical gates
   // k: total number of physical timesteps
@@ -2540,11 +2592,21 @@ int main (int argc, char *argv[]) {
     total_cycles += leaf_avg_cycles * leaf_freq;    
   }
 
+  std::vector<unsigned int> peak_storage (SIMD_K, 0);  
+  double total_peak_storage = 0;  
+  for (auto &it : storage_per_cycle)
+    for (int k = 0; k<SIMD_K; k++)
+      if (peak_storage[k] < (it.second)[k])
+        peak_storage[k] = (it.second)[k];
+  for (int k = 0; k<SIMD_K; k++)
+    if (total_peak_storage < peak_storage[k])
+      total_peak_storage = peak_storage[k];
   unsigned int max_q_count = 0;
   for (auto &it : qbits_per_cycle) {
     if (it.second > max_q_count) max_q_count = it.second;
   }
   unsigned long long num_physical_qbits = (unsigned long long) max_q_count * (unsigned long long)pow(7.0,(double)concatenation_level);
+  if (tech=="superconductor") num_physical_qbits += SIMD_cols * SIMD_rows * total_peak_storage * (int)pow(7.0,(double)concatenation_level);
   
 
   // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Report results for plotting %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2561,7 +2623,8 @@ int main (int argc, char *argv[]) {
                     +".p."+(std::to_string(P_error_rate))
                     +".cap."+(cap ? (std::to_string(mov_cap)) : std::string("inf"))
                     +".window."+(window ? (std::to_string(window_size)) : std::string("inf"))
-                    +direction                             
+                    +direction
+                    +technology                   
                     +".kq";
   kq_file.open(kq_file_path);
 
@@ -2579,7 +2642,8 @@ int main (int argc, char *argv[]) {
                         +".p."+(std::to_string(P_error_rate))      
                         +".cap."+(cap ? (std::to_string(mov_cap)) : std::string("inf"))
                         +".window."+(window ? (std::to_string(window_size)) : std::string("inf"))
-                        +direction                              
+                        +direction  
+                        +technology                                           
                         +".usage";
     usage_file.open(usage_file_path);
     for (auto &it : ancillas_per_cycle) {
@@ -2595,7 +2659,8 @@ int main (int argc, char *argv[]) {
                         +".p."+(std::to_string(P_error_rate))      
                         +".cap."+(cap ? (std::to_string(mov_cap)) : std::string("inf"))
                         +".window."+(window ? (std::to_string(window_size)) : std::string("inf"))
-                        +direction                             
+                        +direction     
+                        +technology
                         +".ages";
     ages_file.open(ages_file_path);
     double avg_ancilla_age=0;
@@ -2623,13 +2688,9 @@ int main (int argc, char *argv[]) {
                         +".cap."+(cap ? (std::to_string(mov_cap)) : std::string("inf"))
                         +".window."+(window ? (std::to_string(window_size)) : std::string("inf"))
                         +direction
+                        +technology                                        
                         +".storage";        
     storage_file.open(storage_file_path);
-    std::vector<double> peak_storage (SIMD_K, 0);
-    for (auto &it : storage_per_cycle)
-      for (int k = 0; k<SIMD_K; k++)
-        if (peak_storage[k] < (it.second)[k])
-          peak_storage[k] = (it.second)[k];
     for (int k = 0; k<SIMD_K; k++)
       storage_file<<peak_storage[k]<<"\t";
     storage_file.close();
