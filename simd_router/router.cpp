@@ -2204,7 +2204,7 @@ int main (int argc, char *argv[]) {
         if (std::shared_ptr<BMOVinst> ph_mov_inst = std::dynamic_pointer_cast<BMOVinst>(*rq_I)) {
           // in case of forward smoothing, think about when to issue those ancilla movs whose qbits haven't been created.
           // reason: we want to route those JIT. With ancillas that are created, we want to be greedy and finish them soon.
-          if(forward && q_map.find(q)==q_map.end() && (q.find("zero")!=std::string::npos || q.find("epr")!=std::string::npos || q.find("epr")!=std::string::npos ) 
+          if(forward && q_map.find(q)==q_map.end() && (q.find("zero")!=std::string::npos || q.find("epr")!=std::string::npos || q.find("magic")!=std::string::npos ) 
               ) {
             if(cap) {
               if (mov_cap_reached)   // skip this one. too many BMOVinsts currently happening.

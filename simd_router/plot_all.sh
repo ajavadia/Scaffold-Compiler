@@ -12,13 +12,16 @@ windows=(10 100 "inf")
 directions=("forward" "backward")
 technologies=("ion" "sup")
 
+cap=100
+
 #----------- Different Smoothing Directions
 for bench in $*; do
   bench_dir=$(dirname $bench)
   bench_name=$(basename $bench)
   output_simulation=$bench_dir/simd_simulation/$bench_name
   output_plot=$bench_dir/simd_simulation/simd_plot/$bench_name
-  rm -rf $bench_dir/simd_simulation/simd_plot && mkdir -p $bench_dir/simd_simulation/simd_plot
+  #rm -rf $bench_dir/simd_simulation/simd_plot
+  mkdir -p $bench_dir/simd_simulation/simd_plot
 
   for tech in "${technologies[@]}"
   do
@@ -34,14 +37,14 @@ for bench in $*; do
         do
           echo "WindowSize = $window"
           #./router ${bench} --p ${p} --window ${window} --${direction} --tech ${tech}--usage --ages --storage
-          echo "Cycle WindowSize=$window" | cat - ${output_simulation}.p.$p.cap.inf.window.${window}.${direction}.${tech}.usage > /tmp/out && mv /tmp/out ${output_plot}.p.$p.cap.inf.window.${window}.${direction}.${tech}.usage #usage
-          echo "$window" | paste - ${output_simulation}.p.$p.cap.inf.window.${window}.${direction}.${tech}.ages > tmp && mv tmp ${output_plot}.p.$p.cap.inf.window.${window}.${direction}.${tech}.ages                    #ages
-          cat ${output_plot}.${direction}.${tech}.ages.data ${output_plot}.p.$p.cap.inf.window.${window}.${direction}.${tech}.ages > temp && mv temp ${output_plot}.${direction}.${tech}.ages.data                     #ages
+          echo "Cycle WindowSize=$window" | cat - ${output_simulation}.p.$p.cap.$cap.window.${window}.${direction}.${tech}.usage > /tmp/out && mv /tmp/out ${output_plot}.p.$p.cap.$cap.window.${window}.${direction}.${tech}.usage #usage
+          echo "$window" | paste - ${output_simulation}.p.$p.cap.$cap.window.${window}.${direction}.${tech}.ages > tmp && mv tmp ${output_plot}.p.$p.cap.$cap.window.${window}.${direction}.${tech}.ages                    #ages
+          cat ${output_plot}.${direction}.${tech}.ages.data ${output_plot}.p.$p.cap.$cap.window.${window}.${direction}.${tech}.ages > temp && mv temp ${output_plot}.${direction}.${tech}.ages.data                     #ages
           if [ "$window" == "${windows[0]}" ];
           then
-            cat ${output_plot}.p.$p.cap.inf.window.${window}.${direction}.${tech}.usage | paste ${output_plot}.${direction}.${tech}.usage.data - > temp && mv temp ${output_plot}.${direction}.${tech}.usage.data
+            cat ${output_plot}.p.$p.cap.$cap.window.${window}.${direction}.${tech}.usage | paste ${output_plot}.${direction}.${tech}.usage.data - > temp && mv temp ${output_plot}.${direction}.${tech}.usage.data
           else
-            cat ${output_plot}.p.$p.cap.inf.window.${window}.${direction}.${tech}.usage | awk '{print $2}' - | paste ${output_plot}.${direction}.${tech}.usage.data - > temp && mv temp ${output_plot}.${direction}.${tech}.usage.data
+            cat ${output_plot}.p.$p.cap.$cap.window.${window}.${direction}.${tech}.usage | awk '{print $2}' - | paste ${output_plot}.${direction}.${tech}.usage.data - > temp && mv temp ${output_plot}.${direction}.${tech}.usage.data
           fi
         done
 

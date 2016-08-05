@@ -17,9 +17,9 @@ files=($(ls $bench/*lpfs | sed "s/^\(.*\)\..*$/\1/"))
 error_rates=(5 6 7 8 9)
 
 # concatenated codes parameters
-caps=(10 100 "inf")
-windows=(10 100 "inf")
-directions=("--forward" "--backward")
+caps=(10 100)
+windows=(100)
+directions=("--forward")
 technologies=("ion" "sup")
 
 parallel="parallel --delay .2 -j 8 --joblog logs/cc.log --resume"
