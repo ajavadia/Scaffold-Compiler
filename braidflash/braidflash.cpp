@@ -60,8 +60,8 @@ unsigned int num_magic_factories = 1;
 //Superconduc: {{"PrepZ",1}, {"X",1}, {"Z",1}, {"H",1}, {"CNOT",40}, {"T",1}, {"Tdag",1}, {"S",1}, {"Sdag",1}, {"MeasZ",140}};
 std::unordered_map<std::string, int> op_delays_ion; 
 std::unordered_map<std::string, int> op_delays_sup; 
-int surface_code_cycle_ion;
-int surface_code_cycle_sup;
+int surface_code_cycle_ion, surface_code_cycle_sup;
+int surface_code_cycle, surface_code_cycle_other;
 
 
 // Note: this is for logical qubit layouts.
@@ -1073,7 +1073,10 @@ int main (int argc, char *argv[]) {
                        4*op_delays_sup.find("CNOT")->second + 
                        op_delays_sup.find("MeasZ")->second;
   
-    
+  
+  if (tech=="ion") {surface_code_cycle = surface_code_cycle_ion; surface_code_cycle_other = surface_code_cycle_sup;}
+  if (tech=="sup") {surface_code_cycle = surface_code_cycle_sup; surface_code_cycle_other = surface_code_cycle_ion;}
+  
   // read program gates
   // mark gate seq numbers from 1 upwards
   string benchmark_path(argv[1]);
@@ -1523,7 +1526,7 @@ int main (int argc, char *argv[]) {
   // KQ: total number of logical gates
   // k: total number of physical timesteps
   // q: total number of physical qubits
-  string kq_file_path;  string kq_file_path_other; 
+  string kq_file_path; 
   ofstream kq_file;      
   kq_file_path = output_dir+benchmark_name
                     +".p."+(to_string(P_error_rate))
