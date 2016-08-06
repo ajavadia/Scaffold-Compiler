@@ -1907,7 +1907,31 @@ int main (int argc, char *argv[]) {
     }            
   }
 
-
+  if(tech=="ion") {
+    op_delays["PrepZ"] = 1;
+    op_delays["X"] = 1;
+    op_delays["Z"] = 1;
+    op_delays["H"] = 1;
+    op_delays["CNOT"] = 10;
+    op_delays["T"] = 1;
+    op_delays["Tdag"] = 1;
+    op_delays["S"] = 1;
+    op_delays["Sdag"] = 1;
+    op_delays["MeasZ"] = 10;  
+  }
+  else if (tech=="sup"){
+    op_delays["PrepZ"] = 1;
+    op_delays["X"] = 1;
+    op_delays["Z"] = 1;
+    op_delays["H"] = 1;
+    op_delays["CNOT"] = 10;
+    op_delays["T"] = 1;
+    op_delays["Tdag"] = 1;
+    op_delays["S"] = 1;
+    op_delays["Sdag"] = 1;
+    op_delays["MeasZ"] = 100;  
+  }
+  /*
   if(tech=="ion") {
     op_delays["PrepZ"] = 1;
     op_delays["X"] = 1;
@@ -1931,7 +1955,7 @@ int main (int argc, char *argv[]) {
     op_delays["S"] = 1;
     op_delays["Sdag"] = 1;
     op_delays["MeasZ"] = 140;  
-  }
+  }*/  
   
   // -------- Start processing benchmark
   // -------- Input: Logical LPFS schedule for leaves

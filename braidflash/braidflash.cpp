@@ -1045,6 +1045,28 @@ int main (int argc, char *argv[]) {
   op_delays_ion["X"] = 1;
   op_delays_ion["Z"] = 1;
   op_delays_ion["H"] = 1;
+  op_delays_ion["CNOT"] = 10;
+  op_delays_ion["T"] = 1;
+  op_delays_ion["Tdag"] = 1;
+  op_delays_ion["S"] = 1;
+  op_delays_ion["Sdag"] = 1;
+  op_delays_ion["MeasZ"] = 10;  
+    
+  op_delays_sup["PrepZ"] = 1;
+  op_delays_sup["X"] = 1;
+  op_delays_sup["Z"] = 1;
+  op_delays_sup["H"] = 1;
+  op_delays_sup["CNOT"] = 10;
+  op_delays_sup["T"] = 1;
+  op_delays_sup["Tdag"] = 1;
+  op_delays_sup["S"] = 1;
+  op_delays_sup["Sdag"] = 1;
+  op_delays_sup["MeasZ"] = 100;
+
+  /*op_delays_ion["PrepZ"] = 1;
+  op_delays_ion["X"] = 1;
+  op_delays_ion["Z"] = 1;
+  op_delays_ion["H"] = 1;
   op_delays_ion["CNOT"] = 100;
   op_delays_ion["T"] = 1;
   op_delays_ion["Tdag"] = 1;
@@ -1061,7 +1083,7 @@ int main (int argc, char *argv[]) {
   op_delays_sup["Tdag"] = 1;
   op_delays_sup["S"] = 1;
   op_delays_sup["Sdag"] = 1;
-  op_delays_sup["MeasZ"] = 140;  
+  op_delays_sup["MeasZ"] = 140; */ 
   
   // how long is each surface code cycle
   surface_code_cycle_ion = op_delays_ion.find("PrepZ")->second + 
