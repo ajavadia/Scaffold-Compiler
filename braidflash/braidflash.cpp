@@ -1040,7 +1040,7 @@ int main (int argc, char *argv[]) {
       }
     }       
   }  
-
+/*
   op_delays_ion["PrepZ"] = 1;
   op_delays_ion["X"] = 1;
   op_delays_ion["Z"] = 1;
@@ -1062,8 +1062,8 @@ int main (int argc, char *argv[]) {
   op_delays_sup["S"] = 1;
   op_delays_sup["Sdag"] = 1;
   op_delays_sup["MeasZ"] = 100;
-
-  /*op_delays_ion["PrepZ"] = 1;
+*/
+  op_delays_ion["PrepZ"] = 1;
   op_delays_ion["X"] = 1;
   op_delays_ion["Z"] = 1;
   op_delays_ion["H"] = 1;
@@ -1083,7 +1083,7 @@ int main (int argc, char *argv[]) {
   op_delays_sup["Tdag"] = 1;
   op_delays_sup["S"] = 1;
   op_delays_sup["Sdag"] = 1;
-  op_delays_sup["MeasZ"] = 140; */ 
+  op_delays_sup["MeasZ"] = 140; 
   
   // how long is each surface code cycle
   surface_code_cycle_ion = op_delays_ion.find("PrepZ")->second + 

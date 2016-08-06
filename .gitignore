@@ -24,9 +24,10 @@
 # simulator intermediate files
 *.tr
 *.graph
-# differetn between systems
+# different between systems
 *Makefile*
 simd_router/plot*.sh
+scripts/par-sweep-*.sh
 
 #==============================================================================#
 # Explicit files to ignore (only matches one).
