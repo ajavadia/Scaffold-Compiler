@@ -10,7 +10,7 @@ error_rates=(5)
 attempt_th_yx=(4)
 attempt_th_drop=(15)
 layout=("" "--opt")
-technologies=("ion" "sup")
+technologies=("sup")
 
 #run
 for bench in $*; do
