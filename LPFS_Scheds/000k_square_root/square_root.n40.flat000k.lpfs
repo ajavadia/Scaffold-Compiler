@@ -1,0 +1,218 @@
+M: $::SIMD_K=4; $::SIMD_D=1024; $::SIMD_L=1
+
+LPFS:
+Function: Sqr (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
+==================================================================
+0,0 TMOV 1 0 b36
+0,0 TMOV 1 0 a18
+0,0 TMOV 1 0 b38
+0,0 TMOV 1 0 a19
+0,0 TMOV 1 0 b34
+0,0 TMOV 1 0 a17
+0,0 TMOV 1 0 b32
+0,0 TMOV 1 0 a16
+0,0 TMOV 1 0 b30
+0,0 TMOV 1 0 a15
+0,0 TMOV 1 0 b28
+0,0 TMOV 1 0 a14
+0,0 TMOV 1 0 b26
+0,0 TMOV 1 0 a13
+0,0 TMOV 1 0 b24
+0,0 TMOV 1 0 a12
+0,0 TMOV 1 0 b22
+0,0 TMOV 1 0 a11
+0,0 TMOV 1 0 b20
+0,0 TMOV 1 0 a10
+0,0 TMOV 1 0 b18
+0,0 TMOV 1 0 a9
+0,0 TMOV 1 0 b16
+0,0 TMOV 1 0 a8
+0,0 TMOV 1 0 b14
+0,0 TMOV 1 0 a7
+0,0 TMOV 1 0 b12
+0,0 TMOV 1 0 a6
+0,0 TMOV 1 0 b10
+0,0 TMOV 1 0 a5
+0,0 TMOV 1 0 b8
+0,0 TMOV 1 0 a4
+0,0 TMOV 1 0 b6
+0,0 TMOV 1 0 a3
+0,0 TMOV 1 0 b4
+0,0 TMOV 1 0 a2
+0,0 TMOV 1 0 b2
+0,0 TMOV 1 0 a1
+0,0 TMOV 1 0 b0
+0,0 TMOV 1 0 a0
+0,1 CNOT b36 a18
+0,1 CNOT b38 a19
+0,1 CNOT b34 a17
+0,1 CNOT b32 a16
+0,1 CNOT b30 a15
+0,1 CNOT b28 a14
+0,1 CNOT b26 a13
+0,1 CNOT b24 a12
+0,1 CNOT b22 a11
+0,1 CNOT b20 a10
+0,1 CNOT b18 a9
+0,1 CNOT b16 a8
+0,1 CNOT b14 a7
+0,1 CNOT b12 a6
+0,1 CNOT b10 a5
+0,1 CNOT b8 a4
+0,1 CNOT b6 a3
+0,1 CNOT b4 a2
+0,1 CNOT b2 a1
+0,1 CNOT b0 a0
+1,0 TMOV 0 1 a18
+1,0 TMOV 0 1 a19
+1,0 TMOV 0 1 a17
+1,0 TMOV 0 1 a16
+1,0 TMOV 0 1 a15
+1,0 TMOV 0 1 a14
+1,0 TMOV 0 1 a13
+1,0 TMOV 0 1 a12
+1,0 TMOV 0 1 a11
+1,0 TMOV 0 1 a10
+1,0 TMOV 0 1 a9
+1,0 TMOV 0 1 a8
+1,0 TMOV 0 1 a7
+1,0 TMOV 0 1 a6
+1,0 TMOV 0 1 a5
+1,0 TMOV 0 1 a4
+1,0 TMOV 0 1 a3
+1,0 TMOV 0 1 a2
+1,0 TMOV 0 1 a1
+1,0 TMOV 0 1 a0
+1,0 TMOV 1 0 a38
+1,0 TMOV 1 0 a28
+1,0 TMOV 1 0 a29
+1,0 TMOV 1 0 a30
+1,0 TMOV 1 0 a31
+1,0 TMOV 1 0 a32
+1,0 TMOV 1 0 a33
+1,0 TMOV 1 0 a34
+1,0 TMOV 1 0 a35
+1,0 TMOV 1 0 a36
+1,0 TMOV 1 0 a37
+1,0 TMOV 1 0 a26
+1,0 TMOV 1 0 a27
+1,0 TMOV 1 0 a20
+1,0 TMOV 1 0 a25
+1,0 TMOV 1 0 a24
+1,0 TMOV 1 0 a21
+1,0 TMOV 1 0 a23
+1,0 TMOV 1 0 a39
+1,0 TMOV 1 0 a22
+1,1 CNOT b36 a38
+1,1 CNOT b16 a28
+1,1 CNOT b18 a29
+1,1 CNOT b20 a30
+1,1 CNOT b22 a31
+1,1 CNOT b24 a32
+1,1 CNOT b26 a33
+1,1 CNOT b28 a34
+1,1 CNOT b30 a35
+1,1 CNOT b32 a36
+1,1 CNOT b34 a37
+1,1 CNOT b12 a26
+1,1 CNOT b14 a27
+1,1 CNOT b0 a20
+1,1 CNOT b10 a25
+1,1 CNOT b8 a24
+1,1 CNOT b2 a21
+1,1 CNOT b6 a23
+1,1 CNOT b38 a39
+1,1 CNOT b4 a22
+2,0 TMOV 0 1 b36
+2,0 TMOV 0 1 b38
+2,0 TMOV 0 1 b34
+2,0 TMOV 0 1 b32
+2,0 TMOV 0 1 b30
+2,0 TMOV 0 1 b28
+2,0 TMOV 0 1 b26
+2,0 TMOV 0 1 b24
+2,0 TMOV 0 1 b22
+2,0 TMOV 0 1 b20
+2,0 TMOV 0 1 b18
+2,0 TMOV 0 1 b16
+2,0 TMOV 0 1 b14
+2,0 TMOV 0 1 b12
+2,0 TMOV 0 1 b10
+2,0 TMOV 0 1 b8
+2,0 TMOV 0 1 b6
+2,0 TMOV 0 1 b4
+2,0 TMOV 0 1 b2
+2,0 TMOV 0 1 b0
+2,0 TMOV 1 0 b37
+2,0 TMOV 1 0 b39
+2,0 TMOV 1 0 b35
+2,0 TMOV 1 0 b1
+2,0 TMOV 1 0 b33
+2,0 TMOV 1 0 b31
+2,0 TMOV 1 0 b3
+2,0 TMOV 1 0 b29
+2,0 TMOV 1 0 b27
+2,0 TMOV 1 0 b25
+2,0 TMOV 1 0 b23
+2,0 TMOV 1 0 b7
+2,0 TMOV 1 0 b21
+2,0 TMOV 1 0 b19
+2,0 TMOV 1 0 b9
+2,0 TMOV 1 0 b17
+2,0 TMOV 1 0 b15
+2,0 TMOV 1 0 b11
+2,0 TMOV 1 0 b13
+2,0 TMOV 1 0 b5
+2,1 CNOT b37 a38
+2,1 CNOT b39 a39
+2,1 CNOT b35 a37
+2,1 CNOT b1 a20
+2,1 CNOT b33 a36
+2,1 CNOT b31 a35
+2,1 CNOT b3 a21
+2,1 CNOT b29 a34
+2,1 CNOT b27 a33
+2,1 CNOT b25 a32
+2,1 CNOT b23 a31
+2,1 CNOT b7 a23
+2,1 CNOT b21 a30
+2,1 CNOT b19 a29
+2,1 CNOT b9 a24
+2,1 CNOT b17 a28
+2,1 CNOT b15 a27
+2,1 CNOT b11 a25
+2,1 CNOT b13 a26
+2,1 CNOT b5 a22
+
+LPFS:
+Function: ToffoliImpl (sched: lpfs, k: 4, d: 1024 l: 1, opp: 1, refill: 0) 
+==================================================================
+0,0 TMOV 1 0 target0
+0,0 TMOV 2 0 control10
+0,0 TMOV 3 0 control20
+0,1 H target0
+0,2 Tdag control10
+0,3 T control20
+1,0 TMOV 2 3 control20
+1,1 T target0
+1,2 CNOT control20 control10
+2,0 TMOV 1 2 control10
+2,1 CNOT control10 target0
+3,0 TMOV 2 1 target0
+3,1 Tdag control10
+3,2 CNOT target0 control20
+4,0 TMOV 1 2 control20
+4,1 CNOT control10 control20
+4,2 T target0
+5,1 Tdag control10
+5,1 Tdag control20
+6,0 TMOV 1 2 target0
+6,0 TMOV 0 1 control20
+6,1 CNOT control10 target0
+7,0 TMOV 2 1 target0
+7,0 TMOV 2 0 control20
+7,1 S control10
+7,2 CNOT target0 control20
+8,0 TMOV 1 2 control20
+8,1 CNOT control20 control10
+8,2 H target0
