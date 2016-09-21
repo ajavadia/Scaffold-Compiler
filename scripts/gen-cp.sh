@@ -7,7 +7,7 @@ SCAF=$ROOT/build/Release+Asserts/lib/Scaffold.so
 
 # Module flattening threshold
 # note: thresholds must be picked from the set in scripts/flattening_thresh.py
-THRESHOLDS=(010k 100k 2M)
+THRESHOLDS=(010k)
 
 # Create directory to put all byproduct and output files in
 for f in $*; do
@@ -32,6 +32,17 @@ for f in $*; do
   fi
 done
 
+# Perform resource estimation 
+for f in $*; do
+  b=$(basename $f .scaffold)
+  for th in ${THRESHOLDS[@]}; do      
+    echo "[gen-cp.sh] $b.flat${th}: Resource count ..."    
+    if [ -n ${b}/${b}.flat${th}.resources ]; then
+      $OPT -S -load $SCAF -ResourceCount ${b}/${b}.flat${th}.ll > /dev/null 2> ${b}/${b}.flat${th}.resources
+    fi
+  done
+done
+
 # Module flattening pass with different thresholds, then critical path calculation.
 for f in $*; do
   b=$(basename $f .scaffold)  
@@ -48,6 +59,7 @@ for f in $*; do
     if [ ! -e ${b}/${b}.flat${th}.cp ]; then
       echo "[gen-cp.sh] Critical path calculation ..."        
       $OPT -load $SCAF -GetCriticalPath ${b}/${b}.flat${th}.ll >/dev/null 2> ${b}/${b}.flat${th}.cp
+      $OPT -load $SCAF -GetClassicalCriticalPath ${b}/${b}.flat${th}.ll >/dev/null 2> ${b}/${b}.flat${th}.ccp      
     fi
   done
   rm -f *flat*txt ${b}.out

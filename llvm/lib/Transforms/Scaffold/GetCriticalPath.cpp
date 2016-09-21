@@ -368,7 +368,7 @@ bool GetCriticalPath::backtraceOperand(Value* opd, int opOrIndex)
       return true;
     }
   }
-  else if(opOrIndex == 0){ //opOrIndex == 1; i.e. Backtracing for Index    
+  else if(opOrIndex == 1){ //opOrIndex == 1; i.e. Backtracing for Index    
     if(btCount>MAX_BT_COUNT) //prevent infinite backtracing
       return true;
 
@@ -999,8 +999,6 @@ void GetCriticalPath::calc_critical_time(Function* F, qGate qg){
 void GetCriticalPath::analyzeCallInst(Function* F, Instruction* pInst){
   if(CallInst *CI = dyn_cast<CallInst>(pInst))
   {      
-    if(debugGetCriticalPath)
-      errs() << "Call inst: " << CI->getCalledFunction()->getName() << "\n";
 
     if(CI->getCalledFunction()->getName() == "store_cbit"){	//trace return values
       return;
@@ -1046,7 +1044,7 @@ void GetCriticalPath::analyzeCallInst(Function* F, Instruction* pInst){
       }
 
 
-      //if(tmpQGateArg.isQbit || tmpQGateArg.isCbit){
+      //if(tmpQGateArg.isQbit || tmpQGateArg.isCbit)
       if(tmpQGateArg.isQbit){
         tmpDepQbit.push_back(tmpQGateArg);	
         tracked_all_operands &= backtraceOperand(CI->getArgOperand(iop),0);
@@ -1057,7 +1055,6 @@ void GetCriticalPath::analyzeCallInst(Function* F, Instruction* pInst){
         assert(tmpDepQbit.size() == 1 && "tmpDepQbit SIZE GT 1");
         tmpDepQbit.clear();
       }
-
     }
 
     if(allDepQbit.size() > 0){
@@ -1095,286 +1092,287 @@ void GetCriticalPath::analyzeCallInst(Function* F, Instruction* pInst){
 
     }    
     allDepQbit.erase(allDepQbit.begin(),allDepQbit.end());
+  }
+}
+
+
+void GetCriticalPath::saveTableFuncQbits(Function* F){
+  map<unsigned int, map<int, uint64_t> > tmpFuncQbitsMap;
+
+  for(map<string, map<int, uint64_t> >::iterator mapIt = funcQbits.begin(); mapIt!=funcQbits.end(); ++mapIt){
+    map<string, unsigned int>::iterator argIt = funcArgs.find((*mapIt).first);
+    if(argIt!=funcArgs.end()){
+      unsigned int argNum = (*argIt).second;
+      tmpFuncQbitsMap[argNum] = (*mapIt).second;
+    }
+  }
+  tableFuncQbits[F] = tmpFuncQbitsMap;
+}
+
+
+void GetCriticalPath::saveTableFuncQbitsStart(Function* F){
+  map<unsigned int, map<int, uint64_t> > tmpFuncQbitsMap;
+
+  for(map<string, map<int, uint64_t> >::iterator mapIt = funcQbitsHalf.begin(); mapIt!=funcQbitsHalf.end(); ++mapIt){
+    map<string, unsigned int>::iterator argIt = funcArgs.find((*mapIt).first);
+    if(argIt!=funcArgs.end()){
+      unsigned int argNum = (*argIt).second;
+      tmpFuncQbitsMap[argNum] = (*mapIt).second;
+    }
+  }
+  tableFuncQbitsStart[F] = tmpFuncQbitsMap;
+}
+
+
+void GetCriticalPath::init_funcQbitsHalf(uint64_t i){
+  //copy all entries of funcQbit
+  //print_funcQbitsHalf();
+
+  for(map<string, map<int,uint64_t> >::iterator inItr = funcQbits.begin(); inItr!=funcQbits.end(); ++inItr){
+    //find string in funcQbitsHalf
+    //errs() << "Looking for string " << (*inItr).first << "\n";
+    map<string, map<int,uint64_t> >::iterator outItr = funcQbitsHalf.find((*inItr).first);
+    assert(outItr != funcQbitsHalf.end() && "funcQbitsHalf does not have entry");
+
+    for(map<int,uint64_t>::iterator in2Itr = (*inItr).second.begin(); in2Itr!=(*inItr).second.end(); ++in2Itr){
+      (*outItr).second[(*in2Itr).first] = i;
     }
   }
 
+}
 
-  void GetCriticalPath::saveTableFuncQbits(Function* F){
-    map<unsigned int, map<int, uint64_t> > tmpFuncQbitsMap;
+void GetCriticalPath::gen_half_funcQbits(uint64_t ct, uint64_t hct){
+  init_funcQbitsHalf(ct);
 
-    for(map<string, map<int, uint64_t> >::iterator mapIt = funcQbits.begin(); mapIt!=funcQbits.end(); ++mapIt){
-      map<string, unsigned int>::iterator argIt = funcArgs.find((*mapIt).first);
-      if(argIt!=funcArgs.end()){
-        unsigned int argNum = (*argIt).second;
-        tmpFuncQbitsMap[argNum] = (*mapIt).second;
+  for(uint64_t i=hct+1; i<ct; i++){
+    map<uint64_t, vector<qGate> >::iterator mit=tsGates.find(i);
+    for(vector<qGate>::iterator vit = (*mit).second.begin(); vit!=(*mit).second.end(); ++vit){
+      //iterate over the args
+      for(int j=0; j<(*vit).numArgs; j++){
+        string argName = (*vit).args[j].name;
+        int argIndex = (*vit).args[j].index;
+        map<string, map<int,uint64_t> >::iterator fit = funcQbitsHalf.find(argName);
+        assert(fit!=funcQbitsHalf.end() && "arg not found in funQbitsHalf");
+
+        assert(argIndex != -1 && "argindex is -1");
+
+        map<int,uint64_t>::iterator mfit = (*fit).second.find(argIndex);
+        assert(mfit != (*fit).second.end() && "arg index not found in funcQbitsHalf");
+
+        if(i < (*mfit).second){ //gate scheduled in TS=i
+          (*mfit).second = i;	  
+        }
+
       }
+
     }
-    tableFuncQbits[F] = tmpFuncQbitsMap;
+
   }
+  //print_funcQbitsHalf();
 
+}
 
-  void GetCriticalPath::saveTableFuncQbitsStart(Function* F){
-    map<unsigned int, map<int, uint64_t> > tmpFuncQbitsMap;
+void GetCriticalPath::schedule_alap_insts(uint64_t ct, uint64_t hct){
+  //errs() << "Scheduling insts ALAP, starting from ts: " << hct << "\n";
 
-    for(map<string, map<int, uint64_t> >::iterator mapIt = funcQbitsHalf.begin(); mapIt!=funcQbitsHalf.end(); ++mapIt){
-      map<string, unsigned int>::iterator argIt = funcArgs.find((*mapIt).first);
-      if(argIt!=funcArgs.end()){
-        unsigned int argNum = (*argIt).second;
-        tmpFuncQbitsMap[argNum] = (*mapIt).second;
+  assert(hct!=0 && "ZERO hct");
+
+  for(uint64_t i=hct; i>=1; i--){
+    map<uint64_t, vector<qGate> >::iterator mit=tsGates.find(i);
+    for(vector<qGate>::iterator vit = (*mit).second.begin(); vit!=(*mit).second.end(); ++vit){
+      //iterate over the args and get ALAP num
+      uint64_t min_ts_of_all_args = ct;
+
+      for(int j=0; j<(*vit).numArgs; j++){
+        string argName = (*vit).args[j].name;
+        int argIndex = (*vit).args[j].index;
+
+        map<string, map<int,uint64_t> >::iterator fit = funcQbitsHalf.find(argName);
+        assert(fit!=funcQbitsHalf.end() && "arg not found in funQbitsHalf");
+        assert(argIndex != -1 && "argIndex = -1 in sched_alap");
+
+        //if(argIndex == -1) //operation on entire array
+        //{
+        //find min for the array
+        //map<int,uint64_t>::iterator indexIter = (*fit).second.find(-2);
+        //  if((*indexIter).second < min_ts_of_all_args)
+        //    min_ts_of_all_args = (*indexIter).second;	  
+        //}
+        //else
+        //{
+        map<int,uint64_t>::iterator mfit = (*fit).second.find(argIndex);
+        assert(mfit != (*fit).second.end() && "arg index not found in funcQbitsHalf");
+
+        if((*mfit).second < min_ts_of_all_args)
+          min_ts_of_all_args = (*mfit).second;
+        //}
       }
-    }
-    tableFuncQbitsStart[F] = tmpFuncQbitsMap;
-  }
+      //print_qgate((*vit));
+      //errs() << "min_ts_of_all_args = " << min_ts_of_all_args << "\n";
+      (*vit).alap_num = min_ts_of_all_args-1;
 
+      //schedule gate in min_ts_of_all_args - 1; update funcQbitsHalf
+      //--print_scheduled_gate((*vit),min_ts_of_all_args-1);
 
-  void GetCriticalPath::init_funcQbitsHalf(uint64_t i){
-    //copy all entries of funcQbit
-    //print_funcQbitsHalf();
+      //find last timestep for all arguments of qgate
+      for(int j=0;j<(*vit).numArgs; j++){
+        map<string, map<int,uint64_t> >::iterator mIter = funcQbitsHalf.find((*vit).args[j].name);
 
-    for(map<string, map<int,uint64_t> >::iterator inItr = funcQbits.begin(); inItr!=funcQbits.end(); ++inItr){
-      //find string in funcQbitsHalf
-      //errs() << "Looking for string " << (*inItr).first << "\n";
-      map<string, map<int,uint64_t> >::iterator outItr = funcQbitsHalf.find((*inItr).first);
-      assert(outItr != funcQbitsHalf.end() && "funcQbitsHalf does not have entry");
+        int argIndex = (*vit).args[j].index;
 
-      for(map<int,uint64_t>::iterator in2Itr = (*inItr).second.begin(); in2Itr!=(*inItr).second.end(); ++in2Itr){
-        (*outItr).second[(*in2Itr).first] = i;
-      }
-    }
-
-  }
-
-  void GetCriticalPath::gen_half_funcQbits(uint64_t ct, uint64_t hct){
-    init_funcQbitsHalf(ct);
-
-    for(uint64_t i=hct+1; i<ct; i++){
-      map<uint64_t, vector<qGate> >::iterator mit=tsGates.find(i);
-      for(vector<qGate>::iterator vit = (*mit).second.begin(); vit!=(*mit).second.end(); ++vit){
-        //iterate over the args
-        for(int j=0; j<(*vit).numArgs; j++){
-          string argName = (*vit).args[j].name;
-          int argIndex = (*vit).args[j].index;
-          map<string, map<int,uint64_t> >::iterator fit = funcQbitsHalf.find(argName);
-          assert(fit!=funcQbitsHalf.end() && "arg not found in funQbitsHalf");
-
-          assert(argIndex != -1 && "argindex is -1");
-
-          map<int,uint64_t>::iterator mfit = (*fit).second.find(argIndex);
-          assert(mfit != (*fit).second.end() && "arg index not found in funcQbitsHalf");
-
-          if(i < (*mfit).second){ //gate scheduled in TS=i
-            (*mfit).second = i;	  
+        if(argIndex == -1){
+          for(map<int,uint64_t>::iterator entryIter = (*mIter).second.begin(); entryIter!=(*mIter).second.end();++entryIter){
+            (*entryIter).second = min_ts_of_all_args - 1;
           }
 
-        }
-
-      }
-
-    }
-    //print_funcQbitsHalf();
-
-  }
-
-  void GetCriticalPath::schedule_alap_insts(uint64_t ct, uint64_t hct){
-    //errs() << "Scheduling insts ALAP, starting from ts: " << hct << "\n";
-
-    assert(hct!=0 && "ZERO hct");
-
-    for(uint64_t i=hct; i>=1; i--){
-      map<uint64_t, vector<qGate> >::iterator mit=tsGates.find(i);
-      for(vector<qGate>::iterator vit = (*mit).second.begin(); vit!=(*mit).second.end(); ++vit){
-        //iterate over the args and get ALAP num
-        uint64_t min_ts_of_all_args = ct;
-
-        for(int j=0; j<(*vit).numArgs; j++){
-          string argName = (*vit).args[j].name;
-          int argIndex = (*vit).args[j].index;
-
-          map<string, map<int,uint64_t> >::iterator fit = funcQbitsHalf.find(argName);
-          assert(fit!=funcQbitsHalf.end() && "arg not found in funQbitsHalf");
-          assert(argIndex != -1 && "argIndex = -1 in sched_alap");
-
-          //if(argIndex == -1) //operation on entire array
-          //{
-          //find min for the array
-          //map<int,uint64_t>::iterator indexIter = (*fit).second.find(-2);
-          //  if((*indexIter).second < min_ts_of_all_args)
-          //    min_ts_of_all_args = (*indexIter).second;	  
-          //}
-          //else
-          //{
-          map<int,uint64_t>::iterator mfit = (*fit).second.find(argIndex);
-          assert(mfit != (*fit).second.end() && "arg index not found in funcQbitsHalf");
-
-          if((*mfit).second < min_ts_of_all_args)
-            min_ts_of_all_args = (*mfit).second;
-          //}
-        }
-        //print_qgate((*vit));
-        //errs() << "min_ts_of_all_args = " << min_ts_of_all_args << "\n";
-        (*vit).alap_num = min_ts_of_all_args-1;
-
-        //schedule gate in min_ts_of_all_args - 1; update funcQbitsHalf
-        //--print_scheduled_gate((*vit),min_ts_of_all_args-1);
-
-        //find last timestep for all arguments of qgate
-        for(int j=0;j<(*vit).numArgs; j++){
-          map<string, map<int,uint64_t> >::iterator mIter = funcQbitsHalf.find((*vit).args[j].name);
-
-          int argIndex = (*vit).args[j].index;
-
-          if(argIndex == -1){
-            for(map<int,uint64_t>::iterator entryIter = (*mIter).second.begin(); entryIter!=(*mIter).second.end();++entryIter){
-              (*entryIter).second = min_ts_of_all_args - 1;
-            }
-
-          }
-          else{
-            //update the timestep number for that argument
-            map<int,uint64_t>::iterator indexIter = (*mIter).second.find(argIndex);
-            (*indexIter).second =  min_ts_of_all_args - 1;
-
-            //update -2 entry for the array, i.e. min ts over all indices
-            indexIter = (*mIter).second.find(-2);
-            if((*indexIter).second > min_ts_of_all_args - 1)
-              (*indexIter).second = min_ts_of_all_args - 1;
-          }  
-        }
-      }
-    }
-    //print_funcQbitsHalf();
-  }
-
-  void GetCriticalPath::process_nonLeafALAP(){
-    //copy entries from funcQbits and set values to 1 => zero slack
-    init_funcQbitsHalf(1);
-
-  }
-
-  void GetCriticalPath::CountCriticalFunctionResources (Function *F) {
-    // Traverse instruction by instruction
-    init_critical_path_algo(F);
-
-
-    for (inst_iterator I = inst_begin(*F), E = inst_end(*F); I != E; ++I) {
-      Instruction *Inst = &*I;                            // Grab pointer to instruction reference
-      analyzeAllocInst(F,Inst);          
-      analyzeCallInst(F,Inst);	
-    }
-
-    if(isLeaf){
-      //print_tsGates();
-
-      //do ALAP processing
-      uint64_t critTimeF = max(find_max_funcQbits(), highestDelay);
-      uint64_t halfCritTime = critTimeF/2;
-
-      //errs() << "from FuncQbits = " << find_max_funcQbits();
-      //errs() << " highestDelay = " << highestDelay << "\n";
-      //errs() << "crittimeF=" << critTimeF << "\n";
-
-      if(critTimeF > 3){
-        //generate_half_funcQbits_table
-        gen_half_funcQbits(critTimeF,halfCritTime);
-
-        //schedule instrs in first half ALAP
-        schedule_alap_insts(critTimeF,halfCritTime);
-      }
-      else
-        init_funcQbitsHalf(1);
-
-
-      //print_funcQbits();
-      //print_funcQbitsHalf();
-
-    }
-    else{
-      //dummy info for ALAP
-      process_nonLeafALAP();
-
-    }
-
-
-    saveTableFuncQbits(F);
-    saveTableFuncQbitsStart(F);
-    //print_tableFuncQbits();
-    //print_tableFuncQbitsStart();
-
-  }
-
-
-  void GetCriticalPath::init_gates_as_functions(){
-    for(int  i =0; i< NUM_QGATES ; i++){
-      string gName = gate_name[i];
-      string fName = "llvm.";
-      fName.append(gName);
-
-      allTSParallelism tmp_info;
-      MaxInfo tmp_max_info;
-
-      tmp_info.timesteps = 1;
-      tmp_max_info.timesteps = 1;
-
-      ArrParGates tmp_gate_info;
-      for(int  k=0; k< NUM_QGATES ; k++){
-        tmp_gate_info.parallel_gates[k] = 0;
-        tmp_max_info.parallel_gates[k] = 0;
-      }
-      tmp_gate_info.parallel_gates[i] = 1;
-      tmp_gate_info.parallel_gates[_All] = 1;
-
-      tmp_max_info.parallel_gates[i] = 1;
-      tmp_max_info.parallel_gates[_All] = 1;
-
-      tmp_info.gates.push_back(tmp_gate_info);
-
-      funcParallelFactor[fName] = tmp_info;
-      funcMaxParallelFactor[fName] = tmp_max_info;
-
-    }
-  }
-
-
-  bool GetCriticalPath::runOnModule (Module &M) {
-    init_gate_names();
-    init_gates_as_functions();
-
-    // iterate over all functions, and over all instructions in those functions
-    CallGraphNode* rootNode = getAnalysis<CallGraph>().getRoot();
-
-    //Post-order
-    for (scc_iterator<CallGraphNode*> sccIb = scc_begin(rootNode), E = scc_end(rootNode); sccIb != E; ++sccIb) {
-      const std::vector<CallGraphNode*> &nextSCC = *sccIb;
-      for (std::vector<CallGraphNode*>::const_iterator nsccI = nextSCC.begin(), E = nextSCC.end(); nsccI != E; ++nsccI) {
-        Function *F = (*nsccI)->getFunction();	  
-
-        if(F && !F->isDeclaration()){
-          //errs() << "\nFunction: " << F->getName() << "\n";      
-
-          funcQbits.clear();
-          funcQbitsHalf.clear();
-          funcArgs.clear();
-
-          getFunctionArguments(F);
-
-          // count the critical resources for this function
-          CountCriticalFunctionResources(F);
-
-          crit_path_f[F] = max(find_max_funcQbits(), highestDelay);
-          //if(F->getName() == "main")
-          //errs() << F->getName() << ": " << "Critical Path Length : " << find_max_funcQbits() << "\n";
-          errs() << F->getName() << " " << max(find_max_funcQbits(),highestDelay) << " isLeaf= " << isLeaf <<"\n";	
         }
         else{
-          if(debugGetCriticalPath)
-            errs() << "WARNING: Ignoring external node or dummy function.\n";
-        }
+          //update the timestep number for that argument
+          map<int,uint64_t>::iterator indexIter = (*mIter).second.find(argIndex);
+          (*indexIter).second =  min_ts_of_all_args - 1;
+
+          //update -2 entry for the array, i.e. min ts over all indices
+          indexIter = (*mIter).second.find(-2);
+          if((*indexIter).second > min_ts_of_all_args - 1)
+            (*indexIter).second = min_ts_of_all_args - 1;
+        }  
       }
     }
-    //print_tableFuncQbits();
-    //print_critical_info("main");
+  }
+  //print_funcQbitsHalf();
+}
 
-    //calc_max_parallelism_statistic();
+void GetCriticalPath::process_nonLeafALAP(){
+  //copy entries from funcQbits and set values to 1 => zero slack
+  init_funcQbitsHalf(1);
 
-    return false;
-  } // End runOnModule
+}
+
+void GetCriticalPath::CountCriticalFunctionResources (Function *F) {
+  // Traverse instruction by instruction
+  init_critical_path_algo(F);
+
+
+  for (inst_iterator I = inst_begin(*F), E = inst_end(*F); I != E; ++I) {
+    Instruction *Inst = &*I;                            // Grab pointer to instruction reference
+    analyzeAllocInst(F,Inst);          
+    analyzeCallInst(F,Inst);	
+  }
+
+  if(isLeaf){
+    //print_tsGates();
+
+    //do ALAP processing
+    uint64_t critTimeF = max(find_max_funcQbits(), highestDelay);
+    uint64_t halfCritTime = critTimeF/2;
+
+    //errs() << "from FuncQbits = " << find_max_funcQbits();
+    //errs() << " highestDelay = " << highestDelay << "\n";
+    //errs() << "crittimeF=" << critTimeF << "\n";
+
+    if(critTimeF > 3){
+      //generate_half_funcQbits_table
+      gen_half_funcQbits(critTimeF,halfCritTime);
+
+      //schedule instrs in first half ALAP
+      schedule_alap_insts(critTimeF,halfCritTime);
+    }
+    else
+      init_funcQbitsHalf(1);
+
+
+    //print_funcQbits();
+    //print_funcQbitsHalf();
+
+  }
+  else{
+    //dummy info for ALAP
+    process_nonLeafALAP();
+
+  }
+
+
+  saveTableFuncQbits(F);
+  saveTableFuncQbitsStart(F);
+  //print_tableFuncQbits();
+  //print_tableFuncQbitsStart();
+
+}
+
+
+void GetCriticalPath::init_gates_as_functions(){
+  for(int  i =0; i< NUM_QGATES ; i++){
+    string gName = gate_name[i];
+    string fName = "llvm.";
+    fName.append(gName);
+
+    allTSParallelism tmp_info;
+    MaxInfo tmp_max_info;
+
+    tmp_info.timesteps = 1;
+    tmp_max_info.timesteps = 1;
+
+    ArrParGates tmp_gate_info;
+    for(int  k=0; k< NUM_QGATES ; k++){
+      tmp_gate_info.parallel_gates[k] = 0;
+      tmp_max_info.parallel_gates[k] = 0;
+    }
+    tmp_gate_info.parallel_gates[i] = 1;
+    tmp_gate_info.parallel_gates[_All] = 1;
+
+    tmp_max_info.parallel_gates[i] = 1;
+    tmp_max_info.parallel_gates[_All] = 1;
+
+    tmp_info.gates.push_back(tmp_gate_info);
+
+    funcParallelFactor[fName] = tmp_info;
+    funcMaxParallelFactor[fName] = tmp_max_info;
+
+  }
+}
+
+
+bool GetCriticalPath::runOnModule (Module &M) {
+  init_gate_names();
+  init_gates_as_functions();
+
+  // iterate over all functions, and over all instructions in those functions
+  CallGraphNode* rootNode = getAnalysis<CallGraph>().getRoot();
+
+  //Post-order
+  for (scc_iterator<CallGraphNode*> sccIb = scc_begin(rootNode), E = scc_end(rootNode); sccIb != E; ++sccIb) {
+    const std::vector<CallGraphNode*> &nextSCC = *sccIb;
+    for (std::vector<CallGraphNode*>::const_iterator nsccI = nextSCC.begin(), E = nextSCC.end(); nsccI != E; ++nsccI) {
+      Function *F = (*nsccI)->getFunction();	  
+
+      if(F && !F->isDeclaration()){
+        if(debugGetCriticalPath)
+          errs() << "\nFunction: " << F->getName() << "\n";      
+
+        funcQbits.clear();
+        funcQbitsHalf.clear();
+        funcArgs.clear();
+
+        getFunctionArguments(F);
+
+        // count the critical resources for this function
+        CountCriticalFunctionResources(F);
+
+        crit_path_f[F] = max(find_max_funcQbits(), highestDelay);
+        //if(F->getName() == "main")
+        //errs() << F->getName() << ": " << "Critical Path Length : " << find_max_funcQbits() << "\n";
+        errs() << F->getName() << " " << max(find_max_funcQbits(),highestDelay) << " isLeaf= " << isLeaf <<"\n";	
+      }
+      else{
+        if(debugGetCriticalPath)
+          errs() << "WARNING: Ignoring external node or dummy function.\n";
+      }
+    }
+  }
+  //print_tableFuncQbits();
+  //print_critical_info("main");
+
+  //calc_max_parallelism_statistic();
+
+  return false;
+} // End runOnModule
