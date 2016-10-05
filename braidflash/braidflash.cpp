@@ -17,7 +17,7 @@
 #include <utility>    //std::pair
 #include <vector>     //std::vector
 #include <list>       //std::list
-#include <algorithm>  //std::erase, std::find
+#include <algorithm>  //std::erase, std::find, std::sort
 #include <queue>      //std::queue
 #include <stdlib.h>   //system
 #include <cstdlib>
@@ -34,6 +34,8 @@
 #include <memory>     //std::shared_ptr, std::make_unique
 #include <limits>     //std::numeric_limits
 #include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/reverse_graph.hpp>
+#include <boost/graph/copy.hpp>
 #include <boost/graph/graphviz.hpp>
 
 //#define _DEBUG
@@ -41,7 +43,7 @@
 
 using namespace std;
 
-unsigned int attempt_th_yx;    // when should i switch DOR routing priority? is evaluated first.
+unsigned int attempt_th_yx;    // when should i switch DOR routing path? is evaluated first.
 unsigned int attempt_th_drop;  // when should i drop the entire operation and reinject it? is evaluated second.
 
 string tech;
@@ -52,8 +54,10 @@ double L_error_rate;        // desired logical error rate = 10^-(L_error_rate)
 int P_error_rate;           // device error rate parameter = 10^-(P_error_rate)
 int code_distance;          // coding distance of the surface code
 
-// number of magic_state_factories
-unsigned int num_magic_factories = 1;
+// magic state distillation
+#define short_A_error 0.005
+unsigned int data_to_factory_ratio = 50;  // ratio of 1:M magic state factories to data qubits
+unsigned int distillation_level = 0;
 
 // Physical operation latencies -- also determines surface code cycle length
 //Trapped-ion: {{"PrepZ",1}, {"X",1}, {"Z",1}, {"H",1}, {"CNOT",100}, {"T",1}, {"Tdag",1}, {"S",1}, {"Sdag",1}, {"MeasZ",25}};
@@ -94,7 +98,6 @@ struct Braid {
   vector<link_descriptor> links;
   Braid(vector<node_descriptor> nodes={}, vector<link_descriptor> links={}) : 
     nodes(nodes), links(links) {}
-  //struct Braid& operator+=(const Braid& rhs) {return *this;}
 };
 Braid operator+( Braid const& lhs, Braid const& rhs);
 
@@ -103,8 +106,9 @@ struct Gate {
   unsigned int seq;
   string op_type;  
   vector<unsigned int> qid; 
-  Gate(unsigned int seq=0, string op_type="CNOT", vector<unsigned int> qid={0,0}) : 
-    seq(seq), op_type(op_type), qid(qid) {}
+  int criticality;
+  Gate(unsigned int seq=0, string op_type="CNOT", vector<unsigned int> qid={0,0}, int criticality=-1) : 
+    seq(seq), op_type(op_type), qid(qid), criticality(criticality) {}
 };
 map<string, unsigned int> gate_latencies; 
 
@@ -125,8 +129,18 @@ struct Event {
   event_type type;        // type of event
   int timer;              // -1: invalid timer. 0: Event ready to go. >0: counting down.
   unsigned int attempts;  // number of attempts to complete event    
-  Event(Braid braid, bool close_open, gate_descriptor gate, event_type type, int timer=-1, unsigned int attempts=0) : 
-    braid(braid), close_open(close_open), gate(gate), type(type), timer(timer), attempts(attempts){}
+  
+  Event(Braid braid, bool close_open, gate_descriptor gate, event_type type, int timer=-1, unsigned int attempts=0)
+    : braid(braid), close_open(close_open), gate(gate), type(type), timer(timer), attempts(attempts){}
+
+  bool operator< (const Event &other) const { // event priority
+    return (!close_open 
+            || (dag[gate].op_type==dag[other.gate].op_type && (int)type>(int)(other.type))
+            //|| attempts > other.attempts
+            //|| dag[gate].criticality < dag[other.gate].criticality
+            //|| braid.links.size() < other.braid.links.size()
+            );
+  }
 };
 void print_event(Event &event) {
   cout << "Event: ";
@@ -145,6 +159,7 @@ void print_event(Event &event) {
   cout << "\tGate: " << dag[event.gate].op_type;
   for (auto &i : dag[event.gate].qid)
     cout << "\t" << i;
+  cout << "\t(Crit: " << dag[event.gate].criticality << ")";
   cout << endl;
   cout << "\tAttempts: " << event.attempts;
   cout << endl;
@@ -153,6 +168,8 @@ void print_event(Event &event) {
 // 7 data structures to keep track of pending/ready events/gates, and qubit names
 map< string, vector<Gate> > all_gates;
 map< string, vector<Gate> > all_gates_opt;
+map< string, dag_t> all_dags;
+map< string, dag_t> all_dags_opt;
 map< string, unsigned int > all_q_counts;
 vector<Gate> module_gates;
 vector<gate_descriptor> ready_gates;
@@ -160,13 +177,25 @@ map< gate_descriptor, queue<Event> > event_queues;
 vector<Event> ready_events;
 map< string, unsigned long long > module_freqs;
 
-// 3 data structures for results
+// 5 data structures for results
 list<pair<gate_descriptor, event_type>> success_events;
 list<pair<gate_descriptor, event_type>> total_conflict_events;
 list<pair<gate_descriptor, event_type>> unique_conflict_events;
 list<gate_descriptor> total_dropped_gates;
 list<gate_descriptor> unique_dropped_gates;
+
+// histograms
 map< unsigned int, unsigned int > attempts_hist;
+map< unsigned int, unsigned int > criticality_hist;
+map< unsigned int, unsigned int > length_hist;
+map< unsigned int, unsigned int > criticality_hist_opt;
+map< unsigned int, unsigned int > length_hist_opt;
+unsigned int max_crit = 0;
+unsigned int max_len = 0;
+unsigned int num_bins = 20;
+unsigned int len_binwidth = 0;    
+unsigned int crit_binwidth = 0;  
+
 
 // find the diagonal node with respect to qubit_num
 unsigned int find_diagonal(unsigned int qubit_num, unsigned int node) {
@@ -623,7 +652,6 @@ bool do_event(Event event) {
 
 // print a specific top-left portion of the mesh status
 void print_2d_mesh(unsigned int max_rows, unsigned int max_cols) {
-  cout << "CLOCK: " << clk << endl;
   // in case requested printing size is larger that the mesh
   if (max_rows > num_rows+1)
     max_rows = num_rows+1;
@@ -722,7 +750,53 @@ pair< pair<int,int>, pair<int,int> > compare_manhattan_costs () {
   unsigned int mcost_opt = 0;
   unsigned int event_count = 0;
   unsigned int event_count_opt = 0;
-  for (auto const &map_it : all_gates) {
+  crit_binwidth = max_crit/num_bins;   
+  len_binwidth = max_len/num_bins;
+  if (crit_binwidth==0) crit_binwidth = 1;  
+  if (len_binwidth==0) len_binwidth = 1;   
+  cout << max_crit << " " << max_len << endl; 
+  for (auto const &map_it : all_dags) {
+    dag_t mdag = map_it.second;
+    unsigned long long module_q_count = all_q_counts[map_it.first];
+    num_rows = (unsigned int)ceil( sqrt( (double)module_q_count ) );
+    num_cols = (num_rows*(num_rows-1) < module_q_count) ? num_rows : num_rows-1;
+    for (auto g_it_range = vertices(mdag); g_it_range.first != g_it_range.second; ++g_it_range.first){
+      gate_descriptor g = *(g_it_range.first);      
+      if (mdag[g].op_type == "CNOT") {      
+        unsigned int c = manhattan_cost(mdag[g].qid[0], mdag[g].qid[1]);
+        mcost += c;
+        event_count += 7;
+        unsigned int crit_binidx = (unsigned int)(mdag[g].criticality/crit_binwidth);                        
+        unsigned int len_binidx = (unsigned int)(c/len_binwidth);
+        ++criticality_hist[crit_binidx];        
+        ++length_hist[len_binidx];
+      }
+      else if (mdag[g].op_type == "H")
+        event_count += 2;
+    }
+  }
+  for (auto const &map_it : all_dags_opt) {
+    dag_t mdag = map_it.second;
+    unsigned long long module_q_count = all_q_counts[map_it.first];
+    num_rows = (unsigned int)ceil( sqrt( (double)module_q_count ) );
+    num_cols = (num_rows*(num_rows-1) < module_q_count) ? num_rows : num_rows-1;
+    for (auto g_it_range = vertices(mdag); g_it_range.first != g_it_range.second; ++g_it_range.first){
+      gate_descriptor g = *(g_it_range.first);      
+      if (mdag[g].op_type == "CNOT") {            
+        unsigned int c = manhattan_cost(mdag[g].qid[0], mdag[g].qid[1]);
+        mcost += c;
+        event_count += 7;
+        unsigned int crit_binidx = (unsigned int)(mdag[g].criticality/crit_binwidth);                        
+        unsigned int len_binidx = (unsigned int)(c/len_binwidth);
+        ++criticality_hist[crit_binidx];        
+        ++length_hist[len_binidx];
+      }
+      else if (mdag[g].op_type == "H")
+        event_count += 2;
+    }
+  }
+
+  /*for (auto const &map_it : all_gates) {
     vector<Gate> module_gates = map_it.second;
     unsigned long long module_q_count = all_q_counts[map_it.first];
     num_rows = (unsigned int)ceil( sqrt( (double)module_q_count ) );
@@ -732,6 +806,11 @@ pair< pair<int,int>, pair<int,int> > compare_manhattan_costs () {
         unsigned int c = manhattan_cost(i.qid[0], i.qid[1]);
         mcost += c;
         event_count += 7;
+        cerr<<"i.criticality"<<i.criticality<<endl;
+        unsigned int crit_binidx = (unsigned int)(i.criticality/crit_binwidth);                        
+        unsigned int len_binidx = (unsigned int)(c/len_binwidth);
+        ++criticality_hist[crit_binidx];        
+        ++length_hist[len_binidx];
       }
       else if (i.op_type == "H")
         event_count += 2;
@@ -747,12 +826,16 @@ pair< pair<int,int>, pair<int,int> > compare_manhattan_costs () {
         unsigned int c = manhattan_cost(i.qid[0], i.qid[1]);
         mcost_opt += c;
         event_count_opt += 7;
+        unsigned int crit_binidx = (unsigned int)(i.criticality/crit_binwidth);                        
+        unsigned int len_binidx = (unsigned int)(c/len_binwidth);
+        ++criticality_hist_opt[crit_binidx];         
+        ++length_hist_opt[len_binidx];
       }
       else if (i.op_type == "H") {
         event_count_opt += 2;
       }
     }
-  }
+  }*/
   result = make_pair(make_pair(mcost,mcost_opt), make_pair(event_count,event_count_opt));
   return result;
 }
@@ -907,51 +990,95 @@ void parse_freq (const string file_path) {
     cerr << "Unable to open .freq file" << endl;
 }
 
-unsigned long long get_critical_clk (dag_t dag) {
+// find total module critical path
+unsigned long long get_critical_clk (dag_t dag_copy) {
   unsigned long long result = 0;
   vector<gate_descriptor> current_gates;        // currently evaluated gates
   vector<gate_descriptor> next_gates;           // next evaluated gates  
   map<gate_descriptor, unsigned long long> cps; // critical path of gates
   current_gates.clear();
   next_gates.clear();
-  cps.clear();
-  for (auto g_it_range = vertices(dag); g_it_range.first != g_it_range.second; ++g_it_range.first){
+  cps.clear();     
+  for (auto g_it_range = vertices(dag_copy); g_it_range.first != g_it_range.second; ++g_it_range.first){
     gate_descriptor g = *(g_it_range.first);
-    if (boost::in_degree(g, dag)==0) { 
+    if (boost::in_degree(g, dag_copy)==0) { 
       current_gates.push_back(g);
-      cps[g] = get_gate_latency(dag[g]);
+      cps[g] = get_gate_latency(dag_copy[g]);
       if (cps[g] > result) {
         result = cps[g]; 
       }
     }
   }  
-  while ( !(num_edges(dag)==0) || !current_gates.empty() ) {
+  while ( !(num_edges(dag_copy)==0) || !current_gates.empty() ) {
     for (auto &g : current_gates) {
       dag_t::adjacency_iterator neighborIt, neighborEnd;
-      boost::tie(neighborIt, neighborEnd) = adjacent_vertices(g, dag);
+      boost::tie(neighborIt, neighborEnd) = adjacent_vertices(g, dag_copy);
       for (; neighborIt != neighborEnd; ++neighborIt) {
         gate_descriptor g_out = *neighborIt;  
         if ( cps.find(g_out) == cps.end() ) {
-          cps[g_out] = cps[g]+get_gate_latency(dag[g_out]);
+          cps[g_out] = cps[g]+get_gate_latency(dag_copy[g_out]);
           if (cps[g_out] > result)
            result = cps[g_out];  
         }
         else {
-          cps[g_out] = max(cps[g_out],cps[g]+get_gate_latency(dag[g_out]));
+          cps[g_out] = max(cps[g_out],cps[g]+get_gate_latency(dag_copy[g_out]));
           if (cps[g_out] > result)
             result = cps[g_out];  
-        }
-        if(boost::in_degree(g_out, dag) == 1) {          
+        }   
+        if(boost::in_degree(g_out, dag_copy) == 1) {          
           next_gates.push_back(g_out);
         }
       }
-      boost::clear_out_edges(g, dag);          
-      assert(in_degree(g,dag) == 0 && out_degree(g,dag) == 0 && "removing gate prematurely from dag.");        
+      boost::clear_out_edges(g, dag_copy);          
+      assert(in_degree(g,dag_copy) == 0 && out_degree(g,dag_copy) == 0 && "removing gate prematurely from dag.");        
     }
     current_gates = next_gates;
     next_gates.clear();
   }
   return result;
+}
+
+// find criticality of each gate: exactly like the above function, but in reverse graph order
+void assign_criticality () {
+  dag_t r_dag;
+  boost::copy_graph(boost::make_reverse_graph(dag), r_dag);  
+  vector<gate_descriptor> current_gates;      // currently evaluated gates
+  vector<gate_descriptor> next_gates;         // next evaluated gates  
+  map<gate_descriptor, unsigned int> crits;   // critical path of gates
+  current_gates.clear();
+  next_gates.clear();
+  crits.clear();     
+  for (auto g_it_range = vertices(r_dag); g_it_range.first != g_it_range.second; ++g_it_range.first){
+    gate_descriptor g = *(g_it_range.first);
+    if (boost::in_degree(g, r_dag)==0) { 
+      current_gates.push_back(g);
+      crits[g] = get_gate_latency(r_dag[g]);
+      dag[gate_map[r_dag[g].seq]].criticality = crits[g];      
+    }
+  }  
+  while ( !(num_edges(r_dag)==0) || !current_gates.empty() ) {
+  //  cout << "current_gates.size(): " << current_gates.size() << endl;    
+//    cout << "num_edges(r_dag): " << num_edges(r_dag) << endl;
+    for (auto &g : current_gates) {
+      dag_t::adjacency_iterator neighborIt, neighborEnd;
+      boost::tie(neighborIt, neighborEnd) = adjacent_vertices(g, r_dag);
+      for (; neighborIt != neighborEnd; ++neighborIt) {
+        gate_descriptor g_out = *neighborIt;  
+        if ( crits.find(g_out) == crits.end() )
+          crits[g_out] = crits[g]+get_gate_latency(r_dag[g_out]);
+        else
+          crits[g_out] = max(crits[g_out],crits[g]+get_gate_latency(r_dag[g_out]));
+        dag[gate_map[r_dag[g_out].seq]].criticality = crits[g_out];                
+        //cout << "assigned criticality: " << crits[g_out] << endl;
+        if(boost::in_degree(g_out, r_dag) == 1)
+          next_gates.push_back(g_out);     
+      }
+      boost::clear_out_edges(g, r_dag);          
+      assert(in_degree(g,r_dag) == 0 && out_degree(g,r_dag) == 0 && "removing gate prematurely from dag.");        
+    }
+    current_gates = next_gates;
+    next_gates.clear();
+  }
 }
 
 void initialize_ready_list () {
@@ -965,7 +1092,8 @@ void initialize_ready_list () {
 
 void increment_clock() {
 #ifdef _DEBUG  
-  print_2d_mesh(num_rows+1, num_cols+1);
+  cout << "CLOCK: " << clk << endl;  
+  //print_2d_mesh(num_rows+1, num_cols+1);
 #endif
   clk++;
   // decrement event timers for all head events
@@ -1116,18 +1244,25 @@ int main (int argc, char *argv[]) {
     exit(1);
   }      
   unsigned long long total_logical_gates = 0;    // KQ parameter, needed for calculating L_error_rate  
+  unsigned long long total_T_gates = 0;          // total number of logical T gates
   for (auto const &map_it : all_gates) {
     string module_name = map_it.first;     
     int module_size = map_it.second.size();
+    int module_T_size = 0;
+    for (auto const &i : map_it.second)
+      if ( i.op_type == "T" || i.op_type == "Tdag")
+        module_T_size++;
     unsigned long long module_freq = 0;
     if ( module_freqs.find(module_name) != module_freqs.end() )
       module_freq = module_freqs[module_name];
 #ifdef _PROGRESS
       cerr<<"\nleaf: "<<module_name<<" - size: "<<module_size<<" - freq: "<<module_freq;
 #endif      
-    total_logical_gates += module_size * module_freq;      
+    total_logical_gates += module_size * module_freq;   
+    total_T_gates += module_T_size * module_freq;   
   }
   cerr << "\ntotal logical gates: " << total_logical_gates << endl;
+  cerr << "total T gates: " << total_T_gates << endl;  
   L_error_rate = (double)epsilon/(double)total_logical_gates;   
   code_distance = 
           2*(int)( ceil(log( (100.0/3.0) * (double)L_error_rate ) / 
@@ -1142,6 +1277,22 @@ int main (int argc, char *argv[]) {
     cerr << "code distance too small for surface code operation. Try changing physical or logical error rates.\n";
     exit(1);
   }
+
+  // calculate magic distillation level 
+  // P_0 = short_A_error, P_1 = 35*(short_A_error)^3, ..., P_n = 35*(P_(n-1))^3
+  double distillation_error = short_A_error;
+  while (distillation_error > epsilon/total_T_gates) {
+    distillation_level++;
+    double pow35 = 0.0;
+    for (int j = 0; j < distillation_level; j++)
+      pow35 += pow(3.0, (double)(j));
+    distillation_error = pow(35.0, pow35) * pow(short_A_error,pow(3.0,(double)distillation_level));
+  }
+
+  // calculate number of magic state factories
+  cerr << "distillation level: " << distillation_level << endl;
+  
+
 
   // optimize qubit placements
   // write all_gates to trace (.tr) file    
@@ -1202,12 +1353,6 @@ int main (int argc, char *argv[]) {
   gate_latencies["H"] += event_timers[h1];
   gate_latencies["H"] += event_timers[h2];  
   
-  // calculate manhattan cost and event count comparisons
-  pair< pair<int,int>, pair<int,int> > mcost_ecount;
-  if (opt) {
-    mcost_ecount = compare_manhattan_costs();
-  }
-
   // braid file: all information to later collect results from
   string output_dir = benchmark_dir+"/braid_simulation/";
   string mkdir_command = "mkdir -p "+output_dir;
@@ -1337,6 +1482,11 @@ int main (int argc, char *argv[]) {
         }          
       }
     }
+    assign_criticality(); // assign criticality to dag nodes    
+    if (!opt)             // store all dags in table for future use
+      all_dags[module_name] = dag;
+    else
+      all_dags_opt[module_name] = dag;
 
     // find serial completion time
 #ifdef _PROGRESS
@@ -1354,6 +1504,12 @@ int main (int argc, char *argv[]) {
     unsigned long long critical_clk = 0;
     critical_clk = get_critical_clk(dag); 
 
+    // update max_crit and max_len
+    for (auto g_it_range = vertices(dag); g_it_range.first != g_it_range.second; ++g_it_range.first){
+      gate_descriptor g = *(g_it_range.first);
+      max_crit = max((int)max_crit, dag[g].criticality);
+    }    
+    max_len = max(max_len, num_rows+num_cols);
 
     initialize_ready_list();
    
@@ -1363,12 +1519,12 @@ int main (int argc, char *argv[]) {
 #ifdef _PROGRESS
     cerr << "Calculating ParallelCLOCK..." << endl;
     unsigned long long prev_remaining_edges = 0;
-#endif        
+#endif       /* 
     while ( !event_queues.empty() || !ready_events.empty() ||
             !(num_edges(dag)==0) || !ready_gates.empty() ) {
 
 #ifdef _PROGRESS
-      if (clk % 1000000 == 0) {
+      if (clk % 10000 == 0) {
         cerr << "ParallelCLOCK = " << clk << " ..." << endl;        
         cerr << num_edges(dag) << " edges remaining..." << endl;
         if (prev_remaining_edges == num_edges(dag) && num_edges(dag)!=0) {
@@ -1406,6 +1562,7 @@ int main (int argc, char *argv[]) {
       // do any lapsed event 
       bool YX_flag = false;
       bool drop_flag = false;
+      //sort(ready_events.begin(), ready_events.end()); // sort by event's gate criticality
       auto it_e = ready_events.begin();
       while (it_e != ready_events.end()) {
         bool success = do_event(*it_e);
@@ -1495,7 +1652,7 @@ int main (int argc, char *argv[]) {
           ++it_e;
         }
       }
-    }
+    }*/
  
     // print results
     unsigned long long module_freq = 1;
@@ -1520,13 +1677,25 @@ int main (int argc, char *argv[]) {
       br_file << "attempt\t" << i.first << "\t" << i.second * module_freq << endl;
     br_file << endl;
   }
-  // Excel Sheet 'ManhattanCost'
-  if (opt) {
+
+  //if (opt) {
+    // Excel Sheet 'ManhattanCost'    
+    pair< pair<int,int>, pair<int,int> > mcost_ecount;    
+    mcost_ecount = compare_manhattan_costs();    
     br_file << "mcost: " << mcost_ecount.first.first << endl;
     br_file << "mcost_opt: " << mcost_ecount.first.second << endl;
     br_file << "event_count: " << mcost_ecount.second.first << endl;
     br_file << "event_count_opt: " << mcost_ecount.second.second << endl; 
-  }
+    // Excel Sheet 'BraidHistograms'
+    cerr << "length_histogram:" << endl;
+    for (int i=0; i<num_bins; i++) {
+      cerr << "[" << i*len_binwidth << "," << (i+1)*len_binwidth << ") " << length_hist[i] << endl;
+    }
+    cerr << "criticality_histogram:" << endl;
+    for (int i=0; i<num_bins; i++) {
+      cerr << "[" << i*crit_binwidth << "," << (i+1)*crit_binwidth << ") " << criticality_hist[i] << endl;
+    }    
+  //}
   // Excel Sheet 'Area'
   int max_q_count = 0;
   for (auto &i : all_q_counts)
@@ -1582,7 +1751,7 @@ int main (int argc, char *argv[]) {
   kq_file_other << "logical KQ: " << total_logical_gates << endl;
   kq_file_other << "physical kq: " << (surface_code_cycle_other*total_cycles) * num_physical_qubits << endl;  
   kq_file_other.close();  
-  cerr << "kq report written to:\t" << kq_file_path << " ||| " << kq_file_path_other << endl; 
+  cerr << "kq report written to:\n" << " \t" << kq_file_path << "\n \t" << kq_file_path_other << endl; 
   
   
   br_file << "\t****** FINISHED SIMULATION *******" << endl;
@@ -1596,6 +1765,6 @@ int main (int argc, char *argv[]) {
                     +(opt ? ".opt.br" : ".br");   
   string copy_command = "cp "+br_file_path+" "+br_file_path_other;
 
-  cerr << "braid report written to:\t" << br_file_path << " ||| " << br_file_path_other << endl;     
+  cerr << "braid report written to:\n" << " \t" << br_file_path << "\n \t" << br_file_path_other << endl;     
   return 0;
 }
