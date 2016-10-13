@@ -1,20 +1,28 @@
 #!/bin/bash
 
-physical_errors=(3 4 5 6 7 8 9)
+# usage: $ bash run_braidflash.sh {benchmark1} {benchmark2} 
+
+physical_errors=(5)
+technologies=("sup")
+priority_policies=(0 1 2 3 4 5 6)
 
 #compile
-rm -f braidflash && make
+make
 
 #run
-for b in $(cat file_list)
-do
-  echo $b  
-  for p in "${physical_errors[@]}"
+for bench in $*; do
+  bench_dir=$(dirname $bench)
+  bench_name=$(basename $bench)
+
+  for tech in "${technologies[@]}"   
   do
-    echo $p
-    ./braidflash ${b} --p ${p} > ${b}.p${p}.br  
-    ./braidflash ${b} --opt --p ${p} > ${b}.p${p}.opt.br 
-    ./braidflash ${b} --cnot --p ${p} > ${b}.p${p}.cnot.br  
-    ./braidflash ${b} --cnot --opt --p ${p} > ${b}.p${p}.cnot.opt.br    
+    for p in "${physical_errors[@]}"
+    do 
+      for pri in "${priority_policies[@]}"
+      do
+      ./braidflash ${bench} --p ${p} --tech ${tech} --pri ${pri}
+      ./braidflash ${bench} --p ${p} --tech ${tech} --pri ${pri} --opt
+      done
+    done
   done
 done

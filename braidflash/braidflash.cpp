@@ -46,7 +46,14 @@ using namespace std;
 unsigned int attempt_th_yx;    // when should i switch DOR routing path? is evaluated first.
 unsigned int attempt_th_drop;  // when should i drop the entire operation and reinject it? is evaluated second.
 
-string tech;
+string tech;                // sup, ion
+int priority_policy;        // 0: no priorities. in program order.
+                            // 1: criticality only.
+                            // 2: braid length only. short2long.
+                            // 3: braid length only. long2short.
+                            // 4: close2open only.
+                            // 5: crticiality + short2long + close2open
+                            // 6: criticality + short2long (highest crit) + long2short (lower crit) + close2open
 
 #define P_th 2              // surface code threshold = 10^-2
 #define epsilon 0.5         // total desired logical error
@@ -58,6 +65,7 @@ int code_distance;          // coding distance of the surface code
 #define short_A_error 0.005
 unsigned int data_to_factory_ratio = 50;  // ratio of 1:M magic state factories to data qubits
 unsigned int distillation_level = 0;
+map< string, unsigned int > num_magic_factories;
 
 // Physical operation latencies -- also determines surface code cycle length
 //Trapped-ion: {{"PrepZ",1}, {"X",1}, {"Z",1}, {"H",1}, {"CNOT",100}, {"T",1}, {"Tdag",1}, {"S",1}, {"Sdag",1}, {"MeasZ",25}};
@@ -118,9 +126,10 @@ typedef dag_t::vertex_descriptor gate_descriptor;
 typedef dag_t::edge_descriptor dependency_descriptor;
 map<unsigned int, gate_descriptor> gate_map;
 dag_t dag;
+int highest_criticality;
 
 // Event: which braids should be opened/closed at which time.
-enum event_type {cnot1, cnot2, cnot3, cnot4, cnot5, cnot6, cnot7, h1, h2};
+enum event_type {cnot1, cnot2, cnot3, cnot4, cnot5, cnot6, cnot7, h1, h2, t1};
 map<event_type, int> event_timers;
 struct Event {
   Braid braid;            // which nodes/links does it contain  
@@ -133,13 +142,75 @@ struct Event {
   Event(Braid braid, bool close_open, gate_descriptor gate, event_type type, int timer=-1, unsigned int attempts=0)
     : braid(braid), close_open(close_open), gate(gate), type(type), timer(timer), attempts(attempts){}
 
-  bool operator< (const Event &other) const { // event priority
-    return (!close_open 
-            || (dag[gate].op_type==dag[other.gate].op_type && (int)type>(int)(other.type))
-            //|| attempts > other.attempts
-            //|| dag[gate].criticality < dag[other.gate].criticality
-            //|| braid.links.size() < other.braid.links.size()
-            );
+  bool operator< (const Event &other) const { // event priority based on its attributes
+    bool res = false;
+    bool co1 = close_open;
+    bool co2 = other.close_open;
+    int crit1 = dag[gate].criticality;
+    int crit2 = dag[other.gate].criticality;
+    int len1 = braid.links.size();
+    int len2 = other.braid.links.size();
+      // 0: no priorities. in program order.    
+    switch (priority_policy) {
+      // 1: criticality only.      
+      case 1: res = (dag[gate].criticality > dag[other.gate].criticality); break;
+      // 2: braid length only. short2long.              
+      case 2: res = (braid.links.size() < other.braid.links.size()); break;
+      // 3: braid length only. long2short.              
+      case 3: res = (braid.links.size() > other.braid.links.size()); break;
+      // 4: close2open only.              
+      case 4: res = (close_open==false && other.close_open==true); break;
+      // 5: crticiality + short2long + close2open              
+      case 5:
+              if (close_open==false && other.close_open==true)
+                res = true;
+              else if (close_open==true && other.close_open==false)
+                res = false;                
+              else {
+                if (dag[gate].criticality > dag[other.gate].criticality)
+                  res = true;
+                else if (dag[gate].criticality == dag[other.gate].criticality)
+                  if (braid.links.size() < other.braid.links.size())
+                    res = true;
+                  else
+                    res = false;
+                else
+                  res = false;
+              }
+              break; 
+      // 6: criticality + short2long (highest crit) + long2short (lower crit) + close2open              
+      case 6:
+              if (close_open==false && other.close_open==true)
+                res = true;
+              else if (close_open==true && other.close_open==false)
+                res = false;                
+              else {              
+                if (dag[gate].criticality > dag[other.gate].criticality)
+                  res = true;
+                else if (dag[gate].criticality == dag[other.gate].criticality) {
+                  if (dag[gate].criticality == highest_criticality) {
+                    if (braid.links.size() < other.braid.links.size())
+                      res = true;
+                    else
+                      res = false;
+                  }
+                  else {
+                    if (braid.links.size() > other.braid.links.size())
+                      res = true;
+                    else
+                      res = false;
+                  }
+                }                
+                else
+                  res = false;
+              }
+              break;
+      // invalid prioritization policy              
+      default:
+             res = false; 
+             break;
+    }
+    return res;    
   }
 };
 void print_event(Event &event) {
@@ -153,7 +224,8 @@ void print_event(Event &event) {
     case cnot6: cout << "cnot6"; break;                
     case cnot7: cout << "cnot7"; break;                
     case h1: cout << "h1"; break;                                
-    case h2: cout << "h2"; break;                 
+    case h2: cout << "h2"; break;  
+    case t1: cout << "tq"; break;             
   }
   cout << endl;
   cout << "\tGate: " << dag[event.gate].op_type;
@@ -546,41 +618,50 @@ queue<Event> events_cnot(unsigned int src_qubit, unsigned int dest_qubit, gate_d
   anc2 = anc1_anc2.second;    
   // cnot_anc_route
   link_descriptor anc_link = edge(node_map[anc1], node_map[anc2], mesh).first;
+  cnot_anc_route.nodes.push_back(node_map[anc2]);    
   cnot_anc_route.nodes.push_back(node_map[anc1]);
-  cnot_anc_route.nodes.push_back(node_map[anc2]);  
   cnot_anc_route.links.push_back(anc_link);  
   // cnot_route_1, cnot_route_2
   pair<Braid,Braid> cnot_route1_route2 = cnot_routes(src_qubit, dest_qubit, anc1);
   cnot_route_1 = cnot_route1_route2.first;
   cnot_route_2 = cnot_route1_route2.second;
   
-  // queue event: opening ancilla nodes/link immediately
+  // queue event cnot1: opening ancilla nodes/link immediately
   cnot_events.push( Event(cnot_anc_route, 1, gate, cnot1, 1, 0) );
-  // queue event: closing ancilla link after 1 cycle
-  node_descriptor n_anc2 = cnot_anc_route.nodes.back();
-  cnot_anc_route.nodes.pop_back();  
-  node_descriptor n_anc1 = cnot_anc_route.nodes.back();  
-  cnot_anc_route.nodes.pop_back();  
+
+  // queue event cnot2: closing ancilla link after 1 cycle
+  node_descriptor n_anc1 = cnot_anc_route.nodes.back();
+  //cnot_anc_route.nodes.pop_back();                       //del
+  //node_descriptor n_anc2 = cnot_anc_route.nodes.back();
+  //cnot_anc_route.nodes.pop_back();  
   cnot_events.push( Event(cnot_anc_route, 0, gate, cnot2, -1, 0) );  
-  // queue event: opening route_1 after 1 cycle
+
+  // queue event cnot3: opening route_1 after 1 cycle
+  cnot_route_1.nodes.push_back(n_anc1);                          //add
   cnot_events.push( Event(cnot_route_1, 1, gate, cnot3, -1, 0) );  
-  // queue event: closing route_1 after 1 cycle
-  node_descriptor n_last = cnot_route_1.nodes.back();
-  cnot_route_1.nodes.pop_back();
-  cnot_route_1.nodes.push_back(n_anc1);
+  
+  // queue event cnot4: closing route_1 after 1 cycle
+  cnot_route_1.nodes.pop_back();                           //add
+  node_descriptor n_last = cnot_route_1.nodes.back();      //del
+  //cnot_route_1.nodes.pop_back();                         //del
+  cnot_route_1.nodes.push_back(n_anc1);                    //del
   cnot_events.push( Event(cnot_route_1, 0, gate, cnot4, -1, 0) );
-  // queue event: opening route_2 after minimum d-1 cycles
-  cnot_route_2.nodes.pop_back();
+  
+  // queue event cnot5: opening route_2 after minimum d-1 cycles
+  cnot_route_2.nodes.push_back(n_last);                    //add
+  //cnot_route_2.nodes.pop_back();                         //del
   cnot_events.push( Event(cnot_route_2, 1, gate, cnot5, -1, 0) );    
-  // queue event: closing route_2 after 1 cycle
-  cnot_route_2.nodes.push_back(n_last);
-  link_descriptor l_anc = cnot_route_2.links.back(); // ?
+  
+  // queue event cnot6: closing route_2 after 1 cycle
+  //cnot_route_2.nodes.push_back(n_last);                  //del
+  link_descriptor l_anc = cnot_route_2.links.back();
   cnot_route_2.links.pop_back();
   cnot_events.push( Event(cnot_route_2, 0, gate, cnot6, -1, 0) ); 
-  // queue event: closing ancillas after minimum d-1 cycles
+  
+  // queue event cnot7: closing ancillas after minimum d-1 cycles
   cnot_anc_route.links.pop_back();
   cnot_anc_route.links.push_back(l_anc);
-  cnot_anc_route.nodes.push_back(n_anc2);
+  //cnot_anc_route.nodes.push_back(n_anc2);
   cnot_events.push( Event(cnot_anc_route, 0, gate, cnot7, -1, 0) );  
   // return events queue
   return cnot_events;
@@ -600,8 +681,8 @@ queue<Event> events_h(unsigned int src_qubit, gate_descriptor gate) {
   link_descriptor left_link = edge(node_map[src_top_left], node_map[src_bottom_left], mesh).first;
   link_descriptor right_link = edge(node_map[src_top_right], node_map[src_bottom_right], mesh).first;
   // merge the braid segments
-  h_route.links.push_back(left_link); 
-  h_route.links.push_back(right_link);  
+  //h_route.links.push_back(left_link); 
+  //h_route.links.push_back(right_link);  
   // queue event: opening side links immediately
   h_events.push( Event(h_route, 1, gate, h1, 1, 0) );
   // queue event: closing it after the gate duration is over  
@@ -610,10 +691,18 @@ queue<Event> events_h(unsigned int src_qubit, gate_descriptor gate) {
   return h_events;  
 }
 
+queue<Event> events_t(unsigned int src_qubit, gate_descriptor gate) {
+  // return this
+  queue<Event> t_events;
+  // only a local measurement along the Z axis for the T gate, no nodes and links become busy.
+  t_events = queue<Event>();
+  return t_events;
+}
+
 // close or open the given braid
 bool do_event(Event event) {
 #ifdef _DEBUG
-  cout << "doing event for gate " << dag[event.gate].seq << ":\t";
+  cout << "doing event " << (int)event.type+1 << " for gate " << dag[event.gate].seq << ":\t";
 #endif
   // check conflict:
   // 1- opening something that's already open
@@ -730,6 +819,12 @@ unsigned int get_gate_latency (Gate g) {
   else if ( g.op_type == "H" ) {
     result += gate_latencies["H"];
   } 
+  else if ( g.op_type == "T" ) {
+    result += gate_latencies["T"];
+  }     
+  else if ( g.op_type == "Tdag" ) {
+    result += gate_latencies["Tdag"];
+  }       
   return result;
 }
 
@@ -773,6 +868,8 @@ pair< pair<int,int>, pair<int,int> > compare_manhattan_costs () {
       }
       else if (mdag[g].op_type == "H")
         event_count += 2;
+      else
+        event_count += 1;       
     }
   }
   for (auto const &map_it : all_dags_opt) {
@@ -793,49 +890,11 @@ pair< pair<int,int>, pair<int,int> > compare_manhattan_costs () {
       }
       else if (mdag[g].op_type == "H")
         event_count += 2;
+      else
+        event_count += 1;         
     }
   }
 
-  /*for (auto const &map_it : all_gates) {
-    vector<Gate> module_gates = map_it.second;
-    unsigned long long module_q_count = all_q_counts[map_it.first];
-    num_rows = (unsigned int)ceil( sqrt( (double)module_q_count ) );
-    num_cols = (num_rows*(num_rows-1) < module_q_count) ? num_rows : num_rows-1;
-    for (auto &i : module_gates) {
-      if (i.op_type == "CNOT") {
-        unsigned int c = manhattan_cost(i.qid[0], i.qid[1]);
-        mcost += c;
-        event_count += 7;
-        cerr<<"i.criticality"<<i.criticality<<endl;
-        unsigned int crit_binidx = (unsigned int)(i.criticality/crit_binwidth);                        
-        unsigned int len_binidx = (unsigned int)(c/len_binwidth);
-        ++criticality_hist[crit_binidx];        
-        ++length_hist[len_binidx];
-      }
-      else if (i.op_type == "H")
-        event_count += 2;
-    }
-  }
-  for (auto const &map_it : all_gates_opt) {
-    vector<Gate> module_gates = map_it.second;
-    unsigned long long module_q_count = all_q_counts[map_it.first];
-    num_rows = (unsigned int)ceil( sqrt( (double)module_q_count ) );
-    num_cols = (num_rows*(num_rows-1) < module_q_count) ? num_rows : num_rows-1;
-    for (auto &i : module_gates) {
-      if (i.op_type == "CNOT") {
-        unsigned int c = manhattan_cost(i.qid[0], i.qid[1]);
-        mcost_opt += c;
-        event_count_opt += 7;
-        unsigned int crit_binidx = (unsigned int)(i.criticality/crit_binwidth);                        
-        unsigned int len_binidx = (unsigned int)(c/len_binwidth);
-        ++criticality_hist_opt[crit_binidx];         
-        ++length_hist_opt[len_binidx];
-      }
-      else if (i.op_type == "H") {
-        event_count_opt += 2;
-      }
-    }
-  }*/
   result = make_pair(make_pair(mcost,mcost_opt), make_pair(event_count,event_count_opt));
   return result;
 }
@@ -867,7 +926,7 @@ vector<string> &split(const string &s, char delim, vector<string> &elems) {
     }
     return elems;
 }
-void parse_LPFS (const string file_path, bool cnot_only) {
+void parse_LPFS (const string file_path) {
   ifstream LPFSfile (file_path);
   string line;
   string leaf_func = "";
@@ -901,19 +960,19 @@ void parse_LPFS (const string file_path, bool cnot_only) {
         split(line, ' ', elems);
         // FIXME: OLD FORMAT: 2,3,5,4
         // FIXME: NEW FORMAT: 1,2,4,3
-        string op_type = elems[1];        
+        string op_type = elems[2];        
         vector<unsigned int> qid;        
-        string qid1 = elems[2];     
+        string qid1 = elems[3];     
         if (q_name_to_num.find(qid1) == q_name_to_num.end())
           q_name_to_num[qid1] = module_q_count++;    
         qid.push_back(q_name_to_num[qid1]);         
-        if (elems.size() == 4) {
-          string qid2 = elems[3];                    
+        if (elems.size() == 5) {
+          string qid2 = elems[4];                    
           if (q_name_to_num.find(qid2) == q_name_to_num.end())
             q_name_to_num[qid2] = module_q_count++;          
           qid.push_back(q_name_to_num[qid2]);
         }
-        if (/*op_type == "PrepZ" || op_type == "MeasZ" ||*/ op_type == "CNOT" || (!cnot_only && op_type == "H")) {
+        if (/*op_type == "PrepZ" || op_type == "MeasZ" ||*/ op_type == "CNOT" || op_type == "H" /*|| op_type == "T" || op_type == "Tdag"*/) {
           Gate g = Gate(seq++, op_type, qid); 
           module_gates.push_back(g);        
         }
@@ -1081,6 +1140,18 @@ void assign_criticality () {
   }
 }
 
+void update_highest_criticality () {
+  highest_criticality = 0;
+  for (auto g_it_range = vertices(dag); g_it_range.first != g_it_range.second; ++g_it_range.first){
+    gate_descriptor g = *(g_it_range.first);
+    if (boost::in_degree(g, dag)!=0 || boost::out_degree(g,dag)!=0) { // don't look at completed gates.
+      int crit = dag[g].criticality;
+      if (crit > highest_criticality)
+        highest_criticality = crit;
+    }
+  }    
+}
+
 void initialize_ready_list () {
   for (auto g_it_range = vertices(dag); g_it_range.first != g_it_range.second; ++g_it_range.first){
     gate_descriptor g = *(g_it_range.first);
@@ -1093,44 +1164,46 @@ void initialize_ready_list () {
 void increment_clock() {
 #ifdef _DEBUG  
   cout << "CLOCK: " << clk << endl;  
-  //print_2d_mesh(num_rows+1, num_cols+1);
+  print_2d_mesh(num_rows+1, num_cols+1);
 #endif
   clk++;
   // decrement event timers for all head events
   // whose predecessor event has finished (timer => 0)
-  for (auto &i : event_queues) { // is this too slow?
-    Event &head_event = i.second.front();
+  vector<gate_descriptor> to_delete_key;
+  for (auto i = event_queues.begin(); i!=event_queues.end(); ++i) { // is this too slow?
+    Event &head_event = (*i).second.front();
     if (head_event.timer < 0)       // predecessor hasn't finished yet
       continue;
     if (head_event.timer != 0)
       head_event.timer--;
 #ifdef _DEBUG
-    cout << "gate " << dag[head_event.gate].seq << ", head_event.timer: " << head_event.timer << endl;        
+    cout << "gate " << dag[(*i).first].seq << ", head_event.timer: " << head_event.timer << endl;        
 #endif
     if(head_event.timer == 0) {     // lapsed event
 #ifdef _DEBUG
       cout << "\tevent lapsed: popping from queue." << endl;
 #endif
       ready_events.push_back(head_event);
-      i.second.pop();
+      (*i).second.pop();
+      if ((*i).second.empty())
+        to_delete_key.push_back((*i).first);
     }
   }
+  for (auto &k : to_delete_key)
+    event_queues.erase(k);
 }
 
 // ------------------------------- main -----------------------------------
 int main (int argc, char *argv[]) {
 
   bool opt=false;
-  bool cnot_only=false;
-  attempt_th_yx = 4;
-  attempt_th_drop = 8;
+  attempt_th_yx = 8;
+  attempt_th_drop = 20;
   tech = "sup";  // default is the braiding approach
   
   for (int i = 0; i<argc; i++) {
     if (strcmp(argv[i],"--opt")==0)
       opt = true;
-    if (strcmp(argv[i],"--cnot")==0)
-      cnot_only = true;
     if (strcmp(argv[i],"--p")==0) {
       if (argc > (i+1)) {
         P_error_rate = atoi(argv[i+1]);
@@ -1166,7 +1239,16 @@ int main (int argc, char *argv[]) {
         cerr<<"Usage: $ braidflash <benchmark> --tech <technology>";
         return 1;
       }
-    }       
+    }   
+    if (strcmp(argv[i],"--pri")==0) {
+      if (argc > (i+1)) {
+        priority_policy = atoi(argv[i+1]);
+      }
+      else {
+        cerr<<"Usage: $ braidflash <benchmark> --pri <priority_policy>";
+        return 1;
+      }
+    }         
   }  
 
   op_delays_ion["PrepZ"] = 1;
@@ -1235,7 +1317,7 @@ int main (int argc, char *argv[]) {
   string benchmark_name = benchmark_path.substr(benchmark_path.find_last_of('/')+1, benchmark_path.length());  
   string LPFS_path = benchmark_path+".lpfs";
   string profile_freq_path = benchmark_path+".freq";
-  parse_LPFS(LPFS_path, cnot_only);
+  parse_LPFS(LPFS_path);
   parse_freq(profile_freq_path);
  
   //calculate code distance
@@ -1252,7 +1334,7 @@ int main (int argc, char *argv[]) {
     for (auto const &i : map_it.second)
       if ( i.op_type == "T" || i.op_type == "Tdag")
         module_T_size++;
-    unsigned long long module_freq = 0;
+    unsigned long long module_freq = 1;
     if ( module_freqs.find(module_name) != module_freqs.end() )
       module_freq = module_freqs[module_name];
 #ifdef _PROGRESS
@@ -1260,6 +1342,7 @@ int main (int argc, char *argv[]) {
 #endif      
     total_logical_gates += module_size * module_freq;   
     total_T_gates += module_T_size * module_freq;   
+    num_magic_factories[module_name] = all_q_counts[module_name]/data_to_factory_ratio;
   }
   cerr << "\ntotal logical gates: " << total_logical_gates << endl;
   cerr << "total T gates: " << total_T_gates << endl;  
@@ -1278,7 +1361,7 @@ int main (int argc, char *argv[]) {
     exit(1);
   }
 
-  // calculate magic distillation level 
+  // calculate magic distillation level and number of factories
   // P_0 = short_A_error, P_1 = 35*(short_A_error)^3, ..., P_n = 35*(P_(n-1))^3
   double distillation_error = short_A_error;
   while (distillation_error > epsilon/total_T_gates) {
@@ -1289,43 +1372,42 @@ int main (int argc, char *argv[]) {
     distillation_error = pow(35.0, pow35) * pow(short_A_error,pow(3.0,(double)distillation_level));
   }
 
-  // calculate number of magic state factories
   cerr << "distillation level: " << distillation_level << endl;
-  
-
 
   // optimize qubit placements
   // write all_gates to trace (.tr) file    
   if (opt) {
     string tr_path = benchmark_path+".tr"; 
-    ofstream tr_file;
-    tr_file.open(tr_path);  
-    for (auto const &map_it : all_gates) {
-      string module_name = map_it.first;     
-      vector<Gate> module_gates = map_it.second;
-      if (!module_gates.empty()) {
-        tr_file << "module: " << module_name << endl;
-        tr_file << "num_nodes: " << all_q_counts[module_name] << endl;
-        for (auto &i : module_gates) {
-          if (i.qid.size() == 1)  
-            tr_file << "ID: " << i.seq << " TYPE: " << i.op_type << " SRC: " << i.qid[0] << endl;
-          else if (i.qid.size() == 2)
-            tr_file << "ID: " << i.seq << " TYPE: " << i.op_type << " SRC: " << i.qid[0] << " DST: " << i.qid[1] << endl;
-          else
-            cerr << "Invalide gate." << endl;
+    string opt_tr_path = benchmark_path+".opt.tr";         
+    ifstream f(opt_tr_path.c_str());
+    if (!f.good()) {
+      ofstream tr_file;
+      tr_file.open(tr_path);  
+      for (auto const &map_it : all_gates) {
+        string module_name = map_it.first;     
+        vector<Gate> module_gates = map_it.second;
+        if (!module_gates.empty()) {
+          tr_file << "module: " << module_name << endl;
+          tr_file << "num_nodes: " << all_q_counts[module_name] << endl;
+          for (auto &i : module_gates) {
+            if (i.qid.size() == 1)  
+              tr_file << "ID: " << i.seq << " TYPE: " << i.op_type << " SRC: " << i.qid[0] << endl;
+            else if (i.qid.size() == 2)
+              tr_file << "ID: " << i.seq << " TYPE: " << i.op_type << " SRC: " << i.qid[0] << " DST: " << i.qid[1] << endl;
+            else
+              cerr << "Invalide gate." << endl;
+          }
         }
       }
-    }
-    tr_file.close();  
-    // use metis to rearrange qubits for more optimal interaction distances
-    string exe_path(argv[0]);
-    string exe_dir = exe_path.substr(0, exe_path.find_last_of('/'));  
-    string metis_command = "python "+exe_dir+"/arrange.py "+tr_path+
+      tr_file.close();  
+      // use metis to rearrange qubits for more optimal interaction distances, if not already done.
+      string exe_path(argv[0]);
+      string exe_dir = exe_path.substr(0, exe_path.find_last_of('/'));  
+      string metis_command = "python "+exe_dir+"/arrange.py "+tr_path+
                            " "+to_string(P_error_rate)+" "+to_string(attempt_th_yx)+" "+to_string(attempt_th_drop);
-    system(metis_command.c_str());
-
-    // read opimized trace (.opt.tr) file into all_gates_opt    
-    string opt_tr_path = benchmark_path+".opt.tr";           
+      system(metis_command.c_str());
+    }
+    // read opimized trace (.opt.tr) file into all_gates_opt          
     parse_tr(opt_tr_path);
   }
   
@@ -1339,6 +1421,7 @@ int main (int argc, char *argv[]) {
   event_timers[cnot7] = code_distance-1;
   event_timers[h1] = 1;
   event_timers[h2] = 8+code_distance;
+  event_timers[t1] = 1;
 
   // build gate_latencies lookup table
   gate_latencies["CNOT"] = 0;
@@ -1352,7 +1435,9 @@ int main (int argc, char *argv[]) {
   gate_latencies["H"] = 0;  
   gate_latencies["H"] += event_timers[h1];
   gate_latencies["H"] += event_timers[h2];  
-  
+  gate_latencies["T"] = 0;    
+  gate_latencies["T"] = event_timers[t1];  
+
   // braid file: all information to later collect results from
   string output_dir = benchmark_dir+"/braid_simulation/";
   string mkdir_command = "mkdir -p "+output_dir;
@@ -1363,6 +1448,7 @@ int main (int argc, char *argv[]) {
                     +".p."+(to_string(P_error_rate))
                     +".yx."+to_string(attempt_th_yx)
                     +".drop."+to_string(attempt_th_drop)                             
+                    +".pri."+to_string(priority_policy)
                     +"."+tech                    
                     +(opt ? ".opt.br" : ".br");
   br_file.open(br_file_path);  
@@ -1390,8 +1476,10 @@ int main (int argc, char *argv[]) {
     unsigned long long module_q_count = all_q_counts[module_name];
     num_rows = (unsigned int)ceil( sqrt( (double)module_q_count ) );
     num_cols = (num_rows*(num_rows-1) < module_q_count) ? num_rows : num_rows-1;
-    br_file << "\nModule: " << module_name << endl;    
-    br_file << "Size: " << num_rows << "X" << num_cols << endl;
+#ifdef _DEBUG    
+    cout << "\nModule: " << module_name << endl;    
+    cout << "Size: " << num_rows << "X" << num_cols << endl;
+#endif
     //if (num_rows == 1 && num_cols == 1) continue;
 
 #ifdef _PROGRESS
@@ -1488,6 +1576,8 @@ int main (int argc, char *argv[]) {
     else
       all_dags_opt[module_name] = dag;
 
+    update_highest_criticality();
+
     // find serial completion time
 #ifdef _PROGRESS
     cerr << "Calculating SerialCLOCK..." << endl;
@@ -1495,7 +1585,8 @@ int main (int argc, char *argv[]) {
     unsigned long long serial_clk = 0;
     for (vector<Gate>::const_iterator I = module_gates.begin(); I != module_gates.end(); ++I) {    
       serial_clk += get_gate_latency(*I);     
-    }       
+    }     
+    cerr << serial_clk << endl;
 
     // find critical path
 #ifdef _PROGRESS
@@ -1503,6 +1594,7 @@ int main (int argc, char *argv[]) {
 #endif         
     unsigned long long critical_clk = 0;
     critical_clk = get_critical_clk(dag); 
+    cerr << critical_clk << endl;
 
     // update max_crit and max_len
     for (auto g_it_range = vertices(dag); g_it_range.first != g_it_range.second; ++g_it_range.first){
@@ -1519,12 +1611,12 @@ int main (int argc, char *argv[]) {
 #ifdef _PROGRESS
     cerr << "Calculating ParallelCLOCK..." << endl;
     unsigned long long prev_remaining_edges = 0;
-#endif       /* 
+#endif       
     while ( !event_queues.empty() || !ready_events.empty() ||
             !(num_edges(dag)==0) || !ready_gates.empty() ) {
 
 #ifdef _PROGRESS
-      if (clk % 10000 == 0) {
+      if (clk % 2 == 0) {
         cerr << "ParallelCLOCK = " << clk << " ..." << endl;        
         cerr << num_edges(dag) << " edges remaining..." << endl;
         if (prev_remaining_edges == num_edges(dag) && num_edges(dag)!=0) {
@@ -1551,7 +1643,11 @@ int main (int argc, char *argv[]) {
         if (dag[*it_g].op_type == "H") {
           queue<Event> h_events = events_h(dag[*it_g].qid[0], *it_g);
           event_queues[*it_g] = h_events;
-        }             
+        }   
+        if (dag[*it_g].op_type == "T") {
+          queue<Event> t_events = events_t(dag[*it_g].qid[0], *it_g);
+          event_queues[*it_g] = t_events;
+        }            
         it_g = ready_gates.erase(it_g);
       }
 
@@ -1562,7 +1658,8 @@ int main (int argc, char *argv[]) {
       // do any lapsed event 
       bool YX_flag = false;
       bool drop_flag = false;
-      //sort(ready_events.begin(), ready_events.end()); // sort by event's gate criticality
+      if (priority_policy != 0)
+        sort(ready_events.begin(), ready_events.end()); // sort by events' priorities
       auto it_e = ready_events.begin();
       while (it_e != ready_events.end()) {
         bool success = do_event(*it_e);
@@ -1597,6 +1694,10 @@ int main (int argc, char *argv[]) {
             }                   
             boost::clear_out_edges(g, dag);          
             assert(in_degree(g,dag) == 0 && out_degree(g,dag) == 0 && "removing gate prematurely from dag.");
+            update_highest_criticality();
+#ifdef _DEBUG
+            cout << "\t\thighest_criticality: " << highest_criticality << endl;            
+#endif            
           }
           else {
             // wasn't last event in its queue: set the timer for the next one off the queue
@@ -1652,7 +1753,7 @@ int main (int argc, char *argv[]) {
           ++it_e;
         }
       }
-    }*/
+    }
  
     // print results
     unsigned long long module_freq = 1;
@@ -1724,6 +1825,7 @@ int main (int argc, char *argv[]) {
                     +".p."+(to_string(P_error_rate))
                     +".yx."+to_string(attempt_th_yx)
                     +".drop."+to_string(attempt_th_drop)    
+                    +".pri."+to_string(priority_policy)                    
                     +"."+tech
                     +(opt ? ".opt.kq" : ".kq");
   kq_file.open(kq_file_path);
@@ -1741,6 +1843,7 @@ int main (int argc, char *argv[]) {
                     +".p."+(to_string(P_error_rate))
                     +".yx."+to_string(attempt_th_yx)
                     +".drop."+to_string(attempt_th_drop)    
+                    +".pri."+to_string(priority_policy)                                        
                     +"."+((tech=="ion") ? "sup" : "ion") 
                     +(opt ? ".opt.kq" : ".kq");
   kq_file_other.open(kq_file_path_other);
@@ -1761,6 +1864,7 @@ int main (int argc, char *argv[]) {
                     +".p."+(to_string(P_error_rate))
                     +".yx."+to_string(attempt_th_yx)
                     +".drop."+to_string(attempt_th_drop)                             
+                    +".pri."+to_string(priority_policy)                                        
                     +"."+((tech=="ion") ? "sup" : "ion")                    
                     +(opt ? ".opt.br" : ".br");   
   string copy_command = "cp "+br_file_path+" "+br_file_path_other;

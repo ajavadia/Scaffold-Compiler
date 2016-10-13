@@ -141,7 +141,7 @@ namespace {
 						return;
 					}
           if (std::string(path).find("gridsynth") != std::string::npos) {
-    			  ss2 << path << " \"(" << std::fixed << Angle << ")\"";          
+    			  ss2 << path << " \"(" << std::fixed << Angle << ")\"" << " -d 3";          
           }
           else if (std::string(path).find("sqct") != std::string::npos) {
             ss2 << path << " " << Angle << axis << SqctLevels;

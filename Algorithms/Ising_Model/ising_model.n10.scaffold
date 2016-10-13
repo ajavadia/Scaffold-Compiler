@@ -15,8 +15,11 @@ J{n-2,n-1}
 #include <stdio.h>
 
 
-const int N = 10;
-const double Bx = 2;
+#define N 10
+#define Bx 2
+#define M 25 // number of Trotter steps
+#define T 15.0  // total duration of adiabatic evolution
+
 // elements of Bz and J are randomly generated from uniform(-2, 2)
 const double Bz[] = {0.28991416502123224, 0.3753979140489183, 1.833144980386955, -1.214086640171801, -0.7900439386714742, 0.6201635457990049, -1.1861122595832945, 1.3076099923675883, -1.9287338588361762, -1.1704835072299256};
 const double J[] = {-1.7916120932417199, 1.4333751492366509, 0.5499583088477014, -0.7547696285020669, -0.8774048828628391, 0.727240315430294, 0.21456953346320162, 0.2109661700329628, -0.11503335763215805};
@@ -37,6 +40,37 @@ void ZcrossZ(qbit q1, qbit q2, double phi) {
 }
 
 
+// red pairs
+void Red(qbit reg[N], int m) {
+  int n;  
+  for (n = 0; n < N-1; n += 2) {  
+    double phi = J[n] * (2.0*m - 1) / M;
+    ZcrossZ(reg[n], reg[n + 1], phi);
+  }  
+}
+
+// black pairs
+void Black(qbit reg[N], int m) {
+  int n;  
+  for (n = 1; n < N-1; n += 2) {  
+    double phi = J[n] * (2.0*m - 1) / M;
+    ZcrossZ(reg[n], reg[n + 1], phi);
+  }  
+}
+
+// Bz Hamiltonian
+void Inter(qbit reg[N], int m) {
+  int n;  
+  double theta1 = (1.0 - (2.0*m-1)/M) * -2 * Bx * T / M;
+  for (n = 0; n < N; n++) {
+    double theta2 = (1.0 - (2.0*m-1)/M) * -2 * Bz[n] * T / M;          
+    H(reg[n]);
+    Rz(reg[n], theta1);
+    H(reg[n]);
+    Rz(reg[n], theta2);            
+  }  
+}
+
 int main() {
     qbit reg[N];
 
@@ -47,37 +81,19 @@ int main() {
         H(reg[n]);
     }
 
-    double T = 15;  // total duration of adiabatic evolution
-    int M = 25;  // number of Trotter steps
     double dt = M / T;  // time per Trotter step
 
     int m;
     for(m = 1; m <= M; m++) {
 
         // Z-Z hamiltonian, executed in parallel
-        for (n = 0; n < N-1; n += 2) {  // red pairs
-            double phi = J[n] * (2.0*m - 1) / M;
-            ZcrossZ(reg[n], reg[n + 1], phi);
-        }
-        for (n = 1; n < N-1; n += 2) {  // black pairs
-            double phi = J[n] * (2.0*m - 1) / M;
-            ZcrossZ(reg[n], reg[n + 1], phi);
-        }
+        Red (reg, m);
+        
+        Black (reg, m);
 
-        double theta1 = (1.0 - (2.0*m-1)/M) * -2 * Bx * T / M;
-        for (n = 0; n < N; n++) {
-            H(reg[n]);
-            Rz(reg[n], theta1);
-            H(reg[n]);
-        }
+        Inter (reg, m);
 
-        // Bz hamiltonian
-        for (n = 0; n < N; n++) {
-            double theta2 = (1.0 - (2.0*m-1)/M) * -2 * Bz[n] * T / M;
-            Rz(reg[n], theta2);
-        }
     }
-
 
     for (n = 0; n < N; n++) {
         MeasZ(reg[0]);

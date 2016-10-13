@@ -1,0 +1,48 @@
+#include <math.h>
+
+// a circuit of with=n^2 and length=n^4.
+// average P parallelism at each depth.
+// it has n^2/M unique modules. 
+// each unique module is M deep, and has on average M*P gates.
+// each unique module repeated n^2 times.
+// Gates in module: M*P. Gates in total: n^4 * P.
+
+#define n 30 // problem size
+#define P 15  // parallelism factor
+#define M 100 // module size
+
+#define width n*n
+#define depth (n*n*n*n)
+#define repeat (n*n)
+#define unique_depth (depth/repeat) // how many CNOT stages in the unique section
+
+#include "synapp.n30p15.h"
+
+void syn_module (qbit reg[width], int j) {
+  int k,l;
+  for (l=0; l<M; l++)
+    for (k=0; k<P; k++) {
+      if (sd_pairs[j+l][k][0]!=-1 && sd_pairs[j+l][k][1]!=-1)
+        CNOT(reg[sd_pairs[j+l][k][0]], reg[sd_pairs[j+l][k][1]]);
+    }
+}
+
+int main() {
+  
+  qbit reg[width];  // qubit register (n^2 qubits)
+  
+  // initialize
+  int i;
+  for ( i = 0; i < width; i++ ) {
+    PrepZ( reg[i], 0 );
+  }
+
+  int j, k;
+  for ( k = 0; k < repeat; k++)  {
+    for ( j = 0; j < unique_depth/M; j++ ) { // repeat n^2 times
+      syn_module(reg, j);
+    }
+  }
+  
+  return 0;
+}

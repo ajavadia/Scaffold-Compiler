@@ -15,8 +15,11 @@ J{n-2,n-1}
 #include <stdio.h>
 
 
-const int N = 20;
-const double Bx = 2;
+#define N 20
+#define Bx 2
+#define M 25 // number of Trotter steps
+#define T 15.0  // total duration of adiabatic evolution
+
 // elements of Bz and J are randomly generated from uniform(-2, 2)
 const double Bz[] = {1.1412738766709727, 1.3836549271368943, 0.5552853586102775, 0.4925101999144701, -0.5885846405997088, -1.392372019425213, -1.215027046970198, 1.0791577829525911, 1.0901101702436224, 1.76288221627199, -0.9292687080865587, 0.40681128609894834, 0.5402869928904925, 1.9908399578653286, -1.3243904124572876, 0.5453674817934804, -0.917999020357859, 1.0402386794220968, 0.577274637942939, -1.221681253347326};
 const double J[] = {-0.27115889644480795, 0.9117470408113872, -1.5087794837630315, -0.9996156362586621, -0.9405507538145175, 1.352850665809747, 0.32628195463559306, -0.3061667984275225, 1.11435365782227, -1.7050835102855633, -0.5146251545958846, 0.9334906696023935, -1.3582108739160583, -0.31517694509002325, -0.48997002427531555, 1.6820087011224945, -1.443427916271709, 0.03622081357566964, -1.6792328766865072};
@@ -37,6 +40,37 @@ void ZcrossZ(qbit q1, qbit q2, double phi) {
 }
 
 
+// red pairs
+void Red(qbit reg[N], int m) {
+  int n;  
+  for (n = 0; n < N-1; n += 2) {  
+    double phi = J[n] * (2.0*m - 1) / M;
+    ZcrossZ(reg[n], reg[n + 1], phi);
+  }  
+}
+
+// black pairs
+void Black(qbit reg[N], int m) {
+  int n;  
+  for (n = 1; n < N-1; n += 2) {  
+    double phi = J[n] * (2.0*m - 1) / M;
+    ZcrossZ(reg[n], reg[n + 1], phi);
+  }  
+}
+
+// Bz Hamiltonian
+void Inter(qbit reg[N], int m) {
+  int n;  
+  double theta1 = (1.0 - (2.0*m-1)/M) * -2 * Bx * T / M;
+  for (n = 0; n < N; n++) {
+    double theta2 = (1.0 - (2.0*m-1)/M) * -2 * Bz[n] * T / M;          
+    H(reg[n]);
+    Rz(reg[n], theta1);
+    H(reg[n]);
+    Rz(reg[n], theta2);            
+  }  
+}
+
 int main() {
     qbit reg[N];
 
@@ -47,37 +81,19 @@ int main() {
         H(reg[n]);
     }
 
-    double T = 15;  // total duration of adiabatic evolution
-    int M = 25;  // number of Trotter steps
     double dt = M / T;  // time per Trotter step
 
     int m;
     for(m = 1; m <= M; m++) {
 
         // Z-Z hamiltonian, executed in parallel
-        for (n = 0; n < N-1; n += 2) {  // red pairs
-            double phi = J[n] * (2.0*m - 1) / M;
-            ZcrossZ(reg[n], reg[n + 1], phi);
-        }
-        for (n = 1; n < N-1; n += 2) {  // black pairs
-            double phi = J[n] * (2.0*m - 1) / M;
-            ZcrossZ(reg[n], reg[n + 1], phi);
-        }
+        Red (reg, m);
+        
+        Black (reg, m);
 
-        double theta1 = (1.0 - (2.0*m-1)/M) * -2 * Bx * T / M;
-        for (n = 0; n < N; n++) {
-            H(reg[n]);
-            Rz(reg[n], theta1);
-            H(reg[n]);
-        }
+        Inter (reg, m);
 
-        // Bz hamiltonian
-        for (n = 0; n < N; n++) {
-            double theta2 = (1.0 - (2.0*m-1)/M) * -2 * Bz[n] * T / M;
-            Rz(reg[n], theta2);
-        }
     }
-
 
     for (n = 0; n < N; n++) {
         MeasZ(reg[0]);
